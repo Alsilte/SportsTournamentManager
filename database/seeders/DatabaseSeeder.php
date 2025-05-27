@@ -1,9 +1,8 @@
 <?php
+// database/seeders/DatabaseSeeder.php
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +12,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            UserSeeder::class,
+            PlayerSeeder::class,        // Después de User
+            TeamSeeder::class,          // Después de User
+            TeamPlayerSeeder::class,    // Después de Team y Player
+            TournamentSeeder::class,    // Después de User
+            TournamentTeamSeeder::class, // Después de Tournament y Team
+            GameMatchSeeder::class,     // Después de Tournament y Team
+            MatchEventSeeder::class,    // Después de GameMatch
+            StandingSeeder::class,      // Al final para calcular standings
         ]);
     }
 }
