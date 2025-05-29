@@ -101,9 +101,7 @@
           <p class="text-gray-500 text-sm">
             © {{ currentYear }} Tournament Manager. All rights reserved.
           </p>
-          <p class="text-gray-500 text-sm mt-2 md:mt-0">
-            Built with ❤️ using Vue.js & Laravel
-          </p>
+          
         </div>
       </div>
     </footer>

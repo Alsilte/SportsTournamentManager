@@ -1,31 +1,59 @@
-import { fileURLToPath, URL } from 'node:url'
+// vite.config.js
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
+import { fileURLToPath, URL } from 'node:url'
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    vue(),
-    vueDevTools(),
-  ],
+  plugins: [vue()],
+  
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
-    },
+    }
   },
+  
   server: {
-    port: 3000,
+    port: 5173,
+    host: '0.0.0.0',
+    cors: true,
     proxy: {
       '/api': {
         target: 'http://localhost:8000',
         changeOrigin: true,
         secure: false,
+        ws: true,
+        rewrite: (path) => path,  // No reescribir la ruta
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, _res) => {
+            console.log('❌ Proxy error:', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            console.log('🔄 Proxying:', `${req.method} ${req.url} -> http://localhost:8000${req.url}`);
+          });
+          proxy.on('proxyRes', (proxyRes, req, _res) => {
+            console.log('✅ Proxy response:', proxyRes.statusCode, req.url);
+          });
+        },
       }
     }
   },
+  
   build: {
     outDir: 'dist',
-    sourcemap: true
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor': ['vue', 'vue-router', 'pinia'],
+          'ui': ['@headlessui/vue', '@heroicons/vue'],
+          'utils': ['axios', 'vue-i18n']
+        }
+      }
+    }
+  },
+  
+  define: {
+    __VUE_PROD_DEVTOOLS__: false,
+    __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false
   }
 })

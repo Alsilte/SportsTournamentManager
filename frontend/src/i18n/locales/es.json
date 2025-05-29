@@ -1,8 +1,77 @@
 {
+  "home": {
+    "hero": {
+      "title": "Gestión Completa",
+      "subtitle": "de Torneos",
+      "description": "Organiza, gestiona y rastrea torneos deportivos con nuestra plataforma integral y poderosa diseñada para el éxito"
+    },
+    "cta": {
+      "getStarted": "Comenzar Gratis",
+      "dashboard": "Ir al Panel",
+      "viewTournaments": "Ver Torneos", 
+      "signUpNow": "Registrarse Ahora",
+      "browseTournaments": "Explorar Torneos",
+      "title": "¿Listo para Comenzar?",
+      "description": "Únete a nuestra plataforma hoy y comienza a gestionar tus torneos como un profesional con todas las herramientas que necesitas"
+    },
+    "trust": {
+      "rating": "4.9★ Valoración",
+      "users": "10,000+ Usuarios",
+      "secure": "100% Seguro"
+    },
+    "features": {
+      "title": "Todo lo que Necesitas",
+      "subtitle": "Desde la creación de torneos hasta los resultados de partidos, gestiona cada aspecto de tus torneos deportivos con nuestro conjunto integral de herramientas",
+      "items": {
+        "tournament_management": {
+          "title": "Gestión de Torneos",
+          "description": "Crea y gestiona torneos con formatos flexibles incluyendo ligas, eliminatorias y fases de grupo con programación avanzada"
+        },
+        "team_organization": {
+          "title": "Organización de Equipos",
+          "description": "Registra equipos, gestiona plantillas de jugadores, rastrea estadísticas y organiza todo sin problemas durante los torneos"
+        },
+        "match_scheduling": {
+          "title": "Programación de Partidos", 
+          "description": "Programa partidos, asigna árbitros, rastrea resultados y gestiona estadios con nuestro sistema integral de gestión de partidos"
+        },
+        "live_statistics": {
+          "title": "Estadísticas en Vivo",
+          "description": "Clasificaciones en tiempo real, estadísticas detalladas de jugadores, análisis de torneos e informes completos al alcance de tus manos"
+        },
+        "user_management": {
+          "title": "Gestión de Usuarios",
+          "description": "Control de acceso avanzado basado en roles para administradores, gestores de equipo, jugadores y árbitros con permisos granulares"
+        },
+        "awards_recognition": {
+          "title": "Premios y Reconocimientos",
+          "description": "Rastrea logros, premios, trofeos y sistemas de reconocimiento por rendimiento excepcional y participación en torneos"
+        }
+      }
+    },
+    "stats": {
+      "title": "Estadísticas de la Plataforma",
+      "subtitle": "Únete a miles de organizadores de torneos y entusiastas del deporte en todo el mundo",
+      "items": {
+        "tournaments": "Torneos Activos",
+        "teams": "Equipos Registrados",
+        "players": "Jugadores Activos", 
+        "matches": "Partidos Jugados"
+      }
+    },
+    "tournaments": {
+      "title": "Torneos Recientes",
+      "subtitle": "Descubre los torneos más recientes y emocionantes en nuestra plataforma",
+      "viewAll": "Ver Todos los Torneos",
+      "noTournamentsDescription": "Sé el primero en crear un torneo increíble y unir comunidades deportivas",
+      "registrationProgress": "Progreso de Inscripción"
+    }
+  },
+
   "common": {
     "loading": "Cargando...",
     "save": "Guardar",
-    "cancel": "Cancelar",
+    "cancel": "Cancelar", 
     "delete": "Eliminar",
     "edit": "Editar",
     "view": "Ver",
@@ -28,16 +97,27 @@
     "active": "Activo",
     "inactive": "Inactivo",
     "total": "Total",
-    "actions": "Acciones"
+    "actions": "Acciones",
+    "language": "Idioma",
+    "selectLanguage": "Seleccionar Idioma",
+    "refresh": "Actualizar",
+    "close": "Cerrar",
+    "open": "Abrir",
+    "submit": "Enviar",
+    "reset": "Restablecer"
   },
   "navigation": {
     "tournaments": "Torneos",
     "teams": "Equipos",
-    "players": "Jugadores",
+    "players": "Jugadores", 
     "matches": "Partidos",
     "admin": "Panel Admin",
     "createTournament": "Crear Torneo",
-    "createTeam": "Crear Equipo"
+    "createTeam": "Crear Equipo",
+    "signIn": "Iniciar Sesión",
+    "signUp": "Registrarse",
+    "signOut": "Cerrar Sesión",
+    "home": "Inicio"
   },
   "auth": {
     "signIn": "Iniciar Sesión",
@@ -66,26 +146,84 @@
     "player": "Jugador",
     "referee": "Árbitro"
   },
-  "dashboard": {
-    "welcome": "¡Bienvenido de vuelta, {name}!",
-    "adminWelcome": "Gestiona torneos y supervisa todo el sistema",
-    "managerWelcome": "Gestiona tus equipos y regístrate en torneos",
-    "playerWelcome": "Consulta tus estadísticas, equipos y próximos partidos",
-    "refereeWelcome": "Revisa tus partidos asignados y gestiona eventos",
-    "systemOverview": "Resumen del Sistema",
-    "totalTournaments": "Torneos Totales",
-    "registeredTeams": "Equipos Registrados",
-    "activeUsers": "Usuarios Activos",
-    "recentTournaments": "Torneos Recientes",
-    "pendingActions": "Acciones Pendientes",
-    "systemHealth": "Estado del Sistema",
-    "myTeams": "Mis Equipos",
-    "upcomingMatches": "Próximos Partidos",
-    "myProfile": "Mi Perfil",
-    "myStatistics": "Mis Estadísticas",
-    "achievements": "Logros",
-    "recentMatches": "Partidos Recientes"
-  },
+  
+    "dashboard": {
+      "welcome": "Welcome back, {name}!",
+      "goodMorning": "Good morning",
+      "goodAfternoon": "Good afternoon", 
+      "goodEvening": "Good evening",
+      "lastLogin": "Last login",
+      "refresh": "Refresh",
+      "dataRefreshed": "Data refreshed successfully",
+      "refreshError": "Error refreshing data",
+      
+      "adminWelcome": "Manage tournaments and oversee the entire system",
+      "managerWelcome": "Manage your teams and register for tournaments",
+      "playerWelcome": "Check your stats, teams, and upcoming matches",
+      "refereeWelcome": "Review your assigned matches and manage game events",
+      "defaultWelcome": "Welcome to Tournament Manager",
+      
+      "adminRole": "System Administrator",
+      "managerRole": "Team Manager",
+      "refereeRole": "Match Referee", 
+      "playerRole": "Player",
+      "userRole": "User",
+      
+      "systemOverview": "System Overview",
+      "totalTournaments": "Total Tournaments",
+      "registeredTeams": "Registered Teams",
+      "activeUsers": "Active Users",
+      "activeSessions": "Active Sessions",
+      "myTeams": "My Teams",
+      "totalPlayers": "Total Players",
+      "upcomingMatches": "Upcoming Matches",
+      "matchesOfficiated": "Matches Officiated",
+      "averageRating": "Average Rating",
+      "matchesPlayed": "Matches Played",
+      "goalsScored": "Goals Scored",
+      "activeTeams": "Active Teams",
+      
+      
+      "recentTournaments": "Recent Tournaments",
+      "pendingActions": "Pending Actions",
+      "systemHealth": "System Health",
+      "myProfile": "My Profile",
+      "myStatistics": "My Statistics",
+      "achievements": "Achievements",
+      "recentMatches": "Recent Matches",
+      "quickActions": "Quick Actions",
+      "performanceMetrics": "Performance Metrics",
+      "teamManagement": "Team Management",
+      "playerManagement": "Player Management",
+      
+      "viewAll": "View All",
+      "viewDetails": "View Details",
+      "manage": "Manage",
+      "edit": "Edit",
+      "approve": "Approve",
+      "reject": "Reject",
+      "review": "Review",
+      "noPendingActions": "No pending actions",
+      "noRecentActivity": "No recent activity",
+      "noUpcomingMatches": "No upcoming matches",
+      "noRecentMatches": "No recent matches",
+      
+      "operational": "Operational",
+      "online": "users online",
+      "lastBackup": "Last backup",
+      "databaseStatus": "Database Status",
+      "apiStatus": "API Status",
+      
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "thisWeek": "This week",
+      "thisMonth": "This month",
+      "hoursAgo": "hours ago",
+      "minutesAgo": "minutes ago",
+      "justNow": "Just now"
+    }
+  
+  ,
   "tournaments": {
     "title": "Torneos",
     "subtitle": "Descubre y únete a torneos deportivos",
@@ -124,83 +262,6 @@
     "teamsRegistered": "{count} equipos registrados",
     "maxTeamsReached": "{current}/{max} equipos"
   },
-  "teams": {
-    "title": "Equipos",
-    "subtitle": "Navega y gestiona equipos deportivos",
-    "create": "Crear Equipo",
-    "name": "Nombre del Equipo",
-    "shortName": "Nombre Corto",
-    "manager": "Manager",
-    "players": "Jugadores",
-    "foundedYear": "Año de Fundación",
-    "homeVenue": "Estadio Local",
-    "contactEmail": "Correo de Contacto",
-    "contactPhone": "Teléfono de Contacto",
-    "description": "Descripción",
-    "viewDetails": "Ver Detalles",
-    "viewRoster": "Ver Plantilla",
-    "manageRoster": "Gestionar Plantilla",
-    "addPlayer": "Añadir Jugador",
-    "removePlayer": "Quitar Jugador",
-    "noTeams": "Aún no hay equipos",
-    "createFirst": "Sé el primero en crear un equipo",
-    "playersCount": "{count} jugadores",
-    "tournamentsCount": "{count} torneos",
-    "statistics": "Estadísticas",
-    "matchHistory": "Historial de Partidos",
-    "captain": "Capitán",
-    "jerseyNumber": "Dorsal #",
-    "position": "Posición"
-  },
-  "players": {
-    "title": "Jugadores",
-    "subtitle": "Navega perfiles de jugadores y estadísticas",
-    "profile": "Perfil del Jugador",
-    "statistics": "Estadísticas",
-    "teamHistory": "Historial de Equipos",
-    "position": "Posición",
-    "age": "Edad",
-    "nationality": "Nacionalidad",
-    "height": "Altura",
-    "weight": "Peso",
-    "preferredFoot": "Pie Preferido",
-    "biography": "Biografía",
-    "totalMatches": "Partidos Totales",
-    "totalGoals": "Goles Totales",
-    "yellowCards": "Tarjetas Amarillas",
-    "redCards": "Tarjetas Rojas",
-    "matchesPlayed": "Partidos Jugados",
-    "goalsScored": "Goles Anotados",
-    "noPlayers": "No se encontraron jugadores"
-  },
-  "matches": {
-    "title": "Partidos",
-    "subtitle": "Ver horarios y resultados de partidos",
-    "create": "Crear Partido",
-    "details": "Detalles del Partido",
-    "homeTeam": "Equipo Local",
-    "awayTeam": "Equipo Visitante",
-    "referee": "Árbitro",
-    "venue": "Estadio",
-    "matchDate": "Fecha del Partido",
-    "round": "Ronda",
-    "finalScore": "Resultado Final",
-    "status": {
-      "scheduled": "Programado",
-      "inProgress": "En Progreso",
-      "completed": "Completado",
-      "postponed": "Pospuesto",
-      "cancelled": "Cancelado"
-    },
-    "events": {
-      "goal": "Gol",
-      "yellowCard": "Tarjeta Amarilla",
-      "redCard": "Tarjeta Roja",
-      "substitution": "Sustitución",
-      "ownGoal": "Autogol"
-    },
-    "noMatches": "No se encontraron partidos"
-  },
   "notifications": {
     "success": "¡Éxito!",
     "error": "¡Error!",
@@ -215,27 +276,7 @@
     "errorOccurred": "Ocurrió un error",
     "invalidData": "Datos inválidos proporcionados",
     "permissionDenied": "Permiso denegado",
-    "networkError": "Error de red"
-  },
-  "validation": {
-    "required": "Este campo es requerido",
-    "emailInvalid": "Por favor ingresa un correo válido",
-    "passwordTooShort": "La contraseña debe tener al menos {min} caracteres",
-    "passwordsNotMatch": "Las contraseñas no coinciden",
-    "numberMin": "Debe ser al menos {min}",
-    "numberMax": "Debe ser como máximo {max}",
-    "stringTooShort": "Debe tener al menos {min} caracteres",
-    "stringTooLong": "Debe tener como máximo {max} caracteres"
-  },
-  "errors": {
-    "pageNotFound": "Página No Encontrada",
-    "pageNotFoundMessage": "La página que buscas no existe o ha sido movida",
-    "goBack": "Volver",
-    "goHome": "Ir al Inicio",
-    "networkError": "Error de Red",
-    "serverError": "Error del Servidor",
-    "unauthorized": "Acceso No Autorizado",
-    "forbidden": "Acceso Prohibido",
-    "somethingWentWrong": "Algo salió mal"
+    "networkError": "Error de red",
+    "languageChanged": "Idioma cambiado exitosamente"
   }
 }

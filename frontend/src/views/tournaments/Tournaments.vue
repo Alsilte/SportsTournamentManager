@@ -238,7 +238,7 @@ import { useAuthStore } from '@/stores/auth'
 import { tournamentAPI, apiHelpers } from '@/services/api'
 import MainLayout from '@/components/layout/MainLayout.vue'
 import TournamentCard from '@/components/tournaments/TournamentCard.vue'
-import TeamRegistrationModal from '@/components/tournaments/TeamRegistrationModal.vue'
+import TeamRegistrationModal from '@/views/tournaments/TeamRegistrationModal.vue'
 
 export default {
   name: 'Tournaments',

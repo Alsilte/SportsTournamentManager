@@ -1,4 +1,73 @@
 {
+  "home": {
+    "hero": {
+      "title": "Complete Tournament",
+      "subtitle": "Management",
+      "description": "Organize, manage, and track sports tournaments with our comprehensive and powerful platform designed for success"
+    },
+    "cta": {
+      "getStarted": "Get Started Free",
+      "dashboard": "Go to Dashboard", 
+      "viewTournaments": "View Tournaments",
+      "signUpNow": "Sign Up Now",
+      "browseTournaments": "Browse Tournaments",
+      "title": "Ready to Get Started?",
+      "description": "Join our platform today and start managing your tournaments like a professional with all the tools you need"
+    },
+    "trust": {
+      "rating": "4.9★ Rating",
+      "users": "10,000+ Users", 
+      "secure": "100% Secure"
+    },
+    "features": {
+      "title": "Everything You Need",
+      "subtitle": "From tournament creation to match results, manage every aspect of your sports tournaments with our comprehensive suite of tools",
+      "items": {
+        "tournament_management": {
+          "title": "Tournament Management",
+          "description": "Create and manage tournaments with flexible formats including leagues, knockouts, and group stages with advanced scheduling"
+        },
+        "team_organization": {
+          "title": "Team Organization", 
+          "description": "Register teams, manage player rosters, track team statistics, and organize everything seamlessly throughout tournaments"
+        },
+        "match_scheduling": {
+          "title": "Match Scheduling",
+          "description": "Schedule matches, assign referees, track results, and manage venues with our comprehensive match management system"
+        },
+        "live_statistics": {
+          "title": "Live Statistics",
+          "description": "Real-time standings, detailed player statistics, tournament analytics, and comprehensive reports at your fingertips"
+        },
+        "user_management": {
+          "title": "User Management",
+          "description": "Advanced role-based access control for administrators, team managers, players, and referees with granular permissions"
+        },
+        "awards_recognition": {
+          "title": "Awards & Recognition",
+          "description": "Track achievements, awards, trophies, and recognition systems for outstanding performance and participation in tournaments"
+        }
+      }
+    },
+    "stats": {
+      "title": "Platform Statistics",
+      "subtitle": "Join thousands of tournament organizers and sports enthusiasts worldwide",
+      "items": {
+        "tournaments": "Active Tournaments",
+        "teams": "Registered Teams", 
+        "players": "Active Players",
+        "matches": "Matches Played"
+      }
+    },
+    "tournaments": {
+      "title": "Recent Tournaments",
+      "subtitle": "Check out the latest and most exciting tournaments on our platform",
+      "viewAll": "View All Tournaments",
+      "noTournamentsDescription": "Be the first to create an amazing tournament and bring sports communities together",
+      "registrationProgress": "Registration Progress"
+    }
+  },
+
   "common": {
     "loading": "Loading...",
     "save": "Save",
@@ -28,16 +97,27 @@
     "active": "Active",
     "inactive": "Inactive",
     "total": "Total",
-    "actions": "Actions"
+    "actions": "Actions",
+    "language": "Language",
+    "selectLanguage": "Select Language",
+    "refresh": "Refresh",
+    "close": "Close",
+    "open": "Open",
+    "submit": "Submit",
+    "reset": "Reset"
   },
   "navigation": {
     "tournaments": "Tournaments",
-    "teams": "Teams",
+    "teams": "Teams", 
     "players": "Players",
     "matches": "Matches",
     "admin": "Admin Panel",
     "createTournament": "Create Tournament",
-    "createTeam": "Create Team"
+    "createTeam": "Create Team",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "home": "Home"
   },
   "auth": {
     "signIn": "Sign In",
@@ -69,7 +149,7 @@
   "dashboard": {
     "welcome": "Welcome back, {name}!",
     "adminWelcome": "Manage tournaments and oversee the entire system",
-    "managerWelcome": "Manage your teams and register for tournaments",
+    "managerWelcome": "Manage your teams and register for tournaments", 
     "playerWelcome": "Check your stats, teams, and upcoming matches",
     "refereeWelcome": "Review your assigned matches and manage game events",
     "systemOverview": "System Overview",
@@ -124,83 +204,6 @@
     "teamsRegistered": "{count} teams registered",
     "maxTeamsReached": "{current}/{max} teams"
   },
-  "teams": {
-    "title": "Teams",
-    "subtitle": "Browse and manage sports teams",
-    "create": "Create Team",
-    "name": "Team Name",
-    "shortName": "Short Name",
-    "manager": "Manager",
-    "players": "Players",
-    "foundedYear": "Founded Year",
-    "homeVenue": "Home Venue",
-    "contactEmail": "Contact Email",
-    "contactPhone": "Contact Phone",
-    "description": "Description",
-    "viewDetails": "View Details",
-    "viewRoster": "View Roster",
-    "manageRoster": "Manage Roster",
-    "addPlayer": "Add Player",
-    "removePlayer": "Remove Player",
-    "noTeams": "No teams yet",
-    "createFirst": "Be the first to create a team",
-    "playersCount": "{count} players",
-    "tournamentsCount": "{count} tournaments",
-    "statistics": "Statistics",
-    "matchHistory": "Match History",
-    "captain": "Captain",
-    "jerseyNumber": "Jersey #",
-    "position": "Position"
-  },
-  "players": {
-    "title": "Players",
-    "subtitle": "Browse player profiles and statistics",
-    "profile": "Player Profile",
-    "statistics": "Statistics",
-    "teamHistory": "Team History",
-    "position": "Position",
-    "age": "Age",
-    "nationality": "Nationality",
-    "height": "Height",
-    "weight": "Weight",
-    "preferredFoot": "Preferred Foot",
-    "biography": "Biography",
-    "totalMatches": "Total Matches",
-    "totalGoals": "Total Goals",
-    "yellowCards": "Yellow Cards",
-    "redCards": "Red Cards",
-    "matchesPlayed": "Matches Played",
-    "goalsScored": "Goals Scored",
-    "noPlayers": "No players found"
-  },
-  "matches": {
-    "title": "Matches",
-    "subtitle": "View match schedules and results",
-    "create": "Create Match",
-    "details": "Match Details",
-    "homeTeam": "Home Team",
-    "awayTeam": "Away Team",
-    "referee": "Referee",
-    "venue": "Venue",
-    "matchDate": "Match Date",
-    "round": "Round",
-    "finalScore": "Final Score",
-    "status": {
-      "scheduled": "Scheduled",
-      "inProgress": "In Progress",
-      "completed": "Completed",
-      "postponed": "Postponed",
-      "cancelled": "Cancelled"
-    },
-    "events": {
-      "goal": "Goal",
-      "yellowCard": "Yellow Card",
-      "redCard": "Red Card",
-      "substitution": "Substitution",
-      "ownGoal": "Own Goal"
-    },
-    "noMatches": "No matches found"
-  },
   "notifications": {
     "success": "Success!",
     "error": "Error!",
@@ -215,27 +218,7 @@
     "errorOccurred": "An error occurred",
     "invalidData": "Invalid data provided",
     "permissionDenied": "Permission denied",
-    "networkError": "Network error occurred"
-  },
-  "validation": {
-    "required": "This field is required",
-    "emailInvalid": "Please enter a valid email address",
-    "passwordTooShort": "Password must be at least {min} characters",
-    "passwordsNotMatch": "Passwords do not match",
-    "numberMin": "Must be at least {min}",
-    "numberMax": "Must be at most {max}",
-    "stringTooShort": "Must be at least {min} characters",
-    "stringTooLong": "Must be at most {max} characters"
-  },
-  "errors": {
-    "pageNotFound": "Page Not Found",
-    "pageNotFoundMessage": "The page you're looking for doesn't exist or has been moved",
-    "goBack": "Go Back",
-    "goHome": "Go Home",
-    "networkError": "Network Error",
-    "serverError": "Server Error",
-    "unauthorized": "Unauthorized Access",
-    "forbidden": "Access Forbidden",
-    "somethingWentWrong": "Something went wrong"
+    "networkError": "Network error occurred",
+    "languageChanged": "Language changed successfully"
   }
 }
