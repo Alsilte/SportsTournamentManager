@@ -26,7 +26,7 @@ Route::get('/health', function () {
 });
 
 // Public routes - No authentication required
-Route::prefix('')->group(function () {
+Route::prefix('v1')->group(function () {
 
   // Authentication routes
   Route::prefix('auth')->group(function () {

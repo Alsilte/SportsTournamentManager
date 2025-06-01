@@ -8,14 +8,14 @@ const getApiBaseUrl = () => {
   // En desarrollo, usar el proxy de Vite O la URL completa
   if (import.meta.env.DEV) {
     // Opción 1: Usar proxy (recomendado)
-    return '/api'  // Esto usará el proxy de Vite
+    return '/api/v1'  // Esto usará el proxy de Vite
     
     // Opción 2: URL directa (descomenta si el proxy no funciona)
     // return 'http://127.0.0.1:8000/api/v1'
   }
   
   // En producción, usar la URL completa
-  return import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'
+  return import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1'
 }
 
 // Crear instancia de axios
