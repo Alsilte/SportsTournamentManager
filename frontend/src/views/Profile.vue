@@ -1,4 +1,3 @@
-<!-- src/views/Profile.vue -->
 <template>
   <MainLayout>
     <template #header>
@@ -71,62 +70,6 @@ export default {
   setup() {
     const authStore = useAuthStore()
     return { authStore }
-  },
-}
-</script>
-
-<!-- src/views/Dashboard.vue -->
-<template>
-  <MainLayout>
-    <template #header>
-      <div>
-        <h1 class="text-3xl font-bold text-gray-900">Welcome back, {{ authStore.userName }}!</h1>
-        <p class="text-gray-600 mt-1">{{ getWelcomeMessage() }}</p>
-      </div>
-    </template>
-
-    <!-- Role-based dashboard content -->
-    <AdminDashboard v-if="authStore.isAdmin" />
-    <TeamManagerDashboard v-else-if="authStore.isTeamManager" />
-    <RefereeDashboard v-else-if="authStore.isReferee" />
-    <PlayerDashboard v-else />
-  </MainLayout>
-</template>
-
-<script>
-import { useAuthStore } from '@/stores/auth'
-import MainLayout from '@/components/layout/MainLayout.vue'
-import AdminDashboard from '@/components/dashboard/AdminDashboard.vue'
-import TeamManagerDashboard from '@/components/dashboard/TeamManagerDashboard.vue'
-import RefereeDashboard from '@/components/dashboard/RefereeDashboard.vue'
-import PlayerDashboard from '@/components/dashboard/PlayerDashboard.vue'
-
-export default {
-  name: 'Dashboard',
-  components: {
-    MainLayout,
-    AdminDashboard,
-    TeamManagerDashboard,
-    RefereeDashboard,
-    PlayerDashboard,
-  },
-  setup() {
-    const authStore = useAuthStore()
-
-    const getWelcomeMessage = () => {
-      const messages = {
-        admin: 'Manage tournaments and oversee the entire system',
-        team_manager: 'Manage your teams and register for tournaments',
-        referee: 'Review your assigned matches and manage game events',
-        player: 'Check your stats, teams, and upcoming matches',
-      }
-      return messages[authStore.userRole] || 'Welcome to Tournament Manager'
-    }
-
-    return {
-      authStore,
-      getWelcomeMessage,
-    }
   },
 }
 </script>
