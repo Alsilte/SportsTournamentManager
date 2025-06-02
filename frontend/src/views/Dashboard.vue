@@ -9,10 +9,10 @@
           </h1>
           <p class="text-gray-600 mt-1">{{ getWelcomeMessage() }}</p>
         </div>
-        
+
         <!-- Quick Actions -->
         <div class="flex items-center space-x-3">
-          <button 
+          <button
             @click="refreshData"
             :disabled="isRefreshing"
             class="btn-secondary flex items-center"
@@ -20,12 +20,8 @@
             <ArrowPathIcon :class="['w-4 h-4 mr-2', isRefreshing ? 'animate-spin' : '']" />
             <span class="hidden sm:inline">{{ $t('common.refresh') }}</span>
           </button>
-          
-          <RouterLink 
-            v-if="authStore.isAdmin"
-            to="/tournaments/create" 
-            class="btn-primary"
-          >
+
+          <RouterLink v-if="authStore.isAdmin" to="/tournaments/create" class="btn-primary">
             <PlusIcon class="w-4 h-4 mr-2" />
             <span class="hidden sm:inline">{{ $t('tournaments.create') }}</span>
           </RouterLink>
@@ -36,7 +32,9 @@
     <!-- Enhanced Role-based Dashboard Content -->
     <div class="space-y-8">
       <!-- Welcome Card with Stats -->
-      <div class="relative overflow-hidden bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-2xl shadow-xl">
+      <div
+        class="relative overflow-hidden bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-2xl shadow-xl"
+      >
         <div class="absolute inset-0 bg-black opacity-10"></div>
         <div class="absolute top-0 right-0 transform translate-x-1/3 -translate-y-1/3">
           <div class="w-72 h-72 bg-primary-400 rounded-full opacity-20"></div>
@@ -44,11 +42,13 @@
         <div class="absolute bottom-0 left-0 transform -translate-x-1/3 translate-y-1/3">
           <div class="w-96 h-96 bg-primary-400 rounded-full opacity-10"></div>
         </div>
-        
+
         <div class="relative p-8">
           <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between">
             <div class="flex items-center space-x-6 mb-6 lg:mb-0">
-              <div class="w-20 h-20 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+              <div
+                class="w-20 h-20 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center backdrop-blur-sm"
+              >
                 <component :is="getRoleIcon()" class="w-10 h-10 text-white" />
               </div>
               <div>
@@ -61,7 +61,7 @@
                 </p>
               </div>
             </div>
-            
+
             <!-- Quick Stats -->
             <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
               <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-4 text-center">
@@ -72,7 +72,9 @@
                 <div class="text-2xl font-bold text-white">{{ quickStats.secondary }}</div>
                 <div class="text-primary-100 text-sm">{{ quickStats.secondaryLabel }}</div>
               </div>
-              <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-4 text-center lg:block hidden">
+              <div
+                class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-4 text-center lg:block hidden"
+              >
                 <div class="text-2xl font-bold text-white">{{ quickStats.tertiary }}</div>
                 <div class="text-primary-100 text-sm">{{ quickStats.tertiaryLabel }}</div>
               </div>
@@ -104,7 +106,7 @@ import {
   ShieldCheckIcon,
   UserGroupIcon,
   UserIcon,
-  ScaleIcon
+  ScaleIcon,
 } from '@heroicons/vue/24/outline'
 import { useAuthStore } from '@/stores/auth'
 import MainLayout from '@/components/layout/MainLayout.vue'
@@ -122,7 +124,7 @@ export default {
     RefereeDashboard,
     PlayerDashboard,
     ArrowPathIcon,
-    PlusIcon
+    PlusIcon,
   },
   setup() {
     const { t } = useI18n()
@@ -139,7 +141,7 @@ export default {
             secondary: '180',
             secondaryLabel: t('dashboard.registeredTeams'),
             tertiary: '850',
-            tertiaryLabel: t('dashboard.activeUsers')
+            tertiaryLabel: t('dashboard.activeUsers'),
           }
         case 'team_manager':
           return {
@@ -148,7 +150,7 @@ export default {
             secondary: '42',
             secondaryLabel: t('dashboard.totalPlayers'),
             tertiary: '12',
-            tertiaryLabel: t('dashboard.upcomingMatches')
+            tertiaryLabel: t('dashboard.upcomingMatches'),
           }
         case 'referee':
           return {
@@ -157,7 +159,7 @@ export default {
             secondary: '8',
             secondaryLabel: t('dashboard.upcomingMatches'),
             tertiary: '4.3',
-            tertiaryLabel: t('dashboard.averageRating')
+            tertiaryLabel: t('dashboard.averageRating'),
           }
         default: // player
           return {
@@ -166,7 +168,7 @@ export default {
             secondary: '8',
             secondaryLabel: t('dashboard.goalsScored'),
             tertiary: '2',
-            tertiaryLabel: t('dashboard.activeTeams')
+            tertiaryLabel: t('dashboard.activeTeams'),
           }
       }
     })
@@ -176,7 +178,7 @@ export default {
         admin: t('dashboard.adminWelcome'),
         team_manager: t('dashboard.managerWelcome'),
         referee: t('dashboard.refereeWelcome'),
-        player: t('dashboard.playerWelcome')
+        player: t('dashboard.playerWelcome'),
       }
       return messages[authStore.userRole] || t('dashboard.defaultWelcome')
     }
@@ -186,7 +188,7 @@ export default {
         admin: t('dashboard.adminRole'),
         team_manager: t('dashboard.managerRole'),
         referee: t('dashboard.refereeRole'),
-        player: t('dashboard.playerRole')
+        player: t('dashboard.playerRole'),
       }
       return roleMessages[authStore.userRole] || t('dashboard.userRole')
     }
@@ -196,7 +198,7 @@ export default {
         admin: ShieldCheckIcon,
         team_manager: UserGroupIcon,
         referee: ScaleIcon,
-        player: UserIcon
+        player: UserIcon,
       }
       return icons[authStore.userRole] || UserIcon
     }
@@ -205,7 +207,7 @@ export default {
       isRefreshing.value = true
       try {
         // Simulate data refresh
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        await new Promise((resolve) => setTimeout(resolve, 1000))
         window.$notify?.success(t('notifications.dataRefreshed'))
       } catch (error) {
         window.$notify?.error(t('notifications.refreshError'))
@@ -221,7 +223,7 @@ export default {
         month: 'long',
         day: 'numeric',
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
       }).format(date)
     }
 
@@ -245,17 +247,22 @@ export default {
       getRoleMessage,
       getRoleIcon,
       refreshData,
-      formatDate
+      formatDate,
     }
-  }
+  },
 }
 </script>
 
 <style scoped>
 /* Custom animations */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .float-animation {

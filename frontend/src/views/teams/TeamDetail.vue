@@ -131,11 +131,11 @@
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-600">Win Rate</span>
-                <span class="font-medium">{{ team.win_rate || 0 }}%</span>
+                <span class="font-medium">{{ teamStats.win_rate || 0 }}%</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-600">Total Goals</span>
-                <span class="font-medium">{{ team.total_goals || 0 }}</span>
+                <span class="font-medium">{{ teamStats.goals_for || 0 }}</span>
               </div>
             </div>
           </div>
@@ -147,13 +147,17 @@
               <div class="flex items-center">
                 <UserIcon class="w-5 h-5 text-gray-400 mr-3" />
                 <div>
-                  <div class="font-medium text-gray-900">{{ team.manager?.name }}</div>
+                  <div class="font-medium text-gray-900">
+                    {{ team.manager?.name || 'No manager assigned' }}
+                  </div>
                   <div class="text-sm text-gray-600">Team Manager</div>
                 </div>
               </div>
               <div class="flex items-center">
                 <EnvelopeIcon class="w-5 h-5 text-gray-400 mr-3" />
-                <div class="text-sm text-gray-600">{{ team.contact_email }}</div>
+                <div class="text-sm text-gray-600">
+                  {{ team.contact_email || 'No email provided' }}
+                </div>
               </div>
               <div v-if="team.contact_phone" class="flex items-center">
                 <PhoneIcon class="w-5 h-5 text-gray-400 mr-3" />
@@ -343,7 +347,8 @@
 
         <!-- Statistics Tab -->
         <div v-if="activeTab === 'statistics'" class="space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Real Statistics from API -->
+          <div v-if="hasStatistics" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="card p-6 text-center">
               <div class="text-3xl font-bold text-primary-600">
                 {{ teamStats.total_matches || 0 }}
@@ -364,17 +369,54 @@
             </div>
           </div>
 
-          <!-- More detailed stats -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- More detailed stats if available -->
+          <div v-if="hasStatistics" class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="card p-6">
               <h3 class="text-lg font-semibold text-gray-900 mb-4">Offensive Stats</h3>
               <div class="space-y-3">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Goals For</span>
+                  <span class="font-medium">{{ teamStats.goals_for || 0 }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Goals Against</span>
+                  <span class="font-medium">{{ teamStats.goals_against || 0 }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Goal Difference</span>
+                  <span class="font-medium">{{ teamStats.goal_difference || 0 }}</span>
+                </div>
                 <div class="flex justify-between">
                   <span class="text-gray-600">Clean Sheets</span>
                   <span class="font-medium">{{ teamStats.clean_sheets || 0 }}</span>
                 </div>
               </div>
             </div>
+
+            <div class="card p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Performance</h3>
+              <div class="space-y-3">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Win Rate</span>
+                  <span class="font-medium">{{ teamStats.win_rate || 0 }}%</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Goals per Match</span>
+                  <span class="font-medium">{{ teamStats.goals_per_match || 0 }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Goals Conceded per Match</span>
+                  <span class="font-medium">{{ teamStats.goals_conceded_per_match || 0 }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- No statistics available -->
+          <div v-if="!hasStatistics" class="text-center py-12">
+            <ChartBarIcon class="w-12 h-12 text-gray-300 mx-auto mb-4" />
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No statistics available</h3>
+            <p class="text-gray-600">Statistics will appear once the team starts playing matches</p>
           </div>
         </div>
       </div>
@@ -392,8 +434,8 @@
 
 <script>
 /**
- * Team Detail Page Component
- * Shows comprehensive team information with players, tournaments, and statistics
+ * Team Detail Page Component - API ONLY VERSION
+ * Shows comprehensive team information with REAL players, tournaments, and statistics
  */
 
 import { ref, computed, onMounted } from 'vue'
@@ -459,6 +501,10 @@ export default {
       ).length
     })
 
+    const hasStatistics = computed(() => {
+      return teamStats.value && Object.keys(teamStats.value).length > 0
+    })
+
     const tabs = computed(() => [
       { id: 'players', name: 'Players', count: teamPlayers.value.length },
       { id: 'tournaments', name: 'Tournaments', count: teamTournaments.value.length },
@@ -503,11 +549,12 @@ export default {
         }
       } catch (err) {
         console.error('Failed to fetch roster:', err)
+        teamPlayers.value = []
       }
     }
 
     /**
-     * Fetch team statistics
+     * Fetch team statistics - ONLY REAL DATA
      */
     const fetchStatistics = async () => {
       try {
@@ -517,41 +564,16 @@ export default {
           const data = apiHelpers.getData(response)
           teamStats.value = data.overall_statistics || {}
           teamTournaments.value = data.tournament_statistics || []
+        } else {
+          // No statistics available - leave empty
+          teamStats.value = {}
+          teamTournaments.value = []
         }
       } catch (err) {
         console.error('Failed to fetch statistics:', err)
-        // Mock data for demo
-        teamStats.value = {
-          total_matches: 15,
-          wins: 8,
-          draws: 4,
-          losses: 3,
-          goals_for: 24,
-          goals_against: 18,
-          goals_per_match: 1.6,
-          goals_conceded_per_match: 1.2,
-          clean_sheets: 5,
-          top_scorer: 'John Smith (8 goals)',
-        }
-
-        teamTournaments.value = [
-          {
-            id: 1,
-            name: 'Spring League',
-            status: 'in_progress',
-            sport_type: 'Football',
-            tournament_type: 'league',
-            start_date: '2024-03-15',
-          },
-          {
-            id: 2,
-            name: 'Summer Cup',
-            status: 'completed',
-            sport_type: 'Football',
-            tournament_type: 'knockout',
-            start_date: '2024-06-01',
-          },
-        ]
+        // No fallback data - just empty objects
+        teamStats.value = {}
+        teamTournaments.value = []
       }
     }
 
@@ -627,6 +649,7 @@ export default {
       showEditModal,
       canManageTeam,
       activeTournaments,
+      hasStatistics,
       tabs,
       formatTournamentStatus,
       getTournamentStatusClass,

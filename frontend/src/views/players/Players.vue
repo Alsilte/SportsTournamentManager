@@ -15,9 +15,16 @@
         <!-- Search -->
         <div class="md:col-span-2">
           <div class="relative">
-            <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input v-model="filters.search" type="text" placeholder="Search players..." class="form-input pl-10"
-              @input="debouncedSearch" />
+            <MagnifyingGlassIcon
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
+            />
+            <input
+              v-model="filters.search"
+              type="text"
+              placeholder="Search players..."
+              class="form-input pl-10"
+              @input="debouncedSearch"
+            />
           </div>
         </div>
 
@@ -49,28 +56,37 @@
       <!-- Active Filters -->
       <div v-if="hasActiveFilters" class="flex flex-wrap gap-2 mt-4">
         <span class="text-sm text-gray-600">Active filters:</span>
-        <span v-if="filters.search"
-          class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+        <span
+          v-if="filters.search"
+          class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
+        >
           Search: "{{ filters.search }}"
           <button @click="clearFilter('search')" class="ml-2 hover:text-primary-900">
             <XMarkIcon class="w-3 h-3" />
           </button>
         </span>
-        <span v-if="filters.position"
-          class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+        <span
+          v-if="filters.position"
+          class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
+        >
           Position: {{ filters.position }}
           <button @click="clearFilter('position')" class="ml-2 hover:text-primary-900">
             <XMarkIcon class="w-3 h-3" />
           </button>
         </span>
-        <span v-if="filters.nationality"
-          class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+        <span
+          v-if="filters.nationality"
+          class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
+        >
           Nationality: {{ filters.nationality }}
           <button @click="clearFilter('nationality')" class="ml-2 hover:text-primary-900">
             <XMarkIcon class="w-3 h-3" />
           </button>
         </span>
-        <button @click="clearAllFilters" class="text-xs text-gray-500 hover:text-gray-700 underline">
+        <button
+          @click="clearAllFilters"
+          class="text-xs text-gray-500 hover:text-gray-700 underline"
+        >
           Clear all
         </button>
       </div>
@@ -117,8 +133,10 @@
           <div class="relative h-32 bg-gradient-to-br from-primary-500 to-primary-700">
             <div class="absolute inset-0 bg-black opacity-20"></div>
             <div class="absolute top-4 right-4">
-              <span v-if="player.position"
-                class="px-2 py-1 rounded-full text-xs font-medium bg-white bg-opacity-90 text-primary-800">
+              <span
+                v-if="player.position"
+                class="px-2 py-1 rounded-full text-xs font-medium bg-white bg-opacity-90 text-primary-800"
+              >
                 {{ player.position }}
               </span>
             </div>
@@ -143,7 +161,10 @@
               </div>
 
               <!-- Height & Weight -->
-              <div v-if="player.height || player.weight" class="flex items-center text-sm text-gray-600">
+              <div
+                v-if="player.height || player.weight"
+                class="flex items-center text-sm text-gray-600"
+              >
                 <UserIcon class="w-4 h-4 mr-2 text-gray-400" />
                 <span>
                   {{ player.height ? player.height + 'cm' : '' }}
@@ -159,7 +180,10 @@
               </div>
 
               <!-- Current Teams -->
-              <div v-if="player.active_teams?.length" class="flex items-center text-sm text-gray-600">
+              <div
+                v-if="player.active_teams?.length"
+                class="flex items-center text-sm text-gray-600"
+              >
                 <UserGroupIcon class="w-4 h-4 mr-2 text-gray-400" />
                 <span>{{ player.active_teams.length }} team(s)</span>
               </div>
@@ -189,11 +213,12 @@
 
             <!-- Actions -->
             <div class="flex gap-3">
-              <RouterLink :to="{ name: 'player-detail', params: { id: player.id } }"
-                class="btn-primary flex-1 text-center">
+              <RouterLink
+                :to="{ name: 'player-detail', params: { id: player.id } }"
+                class="btn-primary flex-1 text-center"
+              >
                 View Profile
               </RouterLink>
-
             </div>
           </div>
         </div>
@@ -202,26 +227,35 @@
       <!-- Pagination -->
       <div v-if="pagination.total > pagination.per_page" class="flex justify-center">
         <nav class="flex items-center space-x-2">
-          <button @click="goToPage(pagination.current_page - 1)" :disabled="pagination.current_page <= 1"
-            class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+          <button
+            @click="goToPage(pagination.current_page - 1)"
+            :disabled="pagination.current_page <= 1"
+            class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             Previous
           </button>
 
           <template v-for="page in visiblePages" :key="page">
-            <button v-if="page !== '...'" @click="goToPage(page)" :class="[
-              'px-3 py-2 text-sm font-medium rounded-md',
-              page === pagination.current_page
-                ? 'bg-primary-600 text-white'
-                : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50',
-            ]">
+            <button
+              v-if="page !== '...'"
+              @click="goToPage(page)"
+              :class="[
+                'px-3 py-2 text-sm font-medium rounded-md',
+                page === pagination.current_page
+                  ? 'bg-primary-600 text-white'
+                  : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50',
+              ]"
+            >
               {{ page }}
             </button>
             <span v-else class="px-3 py-2 text-sm font-medium text-gray-500">...</span>
           </template>
 
-          <button @click="goToPage(pagination.current_page + 1)"
+          <button
+            @click="goToPage(pagination.current_page + 1)"
             :disabled="pagination.current_page >= pagination.last_page"
-            class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+            class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             Next
           </button>
         </nav>
@@ -319,7 +353,9 @@ export default {
     })
 
     const totalPlayers = computed(() => pagination.value.total || players.value.length)
-    const activePlayers = computed(() => players.value.filter((p) => p.user?.is_active !== false).length)
+    const activePlayers = computed(
+      () => players.value.filter((p) => p.user?.is_active !== false).length,
+    )
     const averageAge = computed(() => {
       const ages = players.value.map((p) => p.age).filter(Boolean)
       if (ages.length === 0) return 0
@@ -389,12 +425,19 @@ export default {
           // Fetch stats for each player
           await fetchPlayerStats()
         } else {
-          // Fallback to mock data if API fails
-          generateMockPlayers()
+          // No fallback data - just empty state
+          players.value = []
+          pagination.value = {
+            current_page: 1,
+            last_page: 1,
+            per_page: 12,
+            total: 0,
+          }
         }
       } catch (error) {
         console.error('Failed to fetch players:', error)
-        generateMockPlayers()
+        players.value = []
+        window.$notify?.error('Failed to load players')
       } finally {
         isLoading.value = false
       }
@@ -416,105 +459,15 @@ export default {
             }
           }
         } catch (error) {
-          // Mock stats if API fails
+          // Don't use mock stats - just set to 0
+          console.error(`Failed to fetch stats for player ${player.id}:`, error)
           playerStats.value[player.id] = {
-            goals: Math.floor(Math.random() * 15),
-            matches: Math.floor(Math.random() * 25) + 5,
-            cards: Math.floor(Math.random() * 5),
+            goals: 0,
+            matches: 0,
+            cards: 0,
           }
         }
       }
-    }
-
-    /**
-     * Generate mock players for demo
-     */
-    const generateMockPlayers = () => {
-      const mockPlayers = [
-        {
-          id: 1,
-          user: { name: 'Carlos Rodriguez', is_active: true },
-          position: 'Forward',
-          age: 24,
-          nationality: 'Spain',
-          height: 178,
-          weight: 75,
-          preferred_foot: 'right',
-          active_teams: [{ id: 1, name: 'Real Madrid' }],
-        },
-        {
-          id: 2,
-          user: { name: 'Marco Silva', is_active: true },
-          position: 'Midfielder',
-          age: 26,
-          nationality: 'Brazil',
-          height: 180,
-          weight: 73,
-          preferred_foot: 'left',
-          active_teams: [{ id: 2, name: 'Barcelona' }],
-        },
-        {
-          id: 3,
-          user: { name: 'Thomas Mueller', is_active: true },
-          position: 'Midfielder',
-          age: 28,
-          nationality: 'Germany',
-          height: 185,
-          weight: 76,
-          preferred_foot: 'right',
-          active_teams: [{ id: 3, name: 'Bayern Munich' }],
-        },
-        {
-          id: 4,
-          user: { name: 'Paolo Rossi', is_active: true },
-          position: 'Defender',
-          age: 25,
-          nationality: 'Italy',
-          height: 182,
-          weight: 78,
-          preferred_foot: 'right',
-          active_teams: [{ id: 4, name: 'Juventus' }],
-        },
-        {
-          id: 5,
-          user: { name: 'Antoine Dubois', is_active: true },
-          position: 'Goalkeeper',
-          age: 27,
-          nationality: 'France',
-          height: 188,
-          weight: 82,
-          preferred_foot: 'right',
-          active_teams: [{ id: 5, name: 'PSG' }],
-        },
-        {
-          id: 6,
-          user: { name: 'Diego Martinez', is_active: true },
-          position: 'Forward',
-          age: 23,
-          nationality: 'Argentina',
-          height: 175,
-          weight: 70,
-          preferred_foot: 'left',
-          active_teams: [{ id: 6, name: 'River Plate' }],
-        },
-      ]
-
-      players.value = mockPlayers
-      pagination.value = {
-        current_page: 1,
-        last_page: 1,
-        per_page: 12,
-        total: mockPlayers.length,
-      }
-
-      // Generate mock stats
-      mockPlayers.forEach((player) => {
-        playerStats.value[player.id] = {
-          goals: Math.floor(Math.random() * 15),
-          matches: Math.floor(Math.random() * 25) + 5,
-          cards: Math.floor(Math.random() * 5),
-        }
-      })
     }
 
     /**
@@ -590,8 +543,7 @@ export default {
       clearFilter,
       clearAllFilters,
       goToPage,
-      handlePlayerClick
-
+      handlePlayerClick,
     }
   },
 }
