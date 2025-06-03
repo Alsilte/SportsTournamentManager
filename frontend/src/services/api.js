@@ -40,6 +40,65 @@ const api = axios.create({
 })
 
 // ============================================================================
+// API HELPERS - AGREGADOS PARA COMPATIBILIDAD
+// ============================================================================
+
+export const apiHelpers = {
+  /**
+   * Extraer datos de respuesta exitosa
+   */
+  getData: (response) => {
+    return response.data?.data || response.data
+  },
+
+  /**
+   * Extraer mensaje de respuesta
+   */
+  getMessage: (response) => {
+    return response.data?.message || 'Operación exitosa'
+  },
+
+  /**
+   * Manejar errores de API
+   */
+  handleError: (error) => {
+    if (error.response) {
+      // Error de respuesta del servidor
+      const errorData = error.response.data
+      return {
+        status: error.response.status,
+        message: errorData?.message || 'Error del servidor',
+        errors: errorData?.errors || {},
+        data: errorData?.data || null
+      }
+    } else if (error.request) {
+      // Error de red
+      return {
+        status: 0,
+        message: 'Error de conexión. Verifica tu conexión a internet.',
+        errors: {},
+        data: null
+      }
+    } else {
+      // Error de configuración
+      return {
+        status: 0,
+        message: error.message || 'Error desconocido',
+        errors: {},
+        data: null
+      }
+    }
+  },
+
+  /**
+   * Verificar si la respuesta fue exitosa
+   */
+  isSuccess: (response) => {
+    return response.data?.success !== false
+  }
+}
+
+// ============================================================================
 // INTERCEPTORS
 // ============================================================================
 
@@ -114,24 +173,102 @@ api.interceptors.response.use(
 )
 
 // ============================================================================
-// MÉTODOS DE API
+// MÉTODOS DE API ACTUALIZADOS PARA COMPATIBILIDAD
 // ============================================================================
 
 export const authAPI = {
   // Registro
-  register: (userData) => api.post('/auth/register', userData),
+  async register(userData) {
+    try {
+      const response = await api.post('/auth/register', userData)
+      return {
+        success: true,
+        data: response.data.data,
+        message: response.data.message
+      }
+    } catch (error) {
+      const errorInfo = apiHelpers.handleError(error)
+      return {
+        success: false,
+        ...errorInfo
+      }
+    }
+  },
   
   // Login
-  login: (credentials) => api.post('/auth/login', credentials),
+  async login(credentials) {
+    try {
+      const response = await api.post('/auth/login', credentials)
+      const { user, token } = response.data.data
+      
+      // Guardar token y datos del usuario
+      localStorage.setItem('auth_token', token)
+      localStorage.setItem('user_data', JSON.stringify(user))
+      
+      return {
+        success: true,
+        data: { user, token },
+        message: response.data.message
+      }
+    } catch (error) {
+      const errorInfo = apiHelpers.handleError(error)
+      return {
+        success: false,
+        ...errorInfo
+      }
+    }
+  },
   
   // Logout
-  logout: () => api.post('/auth/logout'),
+  async logout() {
+    try {
+      await api.post('/auth/logout')
+    } catch (error) {
+      console.warn('Error al cerrar sesión en el servidor:', error)
+    } finally {
+      // Limpiar datos locales siempre
+      localStorage.removeItem('auth_token')
+      localStorage.removeItem('user_data')
+    }
+    
+    return { success: true }
+  },
   
   // Usuario actual
-  me: () => api.get('/auth/me'),
+  async me() {
+    try {
+      const response = await api.get('/auth/me')
+      return {
+        success: true,
+        data: response.data.data,
+        message: response.data.message
+      }
+    } catch (error) {
+      const errorInfo = apiHelpers.handleError(error)
+      return {
+        success: false,
+        ...errorInfo
+      }
+    }
+  },
   
   // Cambiar contraseña
-  changePassword: (passwordData) => api.post('/auth/change-password', passwordData)
+  async changePassword(passwordData) {
+    try {
+      const response = await api.post('/auth/change-password', passwordData)
+      return {
+        success: true,
+        data: response.data.data,
+        message: response.data.message
+      }
+    } catch (error) {
+      const errorInfo = apiHelpers.handleError(error)
+      return {
+        success: false,
+        ...errorInfo
+      }
+    }
+  }
 }
 
 export const tournamentAPI = {

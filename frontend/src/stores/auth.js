@@ -1,6 +1,9 @@
 /**
- * Authentication Store
- * Manages user authentication state, login, logout, and permissions
+ * STORE DE AUTENTICACIÓN
+ * 
+ * Archivo: src/stores/auth.js
+ * 
+ * Manejo global del estado de autenticación con Pinia
  */
 
 import { defineStore } from 'pinia'
@@ -9,244 +12,265 @@ import { authAPI, apiHelpers } from '@/services/api'
 import router from '@/router'
 
 export const useAuthStore = defineStore('auth', () => {
-  // State
+  // ============================================================================
+  // ESTADO
+  // ============================================================================
+  
   const user = ref(null)
-  const token = ref(localStorage.getItem('auth_token'))
+  const token = ref(null)
   const isLoading = ref(false)
   const error = ref(null)
 
-  // Getters
-  const isAuthenticated = computed(() => !!token.value && !!user.value)
-  const isAdmin = computed(() => user.value?.role === 'admin')
-  const isTeamManager = computed(() => user.value?.role === 'team_manager')
-  const isPlayer = computed(() => user.value?.role === 'player')
-  const isReferee = computed(() => user.value?.role === 'referee')
-  const userRole = computed(() => user.value?.role || null)
-  const userName = computed(() => user.value?.name || '')
-  const userEmail = computed(() => user.value?.email || '')
-
-  // Actions
+  // ============================================================================
+  // GETTERS COMPUTADOS
+  // ============================================================================
   
+  const isAuthenticated = computed(() => {
+    return !!(user.value && token.value)
+  })
+
+  const userRole = computed(() => {
+    return user.value?.tipo_usuario || null
+  })
+
+  const userName = computed(() => {
+    return user.value?.nombre || ''
+  })
+
+  const userEmail = computed(() => {
+    return user.value?.email || ''
+  })
+
+  const isAdmin = computed(() => {
+    return userRole.value === 'administrador'
+  })
+
+  const isJugador = computed(() => {
+    return userRole.value === 'jugador'
+  })
+
+  const isArbitro = computed(() => {
+    return userRole.value === 'arbitro'
+  })
+
+  // ============================================================================
+  // ACCIONES
+  // ============================================================================
+
   /**
-   * Initialize authentication state on app start
+   * Inicializar store desde localStorage
    */
-  const initializeAuth = async () => {
-    if (token.value) {
+  function initializeAuth() {
+    const savedToken = localStorage.getItem('auth_token')
+    const savedUser = localStorage.getItem('user_data')
+
+    if (savedToken && savedUser) {
       try {
-        await fetchProfile()
+        token.value = savedToken
+        user.value = JSON.parse(savedUser)
       } catch (error) {
-        console.error('Failed to initialize auth:', error)
+        console.error('Error al parsear datos de usuario:', error)
         clearAuth()
       }
     }
   }
 
   /**
-   * Login user with credentials
+   * Limpiar estado de autenticación
    */
-  const login = async (credentials) => {
-    isLoading.value = true
-    error.value = null
-
-    try {
-      const response = await authAPI.login(credentials)
-      
-      if (apiHelpers.isSuccess(response)) {
-        const data = apiHelpers.getData(response)
-        
-        // Store token and user data
-        token.value = data.token
-        user.value = data.user
-        localStorage.setItem('auth_token', data.token)
-        
-        // Redirect to intended route or dashboard
-        const intendedRoute = router.currentRoute.value.query.redirect || '/dashboard'
-        router.push(intendedRoute)
-        
-        return { success: true }
-      } else {
-        throw new Error(response.data.message || 'Login failed')
-      }
-    } catch (err) {
-      error.value = apiHelpers.handleError(err)
-      return { success: false, error: error.value }
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  /**
-   * Register new user
-   */
-  const register = async (userData) => {
-    isLoading.value = true
-    error.value = null
-
-    try {
-      const response = await authAPI.register(userData)
-      
-      if (apiHelpers.isSuccess(response)) {
-        const data = apiHelpers.getData(response)
-        
-        // Store token and user data
-        token.value = data.token
-        user.value = data.user
-        localStorage.setItem('auth_token', data.token)
-        
-        // Redirect to dashboard
-        router.push('/dashboard')
-        
-        return { success: true }
-      } else {
-        throw new Error(response.data.message || 'Registration failed')
-      }
-    } catch (err) {
-      error.value = apiHelpers.handleError(err)
-      return { success: false, error: error.value }
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  /**
-   * Logout user
-   */
-  const logout = async () => {
-    isLoading.value = true
-
-    try {
-      // Call logout endpoint to invalidate token on server
-      await authAPI.logout()
-    } catch (error) {
-      console.error('Logout API call failed:', error)
-      // Continue with local logout even if API call fails
-    } finally {
-      clearAuth()
-      router.push('/login')
-      isLoading.value = false
-    }
-  }
-
-  /**
-   * Fetch user profile
-   */
-  const fetchProfile = async () => {
-    try {
-      const response = await authAPI.profile()
-      
-      if (apiHelpers.isSuccess(response)) {
-        user.value = apiHelpers.getData(response)
-        return { success: true }
-      } else {
-        throw new Error('Failed to fetch profile')
-      }
-    } catch (err) {
-      error.value = apiHelpers.handleError(err)
-      return { success: false, error: error.value }
-    }
-  }
-
-  /**
-   * Update user profile
-   */
-  const updateProfile = async (profileData) => {
-    isLoading.value = true
-    error.value = null
-
-    try {
-      const response = await authAPI.updateProfile(profileData)
-      
-      if (apiHelpers.isSuccess(response)) {
-        user.value = apiHelpers.getData(response)
-        return { success: true }
-      } else {
-        throw new Error(response.data.message || 'Profile update failed')
-      }
-    } catch (err) {
-      error.value = apiHelpers.handleError(err)
-      return { success: false, error: error.value }
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  /**
-   * Refresh authentication token
-   */
-  const refreshToken = async () => {
-    try {
-      const response = await authAPI.refresh()
-      
-      if (apiHelpers.isSuccess(response)) {
-        const data = apiHelpers.getData(response)
-        token.value = data.token
-        localStorage.setItem('auth_token', data.token)
-        return { success: true }
-      } else {
-        throw new Error('Token refresh failed')
-      }
-    } catch (err) {
-      console.error('Token refresh failed:', err)
-      clearAuth()
-      return { success: false }
-    }
-  }
-
-  /**
-   * Clear authentication data
-   */
-  const clearAuth = () => {
+  function clearAuth() {
     user.value = null
     token.value = null
+    error.value = null
     localStorage.removeItem('auth_token')
+    localStorage.removeItem('user_data')
+  }
+
+  /**
+   * Establecer error
+   */
+  function setError(errorMessage) {
+    error.value = errorMessage
+  }
+
+  /**
+   * Limpiar error
+   */
+  function clearError() {
     error.value = null
   }
 
   /**
-   * Check if user has specific role
+   * Registrar nuevo usuario
    */
-  const hasRole = (role) => {
-    return user.value?.role === role
+  async function register(userData) {
+    isLoading.value = true
+    clearError()
+
+    try {
+      const result = await authAPI.register(userData)
+      
+      if (result.success) {
+        // Si el registro incluye login automático
+        if (result.data.token) {
+          token.value = result.data.token
+          user.value = result.data.user
+        }
+        return { success: true, message: result.message }
+      } else {
+        setError(result.message)
+        return { success: false, message: result.message, errors: result.errors }
+      }
+    } catch (error) {
+      const errorMessage = 'Error de conexión al registrar usuario'
+      setError(errorMessage)
+      return { success: false, message: errorMessage }
+    } finally {
+      isLoading.value = false
+    }
   }
 
   /**
-   * Check if user has any of the specified roles
+   * Iniciar sesión
    */
-  const hasAnyRole = (roles) => {
-    return roles.includes(user.value?.role)
+  async function login(credentials) {
+    isLoading.value = true
+    clearError()
+
+    try {
+      const result = await authAPI.login(credentials)
+      
+      if (result.success) {
+        token.value = result.data.token
+        user.value = result.data.user
+        
+        // Redirigir al dashboard después del login exitoso
+        await router.push('/dashboard')
+        
+        return { success: true, message: result.message }
+      } else {
+        setError(result.message)
+        return { success: false, message: result.message, errors: result.errors }
+      }
+    } catch (error) {
+      const errorMessage = 'Error de conexión al iniciar sesión'
+      setError(errorMessage)
+      return { success: false, message: errorMessage }
+    } finally {
+      isLoading.value = false
+    }
   }
 
   /**
-   * Check if user can manage teams
+   * Cerrar sesión
    */
-  const canManageTeams = computed(() => {
-    return isAdmin.value || isTeamManager.value
-  })
-
-  /**
-   * Check if user can manage tournaments
-   */
-  const canManageTournaments = computed(() => {
-    return isAdmin.value
-  })
-
-  /**
-   * Check if user can referee matches
-   */
-  const canRefereeMatches = computed(() => {
-    return isAdmin.value || isReferee.value
-  })
-
-  /**
-   * Clear error state
-   */
-  const clearError = () => {
-    error.value = null
+  async function logout() {
+    isLoading.value = true
+    
+    try {
+      await authAPI.logout()
+    } catch (error) {
+      console.warn('Error al cerrar sesión en el servidor:', error)
+    } finally {
+      clearAuth()
+      isLoading.value = false
+      
+      // Redirigir al login
+      await router.push('/login')
+    }
   }
 
-  // Return store interface
+  /**
+   * Obtener datos del usuario actual
+   */
+  async function fetchUser() {
+    if (!token.value) {
+      return { success: false, message: 'No hay token de autenticación' }
+    }
+
+    isLoading.value = true
+    clearError()
+
+    try {
+      const result = await authAPI.me()
+      
+      if (result.success) {
+        user.value = result.data
+        // Actualizar datos en localStorage
+        localStorage.setItem('user_data', JSON.stringify(result.data))
+        return { success: true, data: result.data }
+      } else {
+        setError(result.message)
+        return { success: false, message: result.message }
+      }
+    } catch (error) {
+      const errorMessage = 'Error al obtener datos del usuario'
+      setError(errorMessage)
+      return { success: false, message: errorMessage }
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  /**
+   * Cambiar contraseña
+   */
+  async function changePassword(passwordData) {
+    isLoading.value = true
+    clearError()
+
+    try {
+      const result = await authAPI.changePassword(passwordData)
+      
+      if (result.success) {
+        return { success: true, message: result.message }
+      } else {
+        setError(result.message)
+        return { success: false, message: result.message, errors: result.errors }
+      }
+    } catch (error) {
+      const errorMessage = 'Error al cambiar contraseña'
+      setError(errorMessage)
+      return { success: false, message: errorMessage }
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  /**
+   * Verificar si el usuario puede acceder a una ruta
+   */
+  function canAccess(requiredRole = null) {
+    if (!isAuthenticated.value) {
+      return false
+    }
+
+    if (!requiredRole) {
+      return true
+    }
+
+    if (Array.isArray(requiredRole)) {
+      return requiredRole.includes(userRole.value)
+    }
+
+    return userRole.value === requiredRole
+  }
+
+  /**
+   * Refrescar autenticación
+   */
+  async function refreshAuth() {
+    if (token.value) {
+      await fetchUser()
+    }
+  }
+
+  // ============================================================================
+  // RETURN DEL STORE
+  // ============================================================================
+
   return {
-    // State
+    // Estado
     user,
     token,
     isLoading,
@@ -254,28 +278,24 @@ export const useAuthStore = defineStore('auth', () => {
     
     // Getters
     isAuthenticated,
-    isAdmin,
-    isTeamManager,
-    isPlayer,
-    isReferee,
     userRole,
     userName,
     userEmail,
-    canManageTeams,
-    canManageTournaments,
-    canRefereeMatches,
+    isAdmin,
+    isJugador,
+    isArbitro,
     
-    // Actions
+    // Acciones
     initializeAuth,
-    login,
-    register,
-    logout,
-    fetchProfile,
-    updateProfile,
-    refreshToken,
     clearAuth,
-    hasRole,
-    hasAnyRole,
-    clearError
+    setError,
+    clearError,
+    register,
+    login,
+    logout,
+    fetchUser,
+    changePassword,
+    canAccess,
+    refreshAuth
   }
 })
