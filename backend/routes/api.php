@@ -69,7 +69,7 @@ Route::prefix('')->group(function () {
 });
 
 // Protected routes - Authentication required
-Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+Route::prefix('')->middleware('auth:sanctum')->group(function () {
 
   // User authentication management
   Route::prefix('auth')->group(function () {
@@ -123,12 +123,12 @@ Route::fallback(function () {
     'message' => 'API endpoint not found',
     'available_endpoints' => [
       'GET /api/health' => 'Health check',
-      'POST /api/v1/auth/login' => 'User login',
-      'POST /api/v1/auth/register' => 'User registration',
-      'GET /api/v1/tournaments' => 'List tournaments',
-      'GET /api/v1/teams' => 'List teams',
-      'GET /api/v1/players' => 'List players',
-      'GET /api/v1/matches' => 'List matches'
+      'POST /api/auth/login' => 'User login',
+      'POST /api/auth/register' => 'User registration',
+      'GET /api/tournaments' => 'List tournaments',
+      'GET /api/teams' => 'List teams',
+      'GET /api/players' => 'List players',
+      'GET /api/matches' => 'List matches'
     ]
   ], 404);
 });

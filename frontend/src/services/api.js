@@ -1,9 +1,9 @@
 /**
- * CONFIGURACIÓN API PARA RAILWAY
+ * API Service - CORREGIDO para Railway
  * 
  * Archivo: frontend/src/services/api.js
  * 
- * Configuración actualizada para conectar con el backend en Railway
+ * Configuración actualizada para usar las rutas CORRECTAS del backend
  */
 
 import axios from 'axios'
@@ -26,7 +26,6 @@ const api = axios.create({
     'Accept': 'application/json',
     'X-Requested-With': 'XMLHttpRequest'
   },
-  // NO usar withCredentials: true para CORS cross-origin
   withCredentials: false
 })
 
@@ -43,7 +42,6 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`
     }
     
-    // Para Railway, podemos agregar headers adicionales si es necesario
     config.headers['X-Frontend-Origin'] = window.location.origin
     
     return config
@@ -95,90 +93,105 @@ api.interceptors.response.use(
 export const authAPI = {
   login: (credentials) => api.post('/auth/login', credentials),
   register: (userData) => api.post('/auth/register', userData),
-  logout: () => api.post('/auth/logout'),
-  refresh: () => api.post('/auth/refresh'),
-  profile: () => api.get('/auth/me'),
-  updateProfile: (data) => api.put('/auth/profile', data),
+  logout: () => api.post('/auth/logout'), // Ruta protegida SIN v1
+  refresh: () => api.post('/auth/refresh'), // Ruta protegida SIN v1
+  profile: () => api.get('/auth/profile'), // Ruta protegida SIN v1
+  updateProfile: (data) => api.put('/auth/profile', data), // Ruta protegida SIN v1
+  logoutAll: () => api.post('/auth/logout-all'), // Nueva ruta disponible
   changePassword: (data) => api.post('/auth/change-password', data),
   forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
   resetPassword: (data) => api.post('/auth/reset-password', data),
 }
 
 // ============================================================================
-// SERVICIOS DE TORNEOS
+// SERVICIOS DE TORNEOS - RUTAS EN INGLÉS SEGÚN EL BACKEND
 // ============================================================================
 
 export const tournamentAPI = {
-  getAll: (params = {}) => api.get('/torneos', { params }),
-  getById: (id) => api.get(`/torneos/${id}`),
-  create: (data) => api.post('/torneos', data),
-  update: (id, data) => api.put(`/torneos/${id}`, data),
-  delete: (id) => api.delete(`/torneos/${id}`),
-  registerTeam: (id, teamData) => api.post(`/torneos/${id}/equipos`, teamData),
-  getStandings: (id) => api.get(`/torneos/${id}/clasificacion`),
-  getMatches: (id) => api.get(`/partidos?torneo_id=${id}`)
+  // Rutas públicas
+  getAll: (params = {}) => api.get('/tournaments', { params }),
+  getById: (id) => api.get(`/tournaments/${id}`),
+  getStandings: (id) => api.get(`/tournaments/${id}/standings`),
+  getMatches: (id) => api.get(`/tournaments/${id}/matches`),
+  getTopScorers: (id) => api.get(`/tournaments/${id}/top-scorers`),
+  
+  // Rutas protegidas (SIN v1 prefix)
+  create: (data) => api.post('/tournaments', data),
+  update: (id, data) => api.put(`/tournaments/${id}`, data),
+  delete: (id) => api.delete(`/tournaments/${id}`),
+  registerTeam: (id, teamData) => api.post(`/tournaments/${id}/register-team`, teamData),
+  recalculateStandings: (id) => api.post(`/tournaments/${id}/recalculate-standings`)
 }
 
 // ============================================================================
-// SERVICIOS DE EQUIPOS
+// SERVICIOS DE EQUIPOS - RUTAS EN INGLÉS SEGÚN EL BACKEND
 // ============================================================================
 
 export const teamAPI = {
-  getAll: (params = {}) => api.get('/equipos', { params }),
-  getById: (id) => api.get(`/equipos/${id}`),
-  create: (data) => api.post('/equipos', data),
-  update: (id, data) => api.put(`/equipos/${id}`, data),
-  delete: (id) => api.delete(`/equipos/${id}`),
-  getRoster: (id) => api.get(`/equipos/${id}/jugadores`),
-  addPlayer: (id, playerData) => api.post(`/equipos/${id}/jugadores`, playerData),
-  removePlayer: (teamId, playerId) => api.delete(`/equipos/${teamId}/jugadores/${playerId}`),
-  getStatistics: (id) => api.get(`/equipos/${id}/estadisticas`)
+  // Rutas públicas
+  getAll: (params = {}) => api.get('/teams', { params }),
+  getById: (id) => api.get(`/teams/${id}`),
+  getRoster: (id) => api.get(`/teams/${id}/roster`),
+  getStatistics: (id) => api.get(`/teams/${id}/statistics`),
+  
+  // Rutas protegidas (SIN v1 prefix)
+  create: (data) => api.post('/teams', data),
+  update: (id, data) => api.put(`/teams/${id}`, data),
+  delete: (id) => api.delete(`/teams/${id}`),
+  addPlayer: (id, playerData) => api.post(`/teams/${id}/add-player`, playerData),
+  removePlayer: (teamId, playerId) => api.delete(`/teams/${teamId}/remove-player/${playerId}`)
 }
 
 // ============================================================================
-// SERVICIOS DE JUGADORES
+// SERVICIOS DE JUGADORES - RUTAS EN INGLÉS SEGÚN EL BACKEND
 // ============================================================================
 
 export const playerAPI = {
-  getAll: (params = {}) => api.get('/usuarios?tipo_usuario=jugador', { params }),
-  getById: (id) => api.get(`/usuarios/${id}`),
-  update: (id, data) => api.put(`/usuarios/${id}`, data),
-  getStatistics: (id) => api.get(`/jugador/estadisticas`),
-  getTeamHistory: (id) => api.get(`/jugador/equipos`),
-  getAvailable: (params = {}) => api.get('/usuarios?tipo_usuario=jugador&activo=true', { params })
+  // Rutas públicas
+  getAll: (params = {}) => api.get('/players', { params }),
+  getById: (id) => api.get(`/players/${id}`),
+  getAvailable: (params = {}) => api.get('/players/available', { params }),
+  getStatistics: (id) => api.get(`/players/${id}/statistics`),
+  getTeamHistory: (id) => api.get(`/players/${id}/team-history`),
+  
+  // Rutas protegidas (SIN v1 prefix)
+  update: (id, data) => api.put(`/players/${id}`, data)
 }
 
 // ============================================================================
-// SERVICIOS DE PARTIDOS
+// SERVICIOS DE PARTIDOS - RUTAS EN INGLÉS SEGÚN EL BACKEND
 // ============================================================================
 
 export const matchAPI = {
-  getAll: (params = {}) => api.get('/partidos', { params }),
-  getById: (id) => api.get(`/partidos/${id}`),
-  create: (data) => api.post('/partidos', data),
-  update: (id, data) => api.put(`/partidos/${id}`, data),
-  addEvent: (id, eventData) => api.post(`/partidos/${id}/eventos`, eventData),
-  getEvents: (id) => api.get(`/partidos/${id}/eventos`),
-  start: (id) => api.post(`/partidos/${id}/iniciar`),
-  finish: (id, data) => api.post(`/partidos/${id}/finalizar`, data)
+  // Rutas públicas
+  getAll: (params = {}) => api.get('/matches', { params }),
+  getById: (id) => api.get(`/matches/${id}`),
+  getEvents: (id) => api.get(`/matches/${id}/events`),
+  
+  // Rutas protegidas (SIN v1 prefix)
+  create: (data) => api.post('/matches', data),
+  update: (id, data) => api.put(`/matches/${id}`, data),
+  addEvent: (id, eventData) => api.post(`/matches/${id}/add-event`, eventData)
 }
 
 // ============================================================================
-// SERVICIOS DE DASHBOARD
+// SERVICIOS DE CLASIFICACIONES
 // ============================================================================
 
-export const dashboardAPI = {
-  getStats: () => api.get('/dashboard/stats'),
-  getActivity: () => api.get('/dashboard/activity')
+export const standingAPI = {
+  getByTournament: (tournamentId, params = {}) => api.get(`/tournaments/${tournamentId}/standings`, { params }),
+  getTeamStats: (tournamentId, teamId) => api.get(`/standings/tournament/${tournamentId}/team/${teamId}`),
+  recalculate: (tournamentId) => api.post(`/tournaments/${tournamentId}/recalculate-standings`),
+  getTopScorers: (tournamentId, params = {}) => api.get(`/tournaments/${tournamentId}/top-scorers`, { params })
 }
 
 // ============================================================================
-// SERVICIOS PÚBLICOS
+// SERVICIOS DE SALUD Y UTILIDADES
 // ============================================================================
 
-export const publicAPI = {
-  getAppInfo: () => api.get('/public/app-info'),
-  getDeportes: () => api.get('/public/deportes')
+export const utilAPI = {
+  healthCheck: () => api.get('/health'),
+  getAvailableEndpoints: () => api.get('/non-existent-route') // Para obtener la lista de endpoints
 }
 
 /**
@@ -208,6 +221,42 @@ export const apiHelpers = {
   // Extract data from successful response
   getData: (response) => {
     return response.data?.data || response.data
+  }
+}
+
+// ============================================================================
+// FUNCIONES DE DEBUG PARA DESARROLLO
+// ============================================================================
+
+export const debugAPI = {
+  testConnection: async () => {
+    try {
+      const response = await api.get('/health')
+      console.log('✅ Conexión exitosa:', response.data)
+      return response
+    } catch (error) {
+      console.error('❌ Error de conexión:', error)
+      throw error
+    }
+  },
+  
+  testEndpoints: async () => {
+    const endpoints = [
+      '/health',
+      '/tournaments',
+      '/teams',
+      '/players',
+      '/matches'
+    ]
+    
+    for (const endpoint of endpoints) {
+      try {
+        const response = await api.get(endpoint)
+        console.log(`✅ ${endpoint}:`, response.status)
+      } catch (error) {
+        console.error(`❌ ${endpoint}:`, error.response?.status || 'Network Error')
+      }
+    }
   }
 }
 
