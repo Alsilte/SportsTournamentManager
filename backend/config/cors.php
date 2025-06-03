@@ -1,77 +1,57 @@
 <?php
 
 /**
- * CONFIGURACIÓN CORS PARA RAILWAY
+ * CONFIGURACIÓN CORS PARA LARAVEL
  * 
  * Archivo: backend/config/cors.php
- * Reemplaza el contenido actual con esto
+ * 
+ * Configuración para permitir solicitudes desde el frontend desplegado
  */
 
 return [
+
     /*
     |--------------------------------------------------------------------------
     | Cross-Origin Resource Sharing (CORS) Configuration
     |--------------------------------------------------------------------------
     |
-    | Configuración optimizada para Railway deployment
+    | Here you may configure your settings for cross-origin resource sharing
+    | or "CORS". This determines what cross-origin operations may execute
+    | in web browsers. You are free to adjust these settings as needed.
+    |
+    | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+    |
     */
 
-    'paths' => [
-        'api/*',
-        'sanctum/csrf-cookie',
-        'auth/*',
-        'public/*'
-    ],
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-        // URLs locales para desarrollo
-        'http://localhost:5173',
-        'http://localhost:5174',
+        // URLs de desarrollo local
         'http://localhost:3000',
+        'http://localhost:5173',
+        'http://127.0.0.1:3000',
         'http://127.0.0.1:5173',
-        'http://127.0.0.1:5174',
-        'https://torneo-deportivo.up.railway.app/',
         
-        // Variables de entorno para producción
-        env('FRONTEND_URL'),
-        env('CORS_ALLOWED_ORIGINS'),
+        // URL de tu frontend en Railway
+        'https://torneo-deportivo.up.railway.app',
+        
+        // Si tienes otros dominios, agrégalos aquí
+        // 'https://tu-otro-dominio.com',
     ],
 
     'allowed_origins_patterns' => [
-        // Permitir todos los subdominios de Railway
-        'https://*.railway.app',
-        'https://*.up.railway.app',
-        
-        // Patrones específicos para Railway
+        // Permitir subdominios de Railway si es necesario
         '/^https:\/\/.*\.up\.railway\.app$/',
-        '/^https:\/\/.*-production-.*\.up\.railway\.app$/',
     ],
 
-    'allowed_headers' => [
-        '*',
-        'Accept',
-        'Accept-Language',
-        'Authorization',
-        'Content-Type',
-        'Content-Language',
-        'X-Requested-With',
-        'X-CSRF-Token',
-        'X-XSRF-Token',
-    ],
+    'allowed_headers' => ['*'],
 
-    'exposed_headers' => [
-        'Cache-Control',
-        'Content-Language',
-        'Content-Type',
-        'Expires',
-        'Last-Modified',
-        'Pragma',
-    ],
+    'exposed_headers' => [],
 
     'max_age' => 0,
 
-    // Importante: false para Railway
-    'supports_credentials' => false,
+    'supports_credentials' => false, // Cambiar a false para Railway
+
 ];
