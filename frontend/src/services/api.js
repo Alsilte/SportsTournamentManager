@@ -1,34 +1,51 @@
 /**
- * SERVICIOS API - SISTEMA DEPORTIVO
+ * CONFIGURACIÓN API PARA RAILWAY
  * 
- * Archivo: src/services/api.js
+ * Archivo: frontend/src/services/api.js
  * 
- * Servicios para comunicación con el backend Laravel
- * Basado en las rutas definidas en backend/routes/api.php
+ * Configuración actualizada para conectar con el backend en Railway
  */
 
 import axios from 'axios'
+import { useAuthStore } from '@/stores/auth'
+import router from '@/router'
 
 // ============================================================================
-// CONFIGURACIÓN BASE DE AXIOS
+// CONFIGURACIÓN DE LA URL BASE
 // ============================================================================
 
+// URL del backend en Railway
+const API_BASE_URL = 'https://sportstournamentmanager-production.up.railway.app/api'
+
+// Create axios instance with base configuration
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
+  baseURL: API_BASE_URL,
+  timeout: 15000, // Aumentado para conexiones más lentas
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest'
   },
-  withCredentials: true,
+  // NO usar withCredentials: true para CORS cross-origin
+  withCredentials: false
 })
 
-// Interceptor para agregar token automáticamente
+/**
+ * Request interceptor
+ * Adds authentication token to requests
+ */
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('auth_token')
+    const authStore = useAuthStore()
+    const token = authStore.token
+    
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
+    
+    // Para Railway, podemos agregar headers adicionales si es necesario
+    config.headers['X-Frontend-Origin'] = window.location.origin
+    
     return config
   },
   (error) => {
@@ -36,16 +53,37 @@ api.interceptors.request.use(
   }
 )
 
-// Interceptor para manejar respuestas
+/**
+ * Response interceptor
+ * Handles authentication errors and token refresh
+ */
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      // Token expirado o inválido
-      localStorage.removeItem('auth_token')
-      localStorage.removeItem('user')
-      window.location.href = '/login'
+  (response) => {
+    return response
+  },
+  async (error) => {
+    const authStore = useAuthStore()
+    
+    // Manejar errores específicos de CORS o conexión
+    if (!error.response) {
+      console.error('Network error or CORS issue:', error.message)
+      return Promise.reject(new Error('Error de conexión con el servidor'))
     }
+    
+    if (error.response?.status === 401) {
+      // Unauthorized - clear auth and redirect to login
+      authStore.clearAuth()
+      if (router.currentRoute.value.name !== 'login') {
+        router.push({ name: 'login' })
+      }
+    } else if (error.response?.status === 403) {
+      // Forbidden - user doesn't have permission
+      console.error('Access forbidden:', error.response.data.message)
+    } else if (error.response?.status >= 500) {
+      // Server error
+      console.error('Server error:', error.response.data)
+    }
+    
     return Promise.reject(error)
   }
 )
@@ -55,90 +93,15 @@ api.interceptors.response.use(
 // ============================================================================
 
 export const authAPI = {
-  // Registro
-  register: (userData) => api.post('/auth/register', userData),
-  
-  // Login
   login: (credentials) => api.post('/auth/login', credentials),
-  
-  // Logout
+  register: (userData) => api.post('/auth/register', userData),
   logout: () => api.post('/auth/logout'),
-  
-  // Logout de todos los dispositivos
-  logoutAll: () => api.post('/auth/logout-all'),
-  
-  // Obtener usuario actual
-  me: () => api.get('/auth/me'),
-  
-  // Cambiar contraseña
-  changePassword: (data) => api.post('/auth/change-password', data),
-  
-  // Refrescar token
   refresh: () => api.post('/auth/refresh'),
-  
-  // Recuperar contraseña
-  forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
-  
-  // Restablecer contraseña
-  resetPassword: (data) => api.post('/auth/reset-password', data),
-  
-  // Verificar token
-  verifyToken: (token) => api.post('/auth/verify-token', { token }),
-  
-  // Gestión de tokens
-  getActiveTokens: () => api.get('/auth/tokens'),
-  revokeToken: (tokenId) => api.delete(`/auth/tokens/${tokenId}`),
-  
-  // Actualizar perfil
+  profile: () => api.get('/auth/me'),
   updateProfile: (data) => api.put('/auth/profile', data),
-}
-
-// ============================================================================
-// SERVICIOS PÚBLICOS
-// ============================================================================
-
-export const publicAPI = {
-  // Información de la aplicación
-  getAppInfo: () => api.get('/public/app-info'),
-  
-  // Lista de deportes
-  getDeportes: () => api.get('/public/deportes'),
-}
-
-// ============================================================================
-// SERVICIOS DE DASHBOARD
-// ============================================================================
-
-export const dashboardAPI = {
-  // Estadísticas del dashboard
-  getStats: () => api.get('/dashboard/stats'),
-  
-  // Actividad reciente
-  getActivity: () => api.get('/dashboard/activity'),
-}
-
-// ============================================================================
-// SERVICIOS DE USUARIOS
-// ============================================================================
-
-export const userAPI = {
-  // Listar usuarios (solo admin)
-  getAll: (params = {}) => api.get('/usuarios', { params }),
-  
-  // Crear usuario (solo admin)
-  create: (userData) => api.post('/usuarios', userData),
-  
-  // Obtener usuario por ID (solo admin)
-  getById: (id) => api.get(`/usuarios/${id}`),
-  
-  // Actualizar usuario (solo admin)
-  update: (id, data) => api.put(`/usuarios/${id}`, data),
-  
-  // Eliminar usuario (solo admin)
-  delete: (id) => api.delete(`/usuarios/${id}`),
-  
-  // Perfil del usuario actual
-  getProfile: () => api.get('/usuarios/me/profile'),
+  changePassword: (data) => api.post('/auth/change-password', data),
+  forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
+  resetPassword: (data) => api.post('/auth/reset-password', data),
 }
 
 // ============================================================================
@@ -146,29 +109,14 @@ export const userAPI = {
 // ============================================================================
 
 export const tournamentAPI = {
-  // Listar torneos
   getAll: (params = {}) => api.get('/torneos', { params }),
-  
-  // Crear torneo
-  create: (data) => api.post('/torneos', data),
-  
-  // Obtener torneo por ID
   getById: (id) => api.get(`/torneos/${id}`),
-  
-  // Actualizar torneo
+  create: (data) => api.post('/torneos', data),
   update: (id, data) => api.put(`/torneos/${id}`, data),
-  
-  // Eliminar torneo
   delete: (id) => api.delete(`/torneos/${id}`),
-  
-  // Inscribir equipo en torneo
-  enrollTeam: (torneoId, data) => api.post(`/torneos/${torneoId}/equipos`, data),
-  
-  // Obtener clasificación del torneo
-  getClassification: (torneoId) => api.get(`/torneos/${torneoId}/clasificacion`),
-  
-  // Generar fixture/calendario (solo admin)
-  generateFixture: (torneoId) => api.post(`/torneos/${torneoId}/fixture`),
+  registerTeam: (id, teamData) => api.post(`/torneos/${id}/equipos`, teamData),
+  getStandings: (id) => api.get(`/torneos/${id}/clasificacion`),
+  getMatches: (id) => api.get(`/partidos?torneo_id=${id}`)
 }
 
 // ============================================================================
@@ -176,32 +124,28 @@ export const tournamentAPI = {
 // ============================================================================
 
 export const teamAPI = {
-  // Listar equipos
   getAll: (params = {}) => api.get('/equipos', { params }),
-  
-  // Crear equipo
-  create: (data) => api.post('/equipos', data),
-  
-  // Obtener equipo por ID
   getById: (id) => api.get(`/equipos/${id}`),
-  
-  // Actualizar equipo
+  create: (data) => api.post('/equipos', data),
   update: (id, data) => api.put(`/equipos/${id}`, data),
-  
-  // Eliminar equipo
   delete: (id) => api.delete(`/equipos/${id}`),
-  
-  // Obtener jugadores del equipo
-  getPlayers: (equipoId) => api.get(`/equipos/${equipoId}/jugadores`),
-  
-  // Agregar jugador al equipo
-  addPlayer: (equipoId, data) => api.post(`/equipos/${equipoId}/jugadores`, data),
-  
-  // Actualizar jugador en el equipo
-  updatePlayer: (equipoId, jugadorId, data) => api.put(`/equipos/${equipoId}/jugadores/${jugadorId}`, data),
-  
-  // Remover jugador del equipo
-  removePlayer: (equipoId, jugadorId) => api.delete(`/equipos/${equipoId}/jugadores/${jugadorId}`),
+  getRoster: (id) => api.get(`/equipos/${id}/jugadores`),
+  addPlayer: (id, playerData) => api.post(`/equipos/${id}/jugadores`, playerData),
+  removePlayer: (teamId, playerId) => api.delete(`/equipos/${teamId}/jugadores/${playerId}`),
+  getStatistics: (id) => api.get(`/equipos/${id}/estadisticas`)
+}
+
+// ============================================================================
+// SERVICIOS DE JUGADORES
+// ============================================================================
+
+export const playerAPI = {
+  getAll: (params = {}) => api.get('/usuarios?tipo_usuario=jugador', { params }),
+  getById: (id) => api.get(`/usuarios/${id}`),
+  update: (id, data) => api.put(`/usuarios/${id}`, data),
+  getStatistics: (id) => api.get(`/jugador/estadisticas`),
+  getTeamHistory: (id) => api.get(`/jugador/equipos`),
+  getAvailable: (params = {}) => api.get('/usuarios?tipo_usuario=jugador&activo=true', { params })
 }
 
 // ============================================================================
@@ -209,130 +153,62 @@ export const teamAPI = {
 // ============================================================================
 
 export const matchAPI = {
-  // Listar partidos
   getAll: (params = {}) => api.get('/partidos', { params }),
-  
-  // Crear partido
-  create: (data) => api.post('/partidos', data),
-  
-  // Obtener partido por ID
   getById: (id) => api.get(`/partidos/${id}`),
-  
-  // Actualizar partido
+  create: (data) => api.post('/partidos', data),
   update: (id, data) => api.put(`/partidos/${id}`, data),
-  
-  // Eliminar partido
-  delete: (id) => api.delete(`/partidos/${id}`),
-  
-  // Iniciar partido
-  start: (partidoId) => api.post(`/partidos/${partidoId}/iniciar`),
-  
-  // Finalizar partido
-  finish: (partidoId, data) => api.post(`/partidos/${partidoId}/finalizar`, data),
-  
-  // Obtener eventos del partido
-  getEvents: (partidoId) => api.get(`/partidos/${partidoId}/eventos`),
-  
-  // Agregar evento al partido
-  addEvent: (partidoId, data) => api.post(`/partidos/${partidoId}/eventos`, data),
+  addEvent: (id, eventData) => api.post(`/partidos/${id}/eventos`, eventData),
+  getEvents: (id) => api.get(`/partidos/${id}/eventos`),
+  start: (id) => api.post(`/partidos/${id}/iniciar`),
+  finish: (id, data) => api.post(`/partidos/${id}/finalizar`, data)
 }
 
 // ============================================================================
-// SERVICIOS ESPECÍFICOS POR ROL
+// SERVICIOS DE DASHBOARD
 // ============================================================================
 
-// SERVICIOS PARA ADMINISTRADORES
-export const adminAPI = {
-  // Estadísticas administrativas
-  getStats: () => api.get('/admin/estadisticas'),
-  
-  // Logs del sistema
-  getLogs: () => api.get('/admin/logs'),
-}
-
-// SERVICIOS PARA JUGADORES
-export const playerAPI = {
-  // Mis equipos
-  getMyTeams: () => api.get('/jugador/equipos'),
-  
-  // Mis estadísticas
-  getMyStats: () => api.get('/jugador/estadisticas'),
-}
-
-// SERVICIOS PARA ÁRBITROS
-export const refereeAPI = {
-  // Mis partidos asignados
-  getMyMatches: () => api.get('/arbitro/partidos'),
+export const dashboardAPI = {
+  getStats: () => api.get('/dashboard/stats'),
+  getActivity: () => api.get('/dashboard/activity')
 }
 
 // ============================================================================
-// SERVICIOS DE DESARROLLO (solo en desarrollo)
+// SERVICIOS PÚBLICOS
 // ============================================================================
 
-export const devAPI = {
-  // Generar datos de prueba
-  seedData: () => api.post('/dev/seed-data'),
-  
-  // Obtener usuarios de prueba
-  getTestUsers: () => api.get('/dev/test-users'),
+export const publicAPI = {
+  getAppInfo: () => api.get('/public/app-info'),
+  getDeportes: () => api.get('/public/deportes')
 }
 
-// ============================================================================
-// HELPERS Y UTILIDADES
-// ============================================================================
-
+/**
+ * API helper functions
+ */
 export const apiHelpers = {
-  // Manejar errores de API
+  // Handle API errors with user-friendly messages
   handleError: (error) => {
-    if (error.response) {
-      // Error de respuesta del servidor
-      const { status, data } = error.response
-      return {
-        status,
-        message: data.message || 'Error del servidor',
-        errors: data.errors || null,
-      }
-    } else if (error.request) {
-      // Error de red
-      return {
-        status: 0,
-        message: 'Error de conexión. Verifica tu conexión a internet.',
-        errors: null,
-      }
+    if (error.response?.data?.message) {
+      return error.response.data.message
+    } else if (error.response?.data?.errors) {
+      // Laravel validation errors
+      const errors = error.response.data.errors
+      return Object.values(errors).flat().join(', ')
+    } else if (error.message) {
+      return error.message
     } else {
-      // Error inesperado
-      return {
-        status: 0,
-        message: 'Error inesperado: ' + error.message,
-        errors: null,
-      }
+      return 'An unexpected error occurred'
     }
   },
-
-  // Extraer datos de respuesta
-  extractData: (response) => {
-    return response.data?.data || response.data
-  },
-
-  // Verificar si la respuesta es exitosa
+  
+  // Check if request was successful
   isSuccess: (response) => {
-    return response.data?.success !== false && response.status >= 200 && response.status < 300
+    return response.data?.success === true || (response.status >= 200 && response.status < 300)
   },
-
-  // Formatear parámetros de consulta
-  formatParams: (params) => {
-    const formatted = {}
-    Object.keys(params).forEach(key => {
-      if (params[key] !== null && params[key] !== undefined && params[key] !== '') {
-        formatted[key] = params[key]
-      }
-    })
-    return formatted
-  },
+  
+  // Extract data from successful response
+  getData: (response) => {
+    return response.data?.data || response.data
+  }
 }
-
-// ============================================================================
-// EXPORTACIONES POR DEFECTO
-// ============================================================================
 
 export default api
