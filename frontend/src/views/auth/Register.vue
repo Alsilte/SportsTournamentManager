@@ -386,43 +386,46 @@ export default {
     /**
      * Handle form submission
      */
-    const handleRegister = async () => {
-      // Clear previous errors
-      generalError.value = ''
-      
-      // Validate form
-      if (!validateForm()) {
-        return
-      }
+   const handleRegister = async () => {
+  // Clear previous errors
+  generalError.value = ''
+  
+  // Validate form
+  if (!validateForm()) {
+    return
+  }
 
-      isLoading.value = true
+  isLoading.value = true
 
-      try {
-        const result = await authStore.register({
-          name: form.value.name,
-          email: form.value.email,
-          role: form.value.role,
-          phone: form.value.phone || null,
-          password: form.value.password,
-          password_confirmation: form.value.password_confirmation
-        })
+  try {
+    const result = await authStore.register({
+      name: form.value.name,
+      email: form.value.email,
+      role: form.value.role,
+      phone: form.value.phone || null,
+      password: form.value.password,
+      password_confirmation: form.value.password_confirmation
+    })
 
-        // Verificar si el registro fue exitoso
-        if (result && result.success !== false) {
-          // El registro fue exitoso, el authStore ya manejó el redirect
-          console.log('Registration successful')
-        } else {
-          // Mostrar error específico
-          generalError.value = result?.error || 'Registration failed. Please try again.'
-        }
-      } catch (error) {
-        console.error('Registration error:', error)
-        generalError.value = 'An unexpected error occurred. Please try again.'
-      } finally {
-        isLoading.value = false
-      }
+    // Verificar si el registro fue exitoso basado en la estructura de respuesta de la API
+    if (result && result.success === true) {
+      console.log('Registration successful:', result.data)
+      // El registro fue exitoso, el authStore ya manejó el token y datos del usuario
+    } else {
+      // Mostrar error específico si existe
+      generalError.value = result?.message || 'Registration failed. Please try again.'
     }
-
+  } catch (error) {
+    console.error('Registration error:', error)
+    if (error.response?.data) {
+      generalError.value = error.response.data.message || 'An unexpected error occurred.'
+    } else {
+      generalError.value = 'An unexpected error occurred. Please try again.'
+    }
+  } finally {
+    isLoading.value = false
+  }
+}
     // Clear any previous auth errors
     onMounted(() => {
       authStore.clearError()
