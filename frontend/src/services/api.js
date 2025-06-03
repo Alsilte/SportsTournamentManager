@@ -1,292 +1,159 @@
-// ============================================================================
-// CONFIGURACIÓN DE API PARA RAILWAY
-// ============================================================================
+/**
+ * SERVICIOS API - SISTEMA DEPORTIVO
+ * 
+ * Archivo: src/services/api.js
+ * 
+ * Servicios para comunicación con el backend Laravel
+ * Basado en las rutas definidas en backend/routes/api.php
+ */
 
 import axios from 'axios'
 
 // ============================================================================
-// CONFIGURACIÓN DE URLs SEGÚN EL ENTORNO
-// ============================================================================
-
-const getApiBaseUrl = () => {
-  // En producción (Railway)
-  if (import.meta.env.PROD) {
-    // CAMBIA ESTA URL POR TU URL DE RAILWAY
-    return 'https://sportstournamentmanager-production.up.railway.app//api'
-  }
-  
-  // En desarrollo local
-  if (import.meta.env.DEV) {
-    return 'http://127.0.0.1:8000/api'
-  }
-  
-  // Fallback
-  return 'http://127.0.0.1:8000/api'
-}
-
-// ============================================================================
-// INSTANCIA DE AXIOS CONFIGURADA
+// CONFIGURACIÓN BASE DE AXIOS
 // ============================================================================
 
 const api = axios.create({
-  baseURL: getApiBaseUrl(),
-  timeout: 30000, // 30 segundos para Railway
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest'
   },
-  withCredentials: false // Para Railway, usualmente false
+  withCredentials: true,
 })
 
-// ============================================================================
-// API HELPERS - AGREGADOS PARA COMPATIBILIDAD
-// ============================================================================
-
-export const apiHelpers = {
-  /**
-   * Extraer datos de respuesta exitosa
-   */
-  getData: (response) => {
-    return response.data?.data || response.data
-  },
-
-  /**
-   * Extraer mensaje de respuesta
-   */
-  getMessage: (response) => {
-    return response.data?.message || 'Operación exitosa'
-  },
-
-  /**
-   * Manejar errores de API
-   */
-  handleError: (error) => {
-    if (error.response) {
-      // Error de respuesta del servidor
-      const errorData = error.response.data
-      return {
-        status: error.response.status,
-        message: errorData?.message || 'Error del servidor',
-        errors: errorData?.errors || {},
-        data: errorData?.data || null
-      }
-    } else if (error.request) {
-      // Error de red
-      return {
-        status: 0,
-        message: 'Error de conexión. Verifica tu conexión a internet.',
-        errors: {},
-        data: null
-      }
-    } else {
-      // Error de configuración
-      return {
-        status: 0,
-        message: error.message || 'Error desconocido',
-        errors: {},
-        data: null
-      }
-    }
-  },
-
-  /**
-   * Verificar si la respuesta fue exitosa
-   */
-  isSuccess: (response) => {
-    return response.data?.success !== false
-  }
-}
-
-// ============================================================================
-// INTERCEPTORS
-// ============================================================================
-
-// Request interceptor - agregar token si existe
+// Interceptor para agregar token automáticamente
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('auth_token')
-    
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
-
-    // Log para debugging
-    if (import.meta.env.DEV) {
-      console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.url}`)
-      console.log('📍 Base URL:', config.baseURL)
-      if (config.data) {
-        console.log('📦 Data:', config.data)
-      }
-    }
-
     return config
   },
   (error) => {
-    console.error('❌ Request Error:', error)
     return Promise.reject(error)
   }
 )
 
-// Response interceptor - manejo de errores
+// Interceptor para manejar respuestas
 api.interceptors.response.use(
-  (response) => {
-    if (import.meta.env.DEV) {
-      console.log(`✅ API Response: ${response.config.method?.toUpperCase()} ${response.config.url}`)
-      console.log('📊 Status:', response.status)
-    }
-    return response
-  },
+  (response) => response,
   (error) => {
-    // Log detallado del error
-    console.error('💥 API Error:', {
-      message: error.message,
-      status: error.response?.status,
-      statusText: error.response?.statusText,
-      url: error.config?.url,
-      baseURL: error.config?.baseURL,
-      fullURL: `${error.config?.baseURL}${error.config?.url}`
-    })
-
-    // Manejo específico de errores de red
-    if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
-      console.error('🔥 Network Error: Cannot connect to Laravel server')
-      console.error('💡 Current API URL:', getApiBaseUrl())
-      console.error('💡 Make sure your Railway backend is running')
-      console.error('💡 Check if the URL is correct')
-    }
-
-    // Error 401 - token expirado
     if (error.response?.status === 401) {
-      console.warn('🔐 Authentication error - removing token')
+      // Token expirado o inválido
       localStorage.removeItem('auth_token')
-      localStorage.removeItem('user_data')
-      
-      // Redirigir al login si no estamos ya ahí
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login'
-      }
+      localStorage.removeItem('user')
+      window.location.href = '/login'
     }
-
     return Promise.reject(error)
   }
 )
 
 // ============================================================================
-// MÉTODOS DE API ACTUALIZADOS PARA COMPATIBILIDAD
+// SERVICIOS DE AUTENTICACIÓN
 // ============================================================================
 
 export const authAPI = {
   // Registro
-  async register(userData) {
-    try {
-      const response = await api.post('/auth/register', userData)
-      return {
-        success: true,
-        data: response.data.data,
-        message: response.data.message
-      }
-    } catch (error) {
-      const errorInfo = apiHelpers.handleError(error)
-      return {
-        success: false,
-        ...errorInfo
-      }
-    }
-  },
+  register: (userData) => api.post('/auth/register', userData),
   
   // Login
-  async login(credentials) {
-    try {
-      const response = await api.post('/auth/login', credentials)
-      const { user, token } = response.data.data
-      
-      // Guardar token y datos del usuario
-      localStorage.setItem('auth_token', token)
-      localStorage.setItem('user_data', JSON.stringify(user))
-      
-      return {
-        success: true,
-        data: { user, token },
-        message: response.data.message
-      }
-    } catch (error) {
-      const errorInfo = apiHelpers.handleError(error)
-      return {
-        success: false,
-        ...errorInfo
-      }
-    }
-  },
+  login: (credentials) => api.post('/auth/login', credentials),
   
   // Logout
-  async logout() {
-    try {
-      await api.post('/auth/logout')
-    } catch (error) {
-      console.warn('Error al cerrar sesión en el servidor:', error)
-    } finally {
-      // Limpiar datos locales siempre
-      localStorage.removeItem('auth_token')
-      localStorage.removeItem('user_data')
-    }
-    
-    return { success: true }
-  },
+  logout: () => api.post('/auth/logout'),
   
-  // Usuario actual
-  async me() {
-    try {
-      const response = await api.get('/auth/me')
-      return {
-        success: true,
-        data: response.data.data,
-        message: response.data.message
-      }
-    } catch (error) {
-      const errorInfo = apiHelpers.handleError(error)
-      return {
-        success: false,
-        ...errorInfo
-      }
-    }
-  },
+  // Logout de todos los dispositivos
+  logoutAll: () => api.post('/auth/logout-all'),
+  
+  // Obtener usuario actual
+  me: () => api.get('/auth/me'),
   
   // Cambiar contraseña
-  async changePassword(passwordData) {
-    try {
-      const response = await api.post('/auth/change-password', passwordData)
-      return {
-        success: true,
-        data: response.data.data,
-        message: response.data.message
-      }
-    } catch (error) {
-      const errorInfo = apiHelpers.handleError(error)
-      return {
-        success: false,
-        ...errorInfo
-      }
-    }
-  }
+  changePassword: (data) => api.post('/auth/change-password', data),
+  
+  // Refrescar token
+  refresh: () => api.post('/auth/refresh'),
+  
+  // Recuperar contraseña
+  forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
+  
+  // Restablecer contraseña
+  resetPassword: (data) => api.post('/auth/reset-password', data),
+  
+  // Verificar token
+  verifyToken: (token) => api.post('/auth/verify-token', { token }),
+  
+  // Gestión de tokens
+  getActiveTokens: () => api.get('/auth/tokens'),
+  revokeToken: (tokenId) => api.delete(`/auth/tokens/${tokenId}`),
+  
+  // Actualizar perfil
+  updateProfile: (data) => api.put('/auth/profile', data),
 }
 
-export const tournamentAPI = {
-  // Obtener todos los torneos
-  getAll: (params = {}) => {
-    console.log('🏆 Fetching tournaments with params:', params)
-    return api.get('/torneos', { params })
-      .catch(error => {
-        console.error('💥 Tournament API Error:', error)
-        throw error
-      })
-  },
+// ============================================================================
+// SERVICIOS PÚBLICOS
+// ============================================================================
+
+export const publicAPI = {
+  // Información de la aplicación
+  getAppInfo: () => api.get('/public/app-info'),
   
-  // Obtener torneo por ID
-  getById: (id) => api.get(`/torneos/${id}`),
+  // Lista de deportes
+  getDeportes: () => api.get('/public/deportes'),
+}
+
+// ============================================================================
+// SERVICIOS DE DASHBOARD
+// ============================================================================
+
+export const dashboardAPI = {
+  // Estadísticas del dashboard
+  getStats: () => api.get('/dashboard/stats'),
+  
+  // Actividad reciente
+  getActivity: () => api.get('/dashboard/activity'),
+}
+
+// ============================================================================
+// SERVICIOS DE USUARIOS
+// ============================================================================
+
+export const userAPI = {
+  // Listar usuarios (solo admin)
+  getAll: (params = {}) => api.get('/usuarios', { params }),
+  
+  // Crear usuario (solo admin)
+  create: (userData) => api.post('/usuarios', userData),
+  
+  // Obtener usuario por ID (solo admin)
+  getById: (id) => api.get(`/usuarios/${id}`),
+  
+  // Actualizar usuario (solo admin)
+  update: (id, data) => api.put(`/usuarios/${id}`, data),
+  
+  // Eliminar usuario (solo admin)
+  delete: (id) => api.delete(`/usuarios/${id}`),
+  
+  // Perfil del usuario actual
+  getProfile: () => api.get('/usuarios/me/profile'),
+}
+
+// ============================================================================
+// SERVICIOS DE TORNEOS
+// ============================================================================
+
+export const tournamentAPI = {
+  // Listar torneos
+  getAll: (params = {}) => api.get('/torneos', { params }),
   
   // Crear torneo
   create: (data) => api.post('/torneos', data),
+  
+  // Obtener torneo por ID
+  getById: (id) => api.get(`/torneos/${id}`),
   
   // Actualizar torneo
   update: (id, data) => api.put(`/torneos/${id}`, data),
@@ -294,24 +161,29 @@ export const tournamentAPI = {
   // Eliminar torneo
   delete: (id) => api.delete(`/torneos/${id}`),
   
-  // Inscribir equipo
-  inscribeTeam: (tournamentId, teamData) => 
-    api.post(`/torneos/${tournamentId}/equipos`, teamData),
+  // Inscribir equipo en torneo
+  enrollTeam: (torneoId, data) => api.post(`/torneos/${torneoId}/equipos`, data),
   
-  // Obtener clasificación
-  getStandings: (tournamentId) => 
-    api.get(`/torneos/${tournamentId}/clasificacion`)
+  // Obtener clasificación del torneo
+  getClassification: (torneoId) => api.get(`/torneos/${torneoId}/clasificacion`),
+  
+  // Generar fixture/calendario (solo admin)
+  generateFixture: (torneoId) => api.post(`/torneos/${torneoId}/fixture`),
 }
 
+// ============================================================================
+// SERVICIOS DE EQUIPOS
+// ============================================================================
+
 export const teamAPI = {
-  // Obtener todos los equipos
+  // Listar equipos
   getAll: (params = {}) => api.get('/equipos', { params }),
-  
-  // Obtener equipo por ID
-  getById: (id) => api.get(`/equipos/${id}`),
   
   // Crear equipo
   create: (data) => api.post('/equipos', data),
+  
+  // Obtener equipo por ID
+  getById: (id) => api.get(`/equipos/${id}`),
   
   // Actualizar equipo
   update: (id, data) => api.put(`/equipos/${id}`, data),
@@ -320,84 +192,147 @@ export const teamAPI = {
   delete: (id) => api.delete(`/equipos/${id}`),
   
   // Obtener jugadores del equipo
-  getPlayers: (teamId) => api.get(`/equipos/${teamId}/jugadores`),
+  getPlayers: (equipoId) => api.get(`/equipos/${equipoId}/jugadores`),
   
   // Agregar jugador al equipo
-  addPlayer: (teamId, playerData) => 
-    api.post(`/equipos/${teamId}/jugadores`, playerData)
+  addPlayer: (equipoId, data) => api.post(`/equipos/${equipoId}/jugadores`, data),
+  
+  // Actualizar jugador en el equipo
+  updatePlayer: (equipoId, jugadorId, data) => api.put(`/equipos/${equipoId}/jugadores/${jugadorId}`, data),
+  
+  // Remover jugador del equipo
+  removePlayer: (equipoId, jugadorId) => api.delete(`/equipos/${equipoId}/jugadores/${jugadorId}`),
 }
 
+// ============================================================================
+// SERVICIOS DE PARTIDOS
+// ============================================================================
+
 export const matchAPI = {
-  // Obtener todos los partidos
+  // Listar partidos
   getAll: (params = {}) => api.get('/partidos', { params }),
-  
-  // Obtener partido por ID
-  getById: (id) => api.get(`/partidos/${id}`),
   
   // Crear partido
   create: (data) => api.post('/partidos', data),
   
+  // Obtener partido por ID
+  getById: (id) => api.get(`/partidos/${id}`),
+  
   // Actualizar partido
   update: (id, data) => api.put(`/partidos/${id}`, data),
   
+  // Eliminar partido
+  delete: (id) => api.delete(`/partidos/${id}`),
+  
   // Iniciar partido
-  start: (id) => api.post(`/partidos/${id}/iniciar`),
+  start: (partidoId) => api.post(`/partidos/${partidoId}/iniciar`),
   
   // Finalizar partido
-  finish: (id, data) => api.post(`/partidos/${id}/finalizar`, data),
+  finish: (partidoId, data) => api.post(`/partidos/${partidoId}/finalizar`, data),
   
   // Obtener eventos del partido
-  getEvents: (matchId) => api.get(`/partidos/${matchId}/eventos`),
+  getEvents: (partidoId) => api.get(`/partidos/${partidoId}/eventos`),
   
   // Agregar evento al partido
-  addEvent: (matchId, eventData) => 
-    api.post(`/partidos/${matchId}/eventos`, eventData)
+  addEvent: (partidoId, data) => api.post(`/partidos/${partidoId}/eventos`, data),
 }
 
-export const dashboardAPI = {
-  // Obtener estadísticas del dashboard
-  getStats: () => api.get('/dashboard/stats'),
+// ============================================================================
+// SERVICIOS ESPECÍFICOS POR ROL
+// ============================================================================
+
+// SERVICIOS PARA ADMINISTRADORES
+export const adminAPI = {
+  // Estadísticas administrativas
+  getStats: () => api.get('/admin/estadisticas'),
   
-  // Obtener actividad reciente
-  getActivity: () => api.get('/dashboard/activity')
+  // Logs del sistema
+  getLogs: () => api.get('/admin/logs'),
+}
+
+// SERVICIOS PARA JUGADORES
+export const playerAPI = {
+  // Mis equipos
+  getMyTeams: () => api.get('/jugador/equipos'),
+  
+  // Mis estadísticas
+  getMyStats: () => api.get('/jugador/estadisticas'),
+}
+
+// SERVICIOS PARA ÁRBITROS
+export const refereeAPI = {
+  // Mis partidos asignados
+  getMyMatches: () => api.get('/arbitro/partidos'),
 }
 
 // ============================================================================
-// UTILIDADES
+// SERVICIOS DE DESARROLLO (solo en desarrollo)
 // ============================================================================
 
-// Función para verificar conectividad
-export const checkConnectivity = async () => {
-  try {
-    const response = await api.get('/public/app-info', { timeout: 5000 })
-    console.log('✅ API connectivity check passed')
-    return true
-  } catch (error) {
-    console.error('❌ API connectivity check failed:', error.message)
-    return false
-  }
+export const devAPI = {
+  // Generar datos de prueba
+  seedData: () => api.post('/dev/seed-data'),
+  
+  // Obtener usuarios de prueba
+  getTestUsers: () => api.get('/dev/test-users'),
 }
-
-// Función para obtener información del servidor
-export const getServerInfo = () => api.get('/public/app-info')
-
-// Función para verificar salud del API
-export const healthCheck = () => {
-  return axios.get(`${getApiBaseUrl().replace('/api', '')}/api/health`, {
-    timeout: 5000
-  })
-}
-
-// Exportar instancia de axios y URL base
-export { api as default, getApiBaseUrl }
 
 // ============================================================================
-// DEBUG INFO
+// HELPERS Y UTILIDADES
 // ============================================================================
 
-if (import.meta.env.DEV) {
-  console.log('🔧 API Configuration:')
-  console.log('📍 Base URL:', getApiBaseUrl())
-  console.log('🌍 Environment:', import.meta.env.MODE)
-  console.log('🏗️ Build:', import.meta.env.PROD ? 'Production' : 'Development')
+export const apiHelpers = {
+  // Manejar errores de API
+  handleError: (error) => {
+    if (error.response) {
+      // Error de respuesta del servidor
+      const { status, data } = error.response
+      return {
+        status,
+        message: data.message || 'Error del servidor',
+        errors: data.errors || null,
+      }
+    } else if (error.request) {
+      // Error de red
+      return {
+        status: 0,
+        message: 'Error de conexión. Verifica tu conexión a internet.',
+        errors: null,
+      }
+    } else {
+      // Error inesperado
+      return {
+        status: 0,
+        message: 'Error inesperado: ' + error.message,
+        errors: null,
+      }
+    }
+  },
+
+  // Extraer datos de respuesta
+  extractData: (response) => {
+    return response.data?.data || response.data
+  },
+
+  // Verificar si la respuesta es exitosa
+  isSuccess: (response) => {
+    return response.data?.success !== false && response.status >= 200 && response.status < 300
+  },
+
+  // Formatear parámetros de consulta
+  formatParams: (params) => {
+    const formatted = {}
+    Object.keys(params).forEach(key => {
+      if (params[key] !== null && params[key] !== undefined && params[key] !== '') {
+        formatted[key] = params[key]
+      }
+    })
+    return formatted
+  },
 }
+
+// ============================================================================
+// EXPORTACIONES POR DEFECTO
+// ============================================================================
+
+export default api
