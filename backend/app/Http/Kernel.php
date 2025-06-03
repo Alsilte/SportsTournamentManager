@@ -1,6 +1,6 @@
 <?php
 
-// app/Http/Kernel.php - Update API middleware
+namespace App\Http; // <-- ESTE namespace es obligatorio
 
 class Kernel
 {
