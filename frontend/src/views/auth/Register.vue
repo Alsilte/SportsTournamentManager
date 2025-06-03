@@ -11,12 +11,12 @@
         Create your account
       </h2>
       <p class="mt-2 text-center text-sm text-gray-600">
-        Already have an account?
+        Or
         <RouterLink 
           to="/login" 
           class="font-medium text-primary-600 hover:text-primary-500 transition-colors"
         >
-          Sign in here
+          sign in to your existing account
         </RouterLink>
       </p>
     </div>
@@ -54,7 +54,7 @@
           <!-- Email Field -->
           <div>
             <label for="email" class="form-label">
-              Email Address
+              Email address
             </label>
             <div class="relative">
               <input
@@ -77,95 +77,10 @@
             </p>
           </div>
 
-          <!-- Password Field -->
-          <div>
-            <label for="password" class="form-label">
-              Password
-            </label>
-            <div class="relative">
-              <input
-                id="password"
-                v-model="form.password"
-                :type="showPassword ? 'text' : 'password'"
-                autocomplete="new-password"
-                required
-                :class="[
-                  'form-input pr-10',
-                  errors.password ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500' : ''
-                ]"
-                placeholder="Create a password"
-                :disabled="isLoading"
-              />
-              <button
-                type="button"
-                @click="showPassword = !showPassword"
-                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                :disabled="isLoading"
-              >
-                <EyeIcon v-if="!showPassword" class="w-5 h-5" />
-                <EyeSlashIcon v-else class="w-5 h-5" />
-              </button>
-            </div>
-            <p v-if="errors.password" class="form-error">
-              {{ errors.password }}
-            </p>
-            <!-- Password strength indicator -->
-            <div v-if="form.password" class="mt-2">
-              <div class="text-xs text-gray-600 mb-1">Password strength:</div>
-              <div class="flex space-x-1">
-                <div 
-                  v-for="i in 4" 
-                  :key="i"
-                  :class="[
-                    'h-1 flex-1 rounded',
-                    i <= passwordStrength ? getStrengthColor(passwordStrength) : 'bg-gray-200'
-                  ]"
-                ></div>
-              </div>
-              <div class="text-xs mt-1" :class="getStrengthTextColor(passwordStrength)">
-                {{ getStrengthText(passwordStrength) }}
-              </div>
-            </div>
-          </div>
-
-          <!-- Confirm Password Field -->
-          <div>
-            <label for="password_confirmation" class="form-label">
-              Confirm Password
-            </label>
-            <div class="relative">
-              <input
-                id="password_confirmation"
-                v-model="form.password_confirmation"
-                :type="showConfirmPassword ? 'text' : 'password'"
-                autocomplete="new-password"
-                required
-                :class="[
-                  'form-input pr-10',
-                  errors.password_confirmation ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500' : ''
-                ]"
-                placeholder="Confirm your password"
-                :disabled="isLoading"
-              />
-              <button
-                type="button"
-                @click="showConfirmPassword = !showConfirmPassword"
-                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                :disabled="isLoading"
-              >
-                <EyeIcon v-if="!showConfirmPassword" class="w-5 h-5" />
-                <EyeSlashIcon v-else class="w-5 h-5" />
-              </button>
-            </div>
-            <p v-if="errors.password_confirmation" class="form-error">
-              {{ errors.password_confirmation }}
-            </p>
-          </div>
-
-          <!-- Role Selection -->
+          <!-- Role Field -->
           <div>
             <label for="role" class="form-label">
-              Role
+              Account Type
             </label>
             <select
               id="role"
@@ -185,15 +100,12 @@
             <p v-if="errors.role" class="form-error">
               {{ errors.role }}
             </p>
-            <p class="text-xs text-gray-500 mt-1">
-              Choose the role that best describes your participation in tournaments
-            </p>
           </div>
 
-          <!-- Phone Field (Optional) -->
+          <!-- Phone Field -->
           <div>
             <label for="phone" class="form-label">
-              Phone Number <span class="text-gray-400 text-sm">(Optional)</span>
+              Phone Number (Optional)
             </label>
             <div class="relative">
               <input
@@ -215,26 +127,89 @@
             </p>
           </div>
 
-          <!-- Terms and Privacy -->
-          <div class="flex items-start">
-            <div class="flex items-center h-5">
+          <!-- Password Field -->
+          <div>
+            <label for="password" class="form-label">
+              Password
+            </label>
+            <div class="relative">
               <input
-                id="terms"
-                v-model="form.terms"
-                type="checkbox"
+                id="password"
+                v-model="form.password"
+                :type="showPassword ? 'text' : 'password'"
+                autocomplete="new-password"
                 required
-                class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                :class="[
+                  'form-input pr-10',
+                  errors.password ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500' : ''
+                ]"
+                placeholder="Enter your password"
                 :disabled="isLoading"
               />
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                :disabled="isLoading"
+              >
+                <EyeIcon v-if="!showPassword" class="w-5 h-5" />
+                <EyeSlashIcon v-else class="w-5 h-5" />
+              </button>
             </div>
-            <div class="ml-2 text-sm">
-              <label for="terms" class="text-gray-700">
-                I agree to the 
-                <a href="#" class="text-primary-600 hover:text-primary-500">Terms of Service</a>
-                and 
-                <a href="#" class="text-primary-600 hover:text-primary-500">Privacy Policy</a>
-              </label>
+            <p v-if="errors.password" class="form-error">
+              {{ errors.password }}
+            </p>
+          </div>
+
+          <!-- Password Confirmation Field -->
+          <div>
+            <label for="password_confirmation" class="form-label">
+              Confirm Password
+            </label>
+            <div class="relative">
+              <input
+                id="password_confirmation"
+                v-model="form.password_confirmation"
+                :type="showPasswordConfirmation ? 'text' : 'password'"
+                autocomplete="new-password"
+                required
+                :class="[
+                  'form-input pr-10',
+                  errors.password_confirmation ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500' : ''
+                ]"
+                placeholder="Confirm your password"
+                :disabled="isLoading"
+              />
+              <button
+                type="button"
+                @click="showPasswordConfirmation = !showPasswordConfirmation"
+                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                :disabled="isLoading"
+              >
+                <EyeIcon v-if="!showPasswordConfirmation" class="w-5 h-5" />
+                <EyeSlashIcon v-else class="w-5 h-5" />
+              </button>
             </div>
+            <p v-if="errors.password_confirmation" class="form-error">
+              {{ errors.password_confirmation }}
+            </p>
+          </div>
+
+          <!-- Terms and Conditions -->
+          <div class="flex items-center">
+            <input
+              id="terms"
+              v-model="form.terms"
+              type="checkbox"
+              class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+              :disabled="isLoading"
+            />
+            <label for="terms" class="ml-2 block text-sm text-gray-700">
+              I agree to the 
+              <a href="#" class="text-primary-600 hover:text-primary-500">Terms of Service</a>
+              and 
+              <a href="#" class="text-primary-600 hover:text-primary-500">Privacy Policy</a>
+            </label>
           </div>
           <p v-if="errors.terms" class="form-error">
             {{ errors.terms }}
@@ -263,24 +238,6 @@
             </button>
           </div>
         </form>
-
-        <!-- Social Registration (Future Enhancement) -->
-        <div class="mt-6">
-          <div class="relative">
-            <div class="absolute inset-0 flex items-center">
-              <div class="w-full border-t border-gray-300" />
-            </div>
-            <div class="relative flex justify-center text-sm">
-              <span class="px-2 bg-white text-gray-500">Or register with</span>
-            </div>
-          </div>
-
-          <div class="mt-6 text-center">
-            <p class="text-sm text-gray-500">
-              Social registration coming soon
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -289,17 +246,17 @@
 <script>
 /**
  * Registration Page Component
- * User registration form with validation and role selection
+ * User registration form with validation
  */
 
-import { ref, computed, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { 
   TrophyIcon,
   UserIcon,
   EnvelopeIcon,
+  PhoneIcon,
   EyeIcon,
   EyeSlashIcon,
-  PhoneIcon,
   ExclamationTriangleIcon
 } from '@heroicons/vue/24/outline'
 import { useAuthStore } from '@/stores/auth'
@@ -310,9 +267,9 @@ export default {
     TrophyIcon,
     UserIcon,
     EnvelopeIcon,
+    PhoneIcon,
     EyeIcon,
     EyeSlashIcon,
-    PhoneIcon,
     ExclamationTriangleIcon
   },
   setup() {
@@ -322,63 +279,89 @@ export default {
     const form = ref({
       name: '',
       email: '',
-      password: '',
-      password_confirmation: '',
       role: '',
       phone: '',
+      password: '',
+      password_confirmation: '',
       terms: false
     })
 
     // UI state
     const showPassword = ref(false)
-    const showConfirmPassword = ref(false)
+    const showPasswordConfirmation = ref(false)
     const isLoading = ref(false)
     const errors = ref({})
     const generalError = ref('')
 
-    // Password strength calculation
-    const passwordStrength = computed(() => {
-      const password = form.value.password
-      if (!password) return 0
-      
-      let strength = 0
-      if (password.length >= 8) strength++
-      if (/[A-Z]/.test(password)) strength++
-      if (/[0-9]/.test(password)) strength++
-      if (/[^A-Za-z0-9]/.test(password)) strength++
-      
-      return strength
-    })
-
-    // Form validation
+    // Computed properties
     const isFormValid = computed(() => {
       return form.value.name && 
              form.value.email && 
+             form.value.role && 
              form.value.password && 
-             form.value.password_confirmation &&
-             form.value.role &&
-             form.value.terms &&
+             form.value.password_confirmation && 
+             form.value.terms && 
              !isLoading.value
     })
 
-    // Watch for password confirmation match
-    watch([() => form.value.password, () => form.value.password_confirmation], () => {
-      if (form.value.password_confirmation && form.value.password !== form.value.password_confirmation) {
-        errors.value.password_confirmation = 'Passwords do not match'
-      } else {
-        delete errors.value.password_confirmation
+    /**
+     * Validate form fields
+     */
+    const validateForm = () => {
+      errors.value = {}
+
+      // Name validation
+      if (!form.value.name) {
+        errors.value.name = 'Full name is required'
+      } else if (form.value.name.length < 2) {
+        errors.value.name = 'Name must be at least 2 characters'
       }
-    })
+
+      // Email validation
+      if (!form.value.email) {
+        errors.value.email = 'Email is required'
+      } else {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(form.value.email)) {
+          errors.value.email = 'Please enter a valid email address'
+        }
+      }
+
+      // Role validation
+      if (!form.value.role) {
+        errors.value.role = 'Please select an account type'
+      }
+
+      // Password validation
+      if (!form.value.password) {
+        errors.value.password = 'Password is required'
+      } else if (form.value.password.length < 8) {
+        errors.value.password = 'Password must be at least 8 characters'
+      }
+
+      // Password confirmation validation
+      if (!form.value.password_confirmation) {
+        errors.value.password_confirmation = 'Password confirmation is required'
+      } else if (form.value.password !== form.value.password_confirmation) {
+        errors.value.password_confirmation = 'Passwords do not match'
+      }
+
+      // Terms validation
+      if (!form.value.terms) {
+        errors.value.terms = 'You must agree to the terms and conditions'
+      }
+
+      return Object.keys(errors.value).length === 0
+    }
 
     /**
      * Handle form submission
      */
     const handleRegister = async () => {
       // Clear previous errors
-      errors.value = {}
       generalError.value = ''
       
-      // Validation
+      // Validate form
       if (!validateForm()) {
         return
       }
@@ -389,122 +372,51 @@ export default {
         const result = await authStore.register({
           name: form.value.name,
           email: form.value.email,
-          password: form.value.password,
-          password_confirmation: form.value.password_confirmation,
           role: form.value.role,
-          phone: form.value.phone || null
+          phone: form.value.phone || null,
+          password: form.value.password,
+          password_confirmation: form.value.password_confirmation
         })
 
-        if (!result.success) {
-          generalError.value = result.error || 'Registration failed'
+        // Verificar si el registro fue exitoso
+        if (result && result.success !== false) {
+          // El registro fue exitoso, el authStore ya manejó el redirect
+          console.log('Registration successful')
+        } else {
+          // Mostrar error específico
+          generalError.value = result?.error || 'Registration failed. Please try again.'
         }
-        // Success case is handled by the store (redirect)
       } catch (error) {
         console.error('Registration error:', error)
-        generalError.value = 'An unexpected error occurred'
+        generalError.value = 'An unexpected error occurred. Please try again.'
       } finally {
         isLoading.value = false
       }
     }
 
     /**
-     * Validate form data
+     * Clear errors when user starts typing
      */
-    const validateForm = () => {
-      const newErrors = {}
-
-      // Name validation
-      if (!form.value.name.trim()) {
-        newErrors.name = 'Name is required'
-      } else if (form.value.name.trim().length < 2) {
-        newErrors.name = 'Name must be at least 2 characters'
-      }
-
-      // Email validation
-      if (!form.value.email) {
-        newErrors.email = 'Email is required'
-      } else {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (!emailRegex.test(form.value.email)) {
-          newErrors.email = 'Please enter a valid email address'
-        }
-      }
-
-      // Password validation
-      if (!form.value.password) {
-        newErrors.password = 'Password is required'
-      } else if (form.value.password.length < 8) {
-        newErrors.password = 'Password must be at least 8 characters'
-      } else if (passwordStrength.value < 2) {
-        newErrors.password = 'Password is too weak. Include uppercase, numbers, or special characters.'
-      }
-
-      // Password confirmation
-      if (!form.value.password_confirmation) {
-        newErrors.password_confirmation = 'Password confirmation is required'
-      } else if (form.value.password !== form.value.password_confirmation) {
-        newErrors.password_confirmation = 'Passwords do not match'
-      }
-
-      // Role validation
-      if (!form.value.role) {
-        newErrors.role = 'Please select a role'
-      }
-
-      // Terms validation
-      if (!form.value.terms) {
-        newErrors.terms = 'You must agree to the terms and conditions'
-      }
-
-      // Phone validation (optional but if provided, should be valid)
-      if (form.value.phone && form.value.phone.length > 0) {
-        const phoneRegex = /^[\+]?[\d\s\-\(\)]{10,}$/
-        if (!phoneRegex.test(form.value.phone)) {
-          newErrors.phone = 'Please enter a valid phone number'
-        }
-      }
-
-      errors.value = newErrors
-      return Object.keys(newErrors).length === 0
+    const clearErrors = () => {
+      errors.value = {}
+      generalError.value = ''
     }
 
-    /**
-     * Get password strength color
-     */
-    const getStrengthColor = (strength) => {
-      const colors = ['bg-danger-500', 'bg-warning-500', 'bg-warning-400', 'bg-success-500']
-      return colors[strength - 1] || 'bg-gray-200'
-    }
-
-    /**
-     * Get password strength text color
-     */
-    const getStrengthTextColor = (strength) => {
-      const colors = ['text-danger-600', 'text-warning-600', 'text-warning-600', 'text-success-600']
-      return colors[strength - 1] || 'text-gray-500'
-    }
-
-    /**
-     * Get password strength text
-     */
-    const getStrengthText = (strength) => {
-      const texts = ['Weak', 'Fair', 'Good', 'Strong']
-      return texts[strength - 1] || 'Too short'
-    }
+    // Clear any previous auth errors
+    onMounted(() => {
+      authStore.clearError()
+    })
 
     return {
       form,
       showPassword,
-      showConfirmPassword,
+      showPasswordConfirmation,
       isLoading,
       errors,
       generalError,
-      passwordStrength,
       isFormValid,
       handleRegister,
-      getStrengthColor,
-      getStrengthTextColor,
-      getStrengthText
+      clearErrors
     }
   }
 }
