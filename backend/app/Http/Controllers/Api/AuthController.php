@@ -1,5 +1,5 @@
 <?php
-// app/Http/Controllers/Api/AuthController.php
+
 
 namespace App\Http\Controllers\Api;
 
@@ -10,13 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    /**
-     * Register a new user
-     */
     public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -36,7 +34,6 @@ class AuthController extends Controller
         }
 
         try {
-            // Create user
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -46,37 +43,33 @@ class AuthController extends Controller
                 'is_active' => true,
             ]);
 
-            // If user is a player, create player profile
             if ($request->role === 'player') {
                 Player::create([
                     'user_id' => $user->id,
                 ]);
             }
 
-            // Create token
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([
                 'success' => true,
                 'message' => 'User registered successfully',
                 'data' => [
-                    'user' => $user,
+                    'user' => $user->load('player'),
                     'token' => $token,
                     'token_type' => 'Bearer'
                 ]
             ], 201);
         } catch (\Exception $e) {
+            Log::error('Registration failed: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Registration failed',
-                'error' => $e->getMessage()
+                'message' => 'Registration failed. Please try again.',
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
             ], 500);
         }
     }
 
-    /**
-     * Login user and create token
-     */
     public function login(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -92,39 +85,44 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $user = User::where('email', $request->email)->first();
+        try {
+            $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid credentials'
+                ], 401);
+            }
+
+            if (!$user->is_active) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Account is deactivated'
+                ], 403);
+            }
+
+            $user->tokens()->delete();
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Login successful',
+                'data' => [
+                    'user' => $user->load('player'),
+                    'token' => $token,
+                    'token_type' => 'Bearer'
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Login failed: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid credentials'
-            ], 401);
+                'message' => 'Login failed',
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+            ], 500);
         }
-
-        if (!$user->is_active) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Account is deactivated'
-            ], 403);
-        }
-
-        // Revoke all existing tokens
-        $user->tokens()->delete();
-
-        // Create new token
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Login successful',
-            'data' => [
-                'user' => $user->load('player'), // Load player profile if exists
-                'token' => $token,
-                'token_type' => 'Bearer'
-            ]
-        ]);
     }
-
     /**
      * Get authenticated user profile
      */

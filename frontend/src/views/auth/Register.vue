@@ -43,6 +43,7 @@
                 ]"
                 placeholder="Enter your full name"
                 :disabled="isLoading"
+                @input="clearFieldError('name')"
               />
               <UserIcon class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             </div>
@@ -69,6 +70,7 @@
                 ]"
                 placeholder="Enter your email"
                 :disabled="isLoading"
+                @input="clearFieldError('email')"
               />
               <EnvelopeIcon class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             </div>
@@ -91,6 +93,7 @@
                 errors.role ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500' : ''
               ]"
               :disabled="isLoading"
+              @change="clearFieldError('role')"
             >
               <option value="">Select your role</option>
               <option value="player">Player</option>
@@ -119,6 +122,7 @@
                 ]"
                 placeholder="Enter your phone number"
                 :disabled="isLoading"
+                @input="clearFieldError('phone')"
               />
               <PhoneIcon class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             </div>
@@ -145,6 +149,7 @@
                 ]"
                 placeholder="Enter your password"
                 :disabled="isLoading"
+                @input="clearFieldError('password')"
               />
               <button
                 type="button"
@@ -179,6 +184,7 @@
                 ]"
                 placeholder="Confirm your password"
                 :disabled="isLoading"
+                @input="clearFieldError('password_confirmation')"
               />
               <button
                 type="button"
@@ -203,6 +209,7 @@
               type="checkbox"
               class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
               :disabled="isLoading"
+              @change="clearFieldError('terms')"
             />
             <label for="terms" class="ml-2 block text-sm text-gray-700">
               I agree to the 
@@ -238,6 +245,16 @@
             </button>
           </div>
         </form>
+
+        <!-- Demo Accounts Info -->
+        <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+          <h3 class="text-sm font-medium text-gray-900 mb-2">Demo Roles Available:</h3>
+          <div class="text-xs text-gray-600 space-y-1">
+            <div><strong>Player:</strong> Join teams, view matches and statistics</div>
+            <div><strong>Team Manager:</strong> Create and manage teams, register for tournaments</div>
+            <div><strong>Referee:</strong> Manage matches and record match events</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -303,6 +320,18 @@ export default {
              form.value.terms && 
              !isLoading.value
     })
+
+    /**
+     * Clear error for specific field
+     */
+    const clearFieldError = (field) => {
+      if (errors.value[field]) {
+        delete errors.value[field]
+      }
+      if (generalError.value) {
+        generalError.value = ''
+      }
+    }
 
     /**
      * Validate form fields
@@ -394,14 +423,6 @@ export default {
       }
     }
 
-    /**
-     * Clear errors when user starts typing
-     */
-    const clearErrors = () => {
-      errors.value = {}
-      generalError.value = ''
-    }
-
     // Clear any previous auth errors
     onMounted(() => {
       authStore.clearError()
@@ -416,7 +437,7 @@ export default {
       generalError,
       isFormValid,
       handleRegister,
-      clearErrors
+      clearFieldError
     }
   }
 }

@@ -127,7 +127,7 @@ const routes = [
     name: 'login',
     component: Login,
     meta: { 
-      title: 'Login',
+      title: 'Sign In',
       public: true,
       hideForAuth: true 
     }
@@ -137,7 +137,7 @@ const routes = [
     name: 'register',
     component: Register,
     meta: { 
-      title: 'Register',
+      title: 'Create Account',
       public: true,
       hideForAuth: true 
     }
@@ -262,7 +262,7 @@ router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
   
   // Set document title
-  document.title = to.meta.title ? `${to.meta.title} - Sports Tournament Manager` : 'Sports Tournament Manager'
+  document.title = to.meta.title ? `${to.meta.title} - Tournament Manager` : 'Tournament Manager'
   
   // Skip auth check for public routes
   if (to.meta.public && !to.meta.requiresAuth) {
