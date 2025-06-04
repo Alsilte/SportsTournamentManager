@@ -60,3 +60,12 @@
     }
   }
   </script>
+
+  <style scoped>
+  /**
+   * Main layout styles
+   */
+   .relative {
+background-color: #ece5d5;   }
+
+   </style>
