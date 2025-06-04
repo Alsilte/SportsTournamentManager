@@ -1,22 +1,20 @@
 {
   "home": {
     "hero": {
-      "title": "Gestión Completa",
-      "subtitle": "de Torneos",
-      "description": "Organiza, gestiona y rastrea torneos deportivos con nuestra plataforma integral y poderosa diseñada para el éxito"
+      "title": "Gestiona tus Torneos Deportivos",
+      "subtitle": "De manera Simple y Eficiente",
+      "description": "La plataforma más completa para organizar y gestionar torneos deportivos"
     },
     "cta": {
-      "getStarted": "Comenzar Gratis",
-      "dashboard": "Ir al Panel",
-      "viewTournaments": "Ver Torneos", 
-      "signUpNow": "Registrarse Ahora",
+      "getStarted": "Comenzar Ahora",
+      "dashboard": "Ir al Dashboard",
+      "viewTournaments": "Ver Torneos",
       "browseTournaments": "Explorar Torneos",
-      "title": "¿Listo para Comenzar?",
-      "description": "Únete a nuestra plataforma hoy y comienza a gestionar tus torneos como un profesional con todas las herramientas que necesitas"
+      "signUpNow": "Regístrate Ahora"
     },
     "trust": {
-      "rating": "4.9★ Valoración",
-      "users": "10,000+ Usuarios",
+      "rating": "4.9/5 Calificación Promedio",
+      "users": "10,000+ Usuarios Activos",
       "secure": "100% Seguro"
     },
     "features": {
