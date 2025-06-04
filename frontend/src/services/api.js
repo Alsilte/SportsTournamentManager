@@ -84,7 +84,7 @@ export const authAPI = {
   register: (userData) => api.post('/auth/register', userData),
   logout: () => api.post('/auth/logout'),
   profile: () => api.get('/auth/profile'),
-  refresh: () => api.post('/auth/refresh'),
+    updateProfile: (data) => api.put('/auth/profile', data),   refresh: () => api.post('/auth/refresh'),
 }
 
 export const tournamentAPI = {

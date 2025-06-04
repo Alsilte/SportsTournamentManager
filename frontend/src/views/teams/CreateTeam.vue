@@ -164,26 +164,47 @@
             </div>
 
             <!-- Team Logo Upload (Future Enhancement) -->
-            <div>
-              <label class="form-label">Team Logo</label>
-              <div
-                class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
-              >
-                <div class="space-y-1 text-center">
-                  <PhotoIcon class="mx-auto h-12 w-12 text-gray-400" />
-                  <div class="flex text-sm text-gray-600">
-                    <span
-                      class="relative cursor-pointer bg-white rounded-md font-medium text-primary-600 hover:text-primary-500"
-                    >
-                      Upload a logo
-                    </span>
-                    <p class="pl-1">or drag and drop</p>
-                  </div>
-                  <p class="text-xs text-gray-500">PNG, JPG, GIF up to 2MB</p>
-                </div>
-              </div>
-              <p class="text-xs text-gray-500 mt-2">Logo upload feature coming soon</p>
-            </div>
+            <div class="card p-6">
+  <h2 class="text-xl font-semibold text-gray-900 mb-6">Team Settings</h2>
+
+  <div class="space-y-6">
+    <!-- Active Status -->
+    <div class="flex items-start space-x-3">
+      <div class="flex items-center h-5">
+        <input
+          id="is_active"
+          v-model="form.is_active"
+          type="checkbox"
+          :disabled="isLoading"
+          class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+        />
+      </div>
+      <div class="text-sm">
+        <label for="is_active" class="font-medium text-gray-700">Active Team</label>
+        <p class="text-gray-500">
+          Active teams can participate in tournaments and manage players.
+        </p>
+      </div>
+    </div>
+
+    <!-- Team Logo Upload - DESHABILITADO TEMPORALMENTE -->
+    <div>
+      <label class="form-label">Team Logo</label>
+      <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md bg-gray-50">
+        <div class="space-y-1 text-center">
+          <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <div class="text-sm text-gray-600">
+            <span class="font-medium text-gray-400">Logo upload feature</span>
+            <p class="text-gray-400">will be available soon</p>
+          </div>
+          <p class="text-xs text-gray-400">Coming in a future update</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
           </div>
         </div>
 

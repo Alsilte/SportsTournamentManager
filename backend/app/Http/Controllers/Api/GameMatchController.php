@@ -15,60 +15,65 @@ use Illuminate\Support\Facades\DB;
 class GameMatchController extends Controller
 {
     /**
-     * Display a listing of matches (public access)
-     */
-    public function index(Request $request): JsonResponse
-    {
-        try {
-            $query = GameMatch::with([
-                'tournament:id,name',
-                'homeTeam:id,name,short_name',
-                'awayTeam:id,name,short_name',
-                'referee:id,name'
-            ]);
+ * Display a listing of matches (public access)
+ */
+public function index(Request $request): JsonResponse
+{
+    try {
+        $query = GameMatch::with([
+            'tournament:id,name',
+            'homeTeam:id,name,short_name',
+            'awayTeam:id,name,short_name',
+            'referee:id,name'
+        ]);
 
-            // Filter by tournament
-            if ($request->has('tournament_id')) {
-                $query->where('tournament_id', $request->tournament_id);
-            }
-
-            // Filter by team
-            if ($request->has('team_id')) {
-                $query->where(function ($q) use ($request) {
-                    $q->where('home_team_id', $request->team_id)
-                        ->orWhere('away_team_id', $request->team_id);
-                });
-            }
-
-            // Filter by status
-            if ($request->has('status')) {
-                $query->where('status', $request->status);
-            }
-
-            // Filter by date range
-            if ($request->has('date_from')) {
-                $query->where('match_date', '>=', $request->date_from);
-            }
-            if ($request->has('date_to')) {
-                $query->where('match_date', '<=', $request->date_to);
-            }
-
-            // Pagination
-            $perPage = $request->get('per_page', 15);
-            $matches = $query->orderBy('match_date')->paginate($perPage);
-
-            return response()->json([
-                'success' => true,
-                'data' => $matches
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to fetch matches',
-                'error' => $e->getMessage()
-            ], 500);
+        // Filter by tournament
+        if ($request->has('tournament_id')) {
+            $query->where('tournament_id', $request->tournament_id);
         }
+
+        // Filter by team
+        if ($request->has('team_id')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('home_team_id', $request->team_id)
+                    ->orWhere('away_team_id', $request->team_id);
+            });
+        }
+
+        // 🆕 NUEVO: Filter by referee_id (para el dashboard del árbitro)
+        if ($request->has('referee_id')) {
+            $query->where('referee_id', $request->referee_id);
+        }
+
+        // Filter by status
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by date range
+        if ($request->has('date_from')) {
+            $query->where('match_date', '>=', $request->date_from);
+        }
+        if ($request->has('date_to')) {
+            $query->where('match_date', '<=', $request->date_to);
+        }
+
+        // Pagination
+        $perPage = $request->get('per_page', 15);
+        $matches = $query->orderBy('match_date')->paginate($perPage);
+
+        return response()->json([
+            'success' => true,
+            'data' => $matches
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to fetch matches',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
 
     /**
      * Store a newly created match

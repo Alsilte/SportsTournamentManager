@@ -139,47 +139,50 @@ class AuthController extends Controller
     /**
      * Update user profile
      */
-    public function updateProfile(Request $request): JsonResponse
-    {
-        $user = $request->user();
+   /**
+ * Update user profile
+ */
+public function updateProfile(Request $request): JsonResponse
+{
+    $user = $request->user();
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'sometimes|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'avatar' => 'nullable|string|max:255',
-            'password' => 'sometimes|string|min:8|confirmed',
-        ]);
+    $validator = Validator::make($request->all(), [
+        'name' => 'sometimes|string|max:255',
+        'phone' => 'nullable|string|max:20',
+        'avatar' => 'nullable|string|max:255',
+        'password' => 'sometimes|string|min:8|confirmed',
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation errors',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        try {
-            $updateData = $request->only(['name', 'phone', 'avatar']);
-
-            if ($request->has('password')) {
-                $updateData['password'] = Hash::make($request->password);
-            }
-
-            $user->update($updateData);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Profile updated successfully',
-                'data' => $user->fresh()
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Profile update failed',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+    if ($validator->fails()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Validation errors',
+            'errors' => $validator->errors()
+        ], 422);
     }
+
+    try {
+        $updateData = $request->only(['name', 'phone', 'avatar']);
+
+        if ($request->has('password')) {
+            $updateData['password'] = Hash::make($request->password);
+        }
+
+        $user->update($updateData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Profile updated successfully',
+            'data' => $user->fresh()->load('player')
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Profile update failed',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
 
     /**
      * Logout user (revoke current token) - MÉTODO CORREGIDO

@@ -13,41 +13,46 @@ use Illuminate\Support\Facades\DB;
 
 class TeamController extends Controller
 {
-    /**
-     * Display a listing of teams (public access)
-     */
-    public function index(Request $request): JsonResponse
-    {
-        try {
-            $query = Team::with('manager:id,name')
-                ->withCount(['activePlayers as players_count']);
+   /**
+ * Display a listing of teams (public access)
+ */
+public function index(Request $request): JsonResponse
+{
+    try {
+        $query = Team::with('manager:id,name')
+            ->withCount(['activePlayers as players_count']);
 
-            // Filter by active status
-            if ($request->has('active')) {
-                $query->where('is_active', $request->boolean('active'));
-            }
-
-            // Search by name
-            if ($request->has('search')) {
-                $query->where('name', 'LIKE', '%' . $request->search . '%');
-            }
-
-            // Pagination
-            $perPage = $request->get('per_page', 15);
-            $teams = $query->orderBy('name')->paginate($perPage);
-
-            return response()->json([
-                'success' => true,
-                'data'    => $teams,
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to fetch teams',
-                'error'   => $e->getMessage(),
-            ], 500);
+        // Filter by active status
+        if ($request->has('active')) {
+            $query->where('is_active', $request->boolean('active'));
         }
+
+        // 🆕 NUEVO: Filter by manager_id (para el dashboard del team manager)
+        if ($request->has('manager_id')) {
+            $query->where('manager_id', $request->manager_id);
+        }
+
+        // Search by name
+        if ($request->has('search')) {
+            $query->where('name', 'LIKE', '%' . $request->search . '%');
+        }
+
+        // Pagination
+        $perPage = $request->get('per_page', 15);
+        $teams = $query->orderBy('name')->paginate($perPage);
+
+        return response()->json([
+            'success' => true,
+            'data'    => $teams,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to fetch teams',
+            'error'   => $e->getMessage(),
+        ], 500);
     }
+}
 
     /**
      * Get team roster - MÉTODO CORREGIDO

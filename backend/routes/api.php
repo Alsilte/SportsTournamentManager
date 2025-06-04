@@ -74,7 +74,7 @@ Route::prefix('')->middleware('auth:sanctum')->group(function () {
   // User authentication management
   Route::prefix('auth')->group(function () {
     Route::get('/profile', [AuthController::class, 'profile']);
-    Route::put('/profile', [AuthController::class, 'updateProfile']);
+Route::put('/profile', [AuthController::class, 'updateProfile']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/logout-all', [AuthController::class, 'logoutAll']);
