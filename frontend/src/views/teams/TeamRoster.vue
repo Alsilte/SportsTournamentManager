@@ -348,7 +348,7 @@
    <AddPlayerModal
   v-if="showAddPlayerModal"
   :team-id="Number(route.params.id)"
-  @close="closeAddPlayerModal"
+  @close="handleCloseModal"
   @success="handlePlayerAdded"
 />
   </MainLayout>
@@ -405,7 +405,6 @@ export default {
     const captain = ref(null)
     const isLoading = ref(false)
     const error = ref('')
-    const showAddPlayerModal = ref(false)
 
     // Filters
     const filters = ref({
@@ -606,13 +605,18 @@ export default {
       })
     }
 
-    const closeAddPlayerModal = () => {
+    // Estado del modal
+    const showAddPlayerModal = ref(false)
+
+    // Función para cerrar el modal
+    const handleCloseModal = () => {
       showAddPlayerModal.value = false
     }
 
+    // Función para manejar el éxito al añadir un jugador
     const handlePlayerAdded = async () => {
       await fetchTeamRoster()
-      closeAddPlayerModal()
+      showAddPlayerModal.value = false
       window.$notify?.success(t('teams.playerAddedSuccess'))
     }
 
@@ -646,7 +650,7 @@ export default {
       confirmRemovePlayer,
       calculateAge,
       formatDate,
-      closeAddPlayerModal,
+      handleCloseModal,
       handlePlayerAdded
     }
   }
