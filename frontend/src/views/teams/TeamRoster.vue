@@ -18,12 +18,10 @@
         <div class="flex items-center space-x-3">
           <button 
             v-if="canManageTeam"
-            @click="() => {
-              console.log('Abriendo modal...');
-              showAddPlayerModal = true;
-            }" 
+            @click="openAddPlayerModal"
             class="btn-primary"
           >
+            <PlusIcon class="w-4 h-4 mr-2" />
             {{ t('teams.addPlayer') }}
           </button>
         </div>
@@ -344,13 +342,13 @@
       </RouterLink>
     </div>
 
-    <!-- Add Player Modal (placeholder) -->
-   <AddPlayerModal
-  v-if="showAddPlayerModal"
-  :team-id="Number(route.params.id)"
-  @close="handleCloseModal"
-  @success="handlePlayerAdded"
-/>
+    <!-- Add Player Modal -->
+    <AddPlayerModal
+      v-if="showAddPlayerModal"
+      :team-id="Number(route.params.id)"
+      @close="handleCloseModal"
+      @success="handlePlayerAdded"
+    />
   </MainLayout>
 </template>
 
@@ -362,7 +360,8 @@
 
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { useI18n } from 'vue-i18n' // Añade esta importación
+import { useI18n } from 'vue-i18n'
+import { AddPlayerModal } from '@/components/teams/AddPlayerModal.vue'
 import {
   ArrowLeftIcon,
   PlusIcon,
@@ -377,12 +376,12 @@ import {
 import { useAuthStore } from '@/stores/auth'
 import { teamAPI, apiHelpers } from '@/services/api'
 import MainLayout from '@/components/layout/MainLayout.vue'
-import AddPlayerModal from '@/components/teams/AddPlayerModal.vue'
 
 export default {
   name: 'TeamRoster',
   components: {
     MainLayout,
+    AddPlayerModal,
     ArrowLeftIcon,
     PlusIcon,
     UserIcon,
@@ -392,10 +391,9 @@ export default {
     TrashIcon,
     MagnifyingGlassIcon,
     ExclamationTriangleIcon,
-    AddPlayerModal,
   },
   setup() {
-    const { t } = useI18n() // Añade esto al inicio del setup
+    const { t } = useI18n()
     const route = useRoute()
     const authStore = useAuthStore()
 
@@ -608,6 +606,11 @@ export default {
     // Estado del modal
     const showAddPlayerModal = ref(false)
 
+    // Función para abrir el modal
+    const openAddPlayerModal = () => {
+      showAddPlayerModal.value = true
+    }
+
     // Función para cerrar el modal
     const handleCloseModal = () => {
       showAddPlayerModal.value = false
@@ -616,7 +619,7 @@ export default {
     // Función para manejar el éxito al añadir un jugador
     const handlePlayerAdded = async () => {
       await fetchTeamRoster()
-      showAddPlayerModal.value = false
+      handleCloseModal()
       window.$notify?.success(t('teams.playerAddedSuccess'))
     }
 
@@ -626,7 +629,7 @@ export default {
     })
 
     return {
-      t, // Asegúrate de incluir t en el return
+      t,
       authStore,
       team,
       players,
@@ -651,7 +654,8 @@ export default {
       calculateAge,
       formatDate,
       handleCloseModal,
-      handlePlayerAdded
+      handlePlayerAdded,
+      openAddPlayerModal
     }
   }
 }

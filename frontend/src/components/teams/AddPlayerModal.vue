@@ -3,7 +3,7 @@
     <div class="bg-white rounded-lg max-w-md w-full p-6">
       <div class="flex items-center justify-between mb-6">
         <h3 class="text-lg font-semibold text-gray-900">{{ t('teams.addPlayerToTeam') }}</h3>
-        <button @click="$emit('close')" class="p-2 rounded-lg text-gray-400 hover:text-gray-600">
+        <button @click="$emit('close')" class="text-gray-400 hover:text-gray-600">
           <XMarkIcon class="w-5 h-5" />
         </button>
       </div>

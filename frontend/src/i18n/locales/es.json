@@ -313,6 +313,9 @@
       "nationality": "Nacionalidad"
     },
     "addPlayerToTeam": "Añadir Jugador al Equipo",
+    "addPlayer": "Añadir Jugador",
+    "playerAddedSuccess": "Jugador añadido exitosamente",
+    "failedToAddPlayer": "Error al añadir jugador",
     "selectPlayer": "Seleccionar Jugador",
     "choosePlayer": "Elige un jugador",
     "jerseyNumber": "Número de Camiseta",
@@ -326,9 +329,6 @@
       "forward": "Delantero"
     },
     "teamCaptain": "Capitán del Equipo",
-    "adding": "Añadiendo",
-    "addPlayer": "Añadir Jugador",
-    "playerAddedSuccess": "¡Jugador añadido exitosamente!",
-    "failedToAddPlayer": "Error al añadir jugador"
+    "adding": "Añadiendo"
   }
 }
