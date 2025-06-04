@@ -8,10 +8,10 @@
           </button>
           <div>
             <h1 class="text-3xl font-bold text-gray-900">
-              {{ team?.name }} - {{ $t('teams.roster') || 'Team Roster' }}
+              {{ team?.name }} - {{ t('teams.roster') }}
             </h1>
             <p class="text-gray-600 mt-1">
-              {{ $t('teams.manageRoster') || 'Manage team players' }}
+              {{ t('teams.manageRoster') }}
             </p>
           </div>
         </div>
@@ -22,7 +22,7 @@
             class="btn-primary"
           >
             <PlusIcon class="w-4 h-4 mr-2" />
-            {{ $t('teams.addPlayer') || 'Add Player' }}
+            {{ t('teams.addPlayer') }}
           </button>
         </div>
       </div>
@@ -46,11 +46,11 @@
         <div class="flex items-center justify-between mb-6">
           <div>
             <h2 class="text-xl font-semibold text-gray-900">{{ team.name }}</h2>
-            <p class="text-gray-600">{{ team.description || $t('teams.noDescription') || 'No description available' }}</p>
+            <p class="text-gray-600">{{ team.description || t('teams.noDescription') }}</p>
           </div>
           <div class="text-right">
             <div class="text-2xl font-bold text-primary-600">{{ activePlayersCount }}</div>
-            <div class="text-sm text-gray-600">{{ $t('teams.activePlayers') || 'Active Players' }}</div>
+            <div class="text-sm text-gray-600">{{ t('teams.activePlayers') }}</div>
           </div>
         </div>
 
@@ -58,19 +58,19 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div class="bg-primary-50 rounded-lg p-4 text-center">
             <div class="text-lg font-bold text-primary-600">{{ totalPlayers }}</div>
-            <div class="text-xs text-gray-600">{{ $t('common.total') || 'Total' }}</div>
+            <div class="text-xs text-gray-600">{{ t('common.total') }}</div>
           </div>
           <div class="bg-success-50 rounded-lg p-4 text-center">
             <div class="text-lg font-bold text-success-600">{{ activePlayersCount }}</div>
-            <div class="text-xs text-gray-600">{{ $t('common.active') || 'Active' }}</div>
+            <div class="text-xs text-gray-600">{{ t('common.active') }}</div>
           </div>
           <div class="bg-warning-50 rounded-lg p-4 text-center">
             <div class="text-lg font-bold text-warning-600">{{ captainsCount }}</div>
-            <div class="text-xs text-gray-600">{{ $t('teams.captains') || 'Captains' }}</div>
+            <div class="text-xs text-gray-600">{{ t('teams.captains') }}</div>
           </div>
           <div class="bg-secondary-50 rounded-lg p-4 text-center">
             <div class="text-lg font-bold text-secondary-600">{{ positionsCount }}</div>
-            <div class="text-xs text-gray-600">{{ $t('teams.positions') || 'Positions' }}</div>
+            <div class="text-xs text-gray-600">{{ t('teams.positions') }}</div>
           </div>
         </div>
       </div>
@@ -80,13 +80,13 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <!-- Search -->
           <div>
-            <label class="form-label">{{ $t('common.search') || 'Search' }}</label>
+            <label class="form-label">{{ t('common.search') }}</label>
             <div class="relative">
               <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 v-model="filters.search"
                 type="text"
-                :placeholder="$t('teams.searchPlayers') || 'Search players...'"
+                :placeholder="t('teams.searchPlayers')"
                 class="form-input pl-10"
                 @input="applyFilters"
               />
@@ -95,9 +95,9 @@
 
           <!-- Position Filter -->
           <div>
-            <label class="form-label">{{ $t('teams.position') || 'Position' }}</label>
+            <label class="form-label">{{ t('teams.position') }}</label>
             <select v-model="filters.position" @change="applyFilters" class="form-input">
-              <option value="">{{ $t('teams.allPositions') || 'All Positions' }}</option>
+              <option value="">{{ t('teams.allPositions') }}</option>
               <option v-for="position in uniquePositions" :key="position" :value="position">
                 {{ position }}
               </option>
@@ -106,12 +106,12 @@
 
           <!-- Status Filter -->
           <div>
-            <label class="form-label">{{ $t('common.status') || 'Status' }}</label>
+            <label class="form-label">{{ t('common.status') }}</label>
             <select v-model="filters.status" @change="applyFilters" class="form-input">
-              <option value="">{{ $t('teams.allPlayers') || 'All Players' }}</option>
-              <option value="active">{{ $t('common.active') || 'Active' }}</option>
-              <option value="inactive">{{ $t('common.inactive') || 'Inactive' }}</option>
-              <option value="captain">{{ $t('teams.captains') || 'Captains' }}</option>
+              <option value="">{{ t('teams.allPlayers') }}</option>
+              <option value="active">{{ t('common.active') }}</option>
+              <option value="inactive">{{ t('common.inactive') }}</option>
+              <option value="captain">{{ t('teams.captains') }}</option>
             </select>
           </div>
         </div>
@@ -121,10 +121,10 @@
       <div class="card p-6">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-xl font-semibold text-gray-900">
-            {{ $t('teams.playerRoster') || 'Player Roster' }}
+            {{ t('teams.playerRoster') }}
           </h2>
           <div class="text-sm text-gray-600">
-            {{ filteredPlayers.length }} {{ $t('teams.players') || 'players' }}
+            {{ filteredPlayers.length }} {{ t('teams.players') }}
           </div>
         </div>
 
@@ -322,10 +322,10 @@
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <button v-if="hasActiveFilters" @click="clearFilters" class="btn-secondary">
-              {{ $t('common.clearFilters') || 'Clear Filters' }}
+              {{ t('common.clearFilters') }}
             </button>
             <button v-if="canManageTeam" @click="showAddPlayerModal = true" class="btn-primary">
-              {{ $t('teams.addPlayer') || 'Add Player' }}
+              {{ t('teams.addPlayer') }}
             </button>
           </div>
         </div>
@@ -338,18 +338,18 @@
       <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('errors.teamNotFound') || 'Team not found' }}</h3>
       <p class="text-gray-600 mb-6">{{ error }}</p>
       <RouterLink to="/teams" class="btn-primary">
-        {{ $t('teams.backToTeams') || 'Back to Teams' }}
+        {{ t('teams.backToTeams') }}
       </RouterLink>
     </div>
 
     <!-- Add Player Modal (placeholder) -->
     <div v-if="showAddPlayerModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-lg max-w-md w-full p-6">
-        <h3 class="text-lg font-semibold mb-4">{{ $t('teams.addPlayer') || 'Add Player' }}</h3>
-        <p class="text-gray-600 mb-6">{{ $t('teams.addPlayerFeature') || 'Add player functionality coming soon' }}</p>
+        <h3 class="text-lg font-semibold mb-4">{{ t('teams.addPlayer') }}</h3>
+        <p class="text-gray-600 mb-6">{{ t('teams.addPlayerFeature') }}</p>
         <div class="flex space-x-3">
           <button @click="showAddPlayerModal = false" class="btn-secondary flex-1">
-            {{ $t('common.close') || 'Close' }}
+            {{ t('common.close') }}
           </button>
         </div>
       </div>
@@ -365,6 +365,8 @@
 
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+
 import {
   ArrowLeftIcon,
   PlusIcon,
@@ -395,6 +397,7 @@ export default {
     ExclamationTriangleIcon,
   },
   setup() {
+        const { t } = useI18n()
     const route = useRoute()
     const authStore = useAuthStore()
 
@@ -633,7 +636,8 @@ export default {
       editPlayer,
       confirmRemovePlayer,
       calculateAge,
-      formatDate
+      formatDate,
+      t
     }
   }
 }
