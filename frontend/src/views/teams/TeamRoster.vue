@@ -18,11 +18,11 @@
         <div class="flex items-center space-x-3">
           <button 
             v-if="canManageTeam"
-            @click="openAddPlayerModal" 
+            @click="showAddPlayerModal = true" 
             class="btn-primary"
           >
             <PlusIcon class="w-4 h-4 mr-2" />
-            {{ t('teams.addPlayer') }}
+            {{ $t('teams.addPlayer') || 'Add Player' }}
           </button>
         </div>
       </div>
@@ -342,144 +342,16 @@
       </RouterLink>
     </div>
 
-    <!-- Add Player Modal -->
+    <!-- Add Player Modal (placeholder) -->
     <div v-if="showAddPlayerModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-lg max-w-md w-full p-6">
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="text-lg font-semibold text-gray-900">{{ t('teams.addPlayer') }}</h3>
-          <button @click="closeAddPlayerModal" class="text-gray-400 hover:text-gray-600">
-            <XMarkIcon class="w-5 h-5" />
+        <h3 class="text-lg font-semibold mb-4">{{ $t('teams.addPlayer') || 'Add Player' }}</h3>
+        <p class="text-gray-600 mb-6">{{ $t('teams.addPlayerFeature') || 'Add player functionality coming soon' }}</p>
+        <div class="flex space-x-3">
+          <button @click="showAddPlayerModal = false" class="btn-secondary flex-1">
+            {{ $t('common.close') || 'Close' }}
           </button>
         </div>
-
-        <!-- Estado de carga -->
-        <div v-if="isLoadingPlayers" class="text-center py-4">
-          <div class="spinner w-6 h-6 mx-auto mb-2"></div>
-          <p class="text-gray-600">{{ t('teams.loadingPlayers') }}</p>
-        </div>
-
-        <!-- Formulario -->
-        <form v-else @submit.prevent="addPlayerToTeam" class="space-y-4">
-          <!-- Jugador -->
-          <div>
-            <label class="form-label" for="player_id">
-              {{ $t('teams.player') || 'Player' }}
-            </label>
-            <div class="relative">
-              <select
-                v-model="newPlayerForm.player_id"
-                id="player_id"
-                class="form-input"
-                required
-              >
-                <option value="">{{ $t('common.select') || 'Select' }}</option>
-                <option v-for="player in availablePlayers" :key="player.id" :value="player.id">
-                  {{ player.name }} ({{ player.email }})
-                </option>
-              </select>
-              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <UserIcon class="w-5 h-5 text-gray-400" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Número de camiseta -->
-          <div>
-            <label class="form-label" for="jersey_number">
-              {{ $t('teams.jerseyNumber') || 'Jersey Number' }}
-            </label>
-            <div class="relative">
-              <input
-                v-model="newPlayerForm.jersey_number"
-                id="jersey_number"
-                type="number"
-                min="1"
-                class="form-input"
-                placeholder="10"
-                required
-              />
-              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <span class="text-gray-400">#</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Posición -->
-          <div>
-            <label class="form-label" for="position">
-              {{ $t('teams.position') || 'Position' }}
-            </label>
-            <div class="relative">
-              <input
-                v-model="newPlayerForm.position"
-                id="position"
-                type="text"
-                class="form-input"
-                placeholder="{{ $t('teams.positionPlaceholder') || 'e.g. Forward' }}"
-                required
-              />
-              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <PencilIcon class="w-5 h-5 text-gray-400" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Capitán -->
-          <div class="flex items-center">
-            <input
-              v-model="newPlayerForm.is_captain"
-              id="is_captain"
-              type="checkbox"
-              class="form-checkbox h-5 w-5 text-primary-600 border-gray-300 rounded"
-            />
-            <label for="is_captain" class="ml-2 text-sm text-gray-700">
-              {{ $t('teams.assignCaptain') || 'Assign as captain' }}
-            </label>
-          </div>
-
-          <!-- Fecha de ingreso -->
-          <div>
-            <label class="form-label" for="joined_date">
-              {{ $t('teams.joinedDate') || 'Joined Date' }}
-            </label>
-            <div class="relative">
-              <input
-                v-model="newPlayerForm.joined_date"
-                id="joined_date"
-                type="date"
-                class="form-input"
-                :max="today"
-                required
-              />
-              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <CalendarIcon class="w-5 h-5 text-gray-400" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Error message -->
-          <div v-if="addPlayerError" class="text-red-500 text-sm mt-2">
-            {{ addPlayerError }}
-          </div>
-
-          <!-- Botones de acción -->
-          <div class="flex justify-end gap-4">
-            <button 
-              @click="closeAddPlayerModal" 
-              class="btn-secondary"
-            >
-              {{ $t('common.cancel') || 'Cancel' }}
-            </button>
-            <button 
-              type="submit" 
-              class="btn-primary"
-              :disabled="isSubmitting"
-            >
-              <span v-if="isSubmitting" class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
-              {{ $t('common.add') || 'Add' }}
-            </button>
-          </div>
-        </form>
       </div>
     </div>
   </MainLayout>
@@ -493,10 +365,6 @@
 
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { useI18n } from 'vue-i18n' // Asegúrate de que esta importación esté presente
-import { XMarkIcon } from '@heroicons/vue/24/outline'
-
-
 import {
   ArrowLeftIcon,
   PlusIcon,
@@ -507,10 +375,9 @@ import {
   TrashIcon,
   MagnifyingGlassIcon,
   ExclamationTriangleIcon,
-  XMarkIcon,
 } from '@heroicons/vue/24/outline'
 import { useAuthStore } from '@/stores/auth'
-import { teamAPI, apiHelpers, playerAPI } from '@/services/api'
+import { teamAPI, apiHelpers } from '@/services/api'
 import MainLayout from '@/components/layout/MainLayout.vue'
 
 export default {
@@ -526,10 +393,8 @@ export default {
     TrashIcon,
     MagnifyingGlassIcon,
     ExclamationTriangleIcon,
-    XMarkIcon,
   },
   setup() {
-    const { t } = useI18n() // Debe estar al inicio del setup
     const route = useRoute()
     const authStore = useAuthStore()
 
@@ -547,22 +412,6 @@ export default {
       position: '',
       status: ''
     })
-
-    // Nuevas variables reactivas
-    const availablePlayers = ref([])
-    const isLoadingPlayers = ref(false)
-    const isSubmitting = ref(false)
-    const addPlayerError = ref('')
-    
-    const newPlayerForm = ref({
-      player_id: '',
-      jersey_number: '',
-      position: '',
-      is_captain: false,
-      joined_date: new Date().toISOString().split('T')[0]
-    })
-
-    const today = computed(() => new Date().toISOString().split('T')[0])
 
     // Computed properties
     const canManageTeam = computed(() => {
@@ -672,32 +521,6 @@ export default {
     }
 
     /**
-     * Fetch available players for adding to team
-     */
-    const fetchAvailablePlayers = async () => {
-      isLoadingPlayers.value = true
-      addPlayerError.value = ''
-
-      try {
-        const response = await playerAPI.available()
-        
-        if (apiHelpers.isSuccess(response)) {
-          const data = apiHelpers.getData(response)
-          availablePlayers.value = data.available_players || []
-        } else {
-          addPlayerError.value = t('errors.failedToLoadPlayers')
-          availablePlayers.value = []
-        }
-      } catch (error) {
-        console.error('Failed to fetch available players:', error)
-        addPlayerError.value = t('errors.failedToLoadPlayers')
-        availablePlayers.value = []
-      } finally {
-        isLoadingPlayers.value = false
-      }
-    }
-
-    /**
      * Apply filters (for future debounced search)
      */
     const applyFilters = () => {
@@ -713,31 +536,6 @@ export default {
         search: '',
         position: '',
         status: ''
-      }
-    }
-
-    /**
-     * Open Add Player modal and fetch available players
-     */
-    const openAddPlayerModal = () => {
-      showAddPlayerModal.value = true
-      fetchAvailablePlayers()
-    }
-
-    /**
-     * Close Add Player modal
-     */
-    const closeAddPlayerModal = () => {
-      showAddPlayerModal.value = false
-      availablePlayers.value = []
-      addPlayerError.value = ''
-      
-      newPlayerForm.value = {
-        player_id: '',
-        jersey_number: '',
-        position: '',
-        is_captain: false,
-        joined_date: new Date().toISOString().split('T')[0]
       }
     }
 
@@ -775,31 +573,6 @@ export default {
       } catch (err) {
         console.error('Failed to remove player:', err)
         window.$notify?.error(apiHelpers.handleError(err))
-      }
-    }
-
-    /**
-     * Add player to team
-     */
-    const addPlayerToTeam = async () => {
-      addPlayerError.value = ''
-      isSubmitting.value = true
-
-      try {
-        const response = await teamAPI.addPlayer(route.params.id, newPlayerForm.value)
-
-        if (apiHelpers.isSuccess(response)) {
-          closeAddPlayerModal()
-          await fetchTeamRoster()
-          window.$notify?.success(t('teams.playerAddedSuccess'))
-        } else {
-          addPlayerError.value = response.data?.message || t('errors.failedToAddPlayer')
-        }
-      } catch (error) {
-        console.error('Failed to add player:', error)
-        addPlayerError.value = apiHelpers.handleError(error)
-      } finally {
-        isSubmitting.value = false
       }
     }
 
@@ -855,21 +628,12 @@ export default {
       uniquePositions,
       hasActiveFilters,
       filteredPlayers,
-      availablePlayers,
-      isLoadingPlayers,
-      isSubmitting,
-      addPlayerError,
-      newPlayerForm,
-      today,
-      openAddPlayerModal,
-      closeAddPlayerModal,
       applyFilters,
       clearFilters,
       editPlayer,
       confirmRemovePlayer,
       calculateAge,
-      formatDate,
-      addPlayerToTeam,
+      formatDate
     }
   }
 }
@@ -917,17 +681,5 @@ export default {
 
 .empty-state-icon {
   @apply w-12 h-12 text-gray-300 mx-auto mb-4;
-}
-
-.spinner {
-  border: 2px solid #f3f3f3;
-  border-top: 2px solid #3498db;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 </style>
