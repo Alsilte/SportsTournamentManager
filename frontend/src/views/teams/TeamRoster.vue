@@ -8,21 +8,23 @@
           </button>
           <div>
             <h1 class="text-3xl font-bold text-gray-900">
-              {{ team?.name }} - {{ $t('teams.roster') || 'Team Roster' }}
+              {{ team?.name }} - {{ t('teams.roster.title') }}
             </h1>
             <p class="text-gray-600 mt-1">
-              {{ $t('teams.manageRoster') || 'Manage team players' }}
+              {{ t('teams.roster.manageRoster') }}
             </p>
           </div>
         </div>
         <div class="flex items-center space-x-3">
           <button 
             v-if="canManageTeam"
-            @click="showAddPlayerModal = true" 
+            @click="() => {
+              console.log('Abriendo modal...');
+              showAddPlayerModal = true;
+            }" 
             class="btn-primary"
           >
-            <PlusIcon class="w-4 h-4 mr-2" />
-            {{ $t('teams.addPlayer') || 'Add Player' }}
+            {{ t('teams.addPlayer') }}
           </button>
         </div>
       </div>
@@ -393,7 +395,7 @@ export default {
     AddPlayerModal,
   },
   setup() {
-    const { t } = useI18n() // Añade esto
+    const { t } = useI18n() // Añade esto al inicio del setup
     const route = useRoute()
     const authStore = useAuthStore()
 
@@ -620,7 +622,7 @@ export default {
     })
 
     return {
-      t, // Añade esto
+      t, // Asegúrate de incluir t en el return
       authStore,
       team,
       players,
