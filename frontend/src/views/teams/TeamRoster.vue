@@ -343,12 +343,12 @@
     </div>
 
     <!-- Add Player Modal (placeholder) -->
-    <AddPlayerModal
-      v-if="showAddPlayerModal"
-      :team-id="Number(route.params.id)"
-      @close="showAddPlayerModal = false"
-      @success="fetchTeamRoster"
-    />
+   <AddPlayerModal
+  v-if="showAddPlayerModal"
+  :team-id="Number(route.params.id)"
+  @close="closeAddPlayerModal"
+  @success="handlePlayerAdded"
+/>
   </MainLayout>
 </template>
 
@@ -360,6 +360,7 @@
 
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n' // Añade esta importación
 import {
   ArrowLeftIcon,
   PlusIcon,
@@ -392,6 +393,7 @@ export default {
     AddPlayerModal,
   },
   setup() {
+    const { t } = useI18n() // Añade esto
     const route = useRoute()
     const authStore = useAuthStore()
 
@@ -602,12 +604,23 @@ export default {
       })
     }
 
+    const closeAddPlayerModal = () => {
+      showAddPlayerModal.value = false
+    }
+
+    const handlePlayerAdded = async () => {
+      await fetchTeamRoster()
+      closeAddPlayerModal()
+      window.$notify?.success(t('teams.playerAddedSuccess'))
+    }
+
     // Initialize
     onMounted(() => {
       fetchTeamRoster()
     })
 
     return {
+      t, // Añade esto
       authStore,
       team,
       players,
@@ -630,7 +643,9 @@ export default {
       editPlayer,
       confirmRemovePlayer,
       calculateAge,
-      formatDate
+      formatDate,
+      closeAddPlayerModal,
+      handlePlayerAdded
     }
   }
 }
