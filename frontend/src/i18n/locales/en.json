@@ -104,7 +104,8 @@
     "close": "Close",
     "open": "Open",
     "submit": "Submit",
-    "reset": "Reset"
+    "reset": "Reset",
+    "unknown": "Unknown"
   },
   "navigation": {
     "tournaments": "Tournaments",
@@ -253,6 +254,24 @@
       "name": "Player",
       "age": "Age",
       "nationality": "Nationality"
-    }
+    },
+    "addPlayerToTeam": "Add Player to Team",
+    "selectPlayer": "Select Player",
+    "choosePlayer": "Choose a player",
+    "jerseyNumber": "Jersey Number",
+    "jerseyPlaceholder": "e.g., 10",
+    "position": "Position",
+    "selectPosition": "Select position",
+    "positions": {
+      "goalkeeper": "Goalkeeper",
+      "defender": "Defender",
+      "midfielder": "Midfielder",
+      "forward": "Forward"
+    },
+    "teamCaptain": "Team Captain",
+    "adding": "Adding",
+    "addPlayer": "Add Player",
+    "playerAddedSuccess": "Player added successfully!",
+    "failedToAddPlayer": "Failed to add player"
   }
 }

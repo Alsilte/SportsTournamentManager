@@ -343,17 +343,12 @@
     </div>
 
     <!-- Add Player Modal (placeholder) -->
-    <div v-if="showAddPlayerModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div class="bg-white rounded-lg max-w-md w-full p-6">
-        <h3 class="text-lg font-semibold mb-4">{{ $t('teams.addPlayer') || 'Add Player' }}</h3>
-        <p class="text-gray-600 mb-6">{{ $t('teams.addPlayerFeature') || 'Add player functionality coming soon' }}</p>
-        <div class="flex space-x-3">
-          <button @click="showAddPlayerModal = false" class="btn-secondary flex-1">
-            {{ $t('common.close') || 'Close' }}
-          </button>
-        </div>
-      </div>
-    </div>
+    <AddPlayerModal
+      v-if="showAddPlayerModal"
+      :team-id="Number(route.params.id)"
+      @close="showAddPlayerModal = false"
+      @success="fetchTeamRoster"
+    />
   </MainLayout>
 </template>
 
@@ -379,6 +374,7 @@ import {
 import { useAuthStore } from '@/stores/auth'
 import { teamAPI, apiHelpers } from '@/services/api'
 import MainLayout from '@/components/layout/MainLayout.vue'
+import AddPlayerModal from '@/components/teams/AddPlayerModal.vue'
 
 export default {
   name: 'TeamRoster',
@@ -393,6 +389,7 @@ export default {
     TrashIcon,
     MagnifyingGlassIcon,
     ExclamationTriangleIcon,
+    AddPlayerModal,
   },
   setup() {
     const route = useRoute()

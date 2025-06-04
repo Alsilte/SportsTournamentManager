@@ -103,7 +103,8 @@
     "close": "Cerrar",
     "open": "Abrir",
     "submit": "Enviar",
-    "reset": "Restablecer"
+    "reset": "Restablecer",
+    "unknown": "Desconocido"
   },
   "navigation": {
     "tournaments": "Torneos",
@@ -310,6 +311,24 @@
       "name": "Jugador",
       "age": "Edad",
       "nationality": "Nacionalidad"
-    }
+    },
+    "addPlayerToTeam": "Añadir Jugador al Equipo",
+    "selectPlayer": "Seleccionar Jugador",
+    "choosePlayer": "Elige un jugador",
+    "jerseyNumber": "Número de Camiseta",
+    "jerseyPlaceholder": "ej., 10",
+    "position": "Posición",
+    "selectPosition": "Seleccionar posición",
+    "positions": {
+      "goalkeeper": "Portero",
+      "defender": "Defensa",
+      "midfielder": "Centrocampista", 
+      "forward": "Delantero"
+    },
+    "teamCaptain": "Capitán del Equipo",
+    "adding": "Añadiendo",
+    "addPlayer": "Añadir Jugador",
+    "playerAddedSuccess": "¡Jugador añadido exitosamente!",
+    "failedToAddPlayer": "Error al añadir jugador"
   }
 }
