@@ -48,6 +48,7 @@
           "description": "Rastrea logros, premios, trofeos y sistemas de reconocimiento por rendimiento excepcional y participación en torneos"
         }
       }
+      
     },
     "stats": {
       "title": "Estadísticas de la Plataforma",
@@ -278,5 +279,39 @@
     "permissionDenied": "Permiso denegado",
     "networkError": "Error de red",
     "languageChanged": "Idioma cambiado exitosamente"
+  },
+  "teams": {
+    "title": "Equipos",
+    "roster": {
+      "title": "Plantilla",
+      "manageRoster": "Gestionar jugadores del equipo",
+      "addPlayer": "Agregar Jugador",
+      "noDescription": "Sin descripción disponible",
+      "activePlayers": "Jugadores Activos",
+      "captains": "Capitanes",
+      "positions": "Posiciones",
+      "searchPlayers": "Buscar jugadores...",
+      "position": "Posición",
+      "allPositions": "Todas las Posiciones",
+      "allPlayers": "Todos los Jugadores",
+      "playerRoster": "Lista de Jugadores",
+      "players": "jugadores",
+      "jerseyNumber": "Número",
+      "joinedDate": "Se unió",
+      "noPosition": "Sin posición",
+      "captain": "Capitán",
+      "removePlayer": "Eliminar Jugador",
+      "noPlayersMatch": "No hay jugadores que coincidan con los filtros",
+      "noPlayersYet": "Aún no hay jugadores en este equipo",
+      "tryDifferentFilters": "Intenta ajustar tus filtros",
+      "addFirstPlayer": "Agrega el primer jugador para comenzar",
+      "backToTeams": "Volver a Equipos",
+      "addPlayerFeature": "Función de agregar jugador próximamente"
+    },
+    "players": {
+      "name": "Jugador",
+      "age": "Edad",
+      "nationality": "Nacionalidad"
+    }
   }
 }

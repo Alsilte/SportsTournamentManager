@@ -220,5 +220,39 @@
     "permissionDenied": "Permission denied",
     "networkError": "Network error occurred",
     "languageChanged": "Language changed successfully"
+  },
+ "teams": {
+    "title": "Teams",
+    "roster": {
+      "title": "Roster",
+      "manageRoster": "Manage team players",
+      "addPlayer": "Add Player",
+      "noDescription": "No description available",
+      "activePlayers": "Active Players",
+      "captains": "Captains",
+      "positions": "Positions",
+      "searchPlayers": "Search players...",
+      "position": "Position",
+      "allPositions": "All Positions",
+      "allPlayers": "All Players",
+      "playerRoster": "Player Roster",
+      "players": "players",
+      "jerseyNumber": "Number",
+      "joinedDate": "Joined",
+      "noPosition": "No position",
+      "captain": "Captain",
+      "removePlayer": "Remove Player",
+      "noPlayersMatch": "No players match your filters",
+      "noPlayersYet": "No players in this team yet",
+      "tryDifferentFilters": "Try adjusting your filters",
+      "addFirstPlayer": "Add your first player to get started",
+      "backToTeams": "Back to Teams",
+      "addPlayerFeature": "Add player feature coming soon"
+    },
+    "players": {
+      "name": "Player",
+      "age": "Age",
+      "nationality": "Nationality"
+    }
   }
 }
