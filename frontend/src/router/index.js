@@ -1,8 +1,4 @@
-/**
- * Vue Router Configuration
- * Defines application routes with authentication guards
- */
-
+// router/index.js - Versión corregida con inicialización async
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
@@ -256,7 +252,7 @@ const router = createRouter({
 })
 
 /**
- * Navigation guards
+ * Navigation guards with proper async auth initialization
  */
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
@@ -264,10 +260,21 @@ router.beforeEach(async (to, from, next) => {
   // Set document title
   document.title = to.meta.title ? `${to.meta.title} - Tournament Manager` : 'Tournament Manager'
   
+  console.log('🧭 Router guard:', to.path, 'requiresAuth:', to.meta.requiresAuth)
+  
+  // CRÍTICO: Esperar a que la autenticación se inicialice
+  if (!authStore.isInitialized) {
+    console.log('⏳ Waiting for auth initialization...')
+    await authStore.initializeAuth()
+  }
+  
+  console.log('✅ Auth initialized. isAuthenticated:', authStore.isAuthenticated)
+  
   // Skip auth check for public routes
   if (to.meta.public && !to.meta.requiresAuth) {
     // Hide login/register pages for authenticated users
     if (to.meta.hideForAuth && authStore.isAuthenticated) {
+      console.log('🔒 Hiding auth page for authenticated user')
       next({ name: 'dashboard' })
       return
     }
@@ -278,6 +285,7 @@ router.beforeEach(async (to, from, next) => {
   // Check authentication for protected routes
   if (to.meta.requiresAuth) {
     if (!authStore.isAuthenticated) {
+      console.log('❌ Not authenticated, redirecting to login')
       next({ 
         name: 'login', 
         query: { redirect: to.fullPath } 
@@ -287,12 +295,13 @@ router.beforeEach(async (to, from, next) => {
     
     // Check role-based access
     if (to.meta.roles && !authStore.hasAnyRole(to.meta.roles)) {
-      // Redirect to dashboard if user doesn't have required role
+      console.log('🚫 Insufficient permissions, redirecting to dashboard')
       next({ name: 'dashboard' })
       return
     }
   }
   
+  console.log('✅ Navigation allowed')
   next()
 })
 
