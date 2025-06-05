@@ -14,7 +14,7 @@
 
     <div class="max-w-4xl mx-auto">
       <!-- Debug Info (remove in production) -->
-      <div v-if="process.env.NODE_ENV === 'development'" class="card p-4 mb-4 bg-yellow-50 border border-yellow-200">
+      <div v-if="import.meta.env.DEV" class="card p-4 mb-4 bg-yellow-50 border border-yellow-200">
         <h3 class="text-sm font-medium text-yellow-800 mb-2">Debug Info:</h3>
         <div class="text-xs text-yellow-700 space-y-1">
           <p>Tournaments loaded: {{ tournaments.length }}</p>
@@ -77,7 +77,7 @@
                 <p>No tournaments available for creating matches.</p>
                 <p class="text-xs mt-1">
                   Only tournaments with status "Registration Open" or "In Progress" can have matches created.
-                  <span v-if="process.env.NODE_ENV === 'development'">
+                  <span v-if="import.meta.env.DEV">
                     Check console for tournament details.
                   </span>
                 </p>
