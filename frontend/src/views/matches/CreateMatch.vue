@@ -13,6 +13,15 @@
     </template>
 
     <div class="max-w-4xl mx-auto">
+      <!-- Debug Info (remove in production) -->
+      <div v-if="process.env.NODE_ENV === 'development'" class="card p-4 mb-4 bg-yellow-50 border border-yellow-200">
+        <h3 class="text-sm font-medium text-yellow-800 mb-2">Debug Info:</h3>
+        <p class="text-xs text-yellow-700">Tournaments loaded: {{ tournaments.length }}</p>
+        <p class="text-xs text-yellow-700">Loading state: {{ isLoading }}</p>
+        <p class="text-xs text-yellow-700">Selected tournament: {{ form.tournament_id }}</p>
+        <p class="text-xs text-yellow-700">Available teams: {{ availableTeams.length }}</p>
+      </div>
+
       <form @submit.prevent="handleSubmit" class="space-y-8">
         <!-- Tournament Selection -->
         <div class="card p-6">
@@ -22,7 +31,16 @@
             <!-- Tournament -->
             <div>
               <label for="tournament_id" class="form-label">Tournament</label>
+              
+              <!-- Loading State for Tournaments -->
+              <div v-if="isLoadingTournaments" class="form-input bg-gray-100 flex items-center">
+                <div class="spinner w-4 h-4 mr-2"></div>
+                Loading tournaments...
+              </div>
+              
+              <!-- Tournament Select -->
               <select
+                v-else
                 id="tournament_id"
                 v-model="form.tournament_id"
                 required
@@ -37,9 +55,15 @@
                   :key="tournament.id" 
                   :value="tournament.id"
                 >
-                  {{ tournament.name }} ({{ tournament.sport_type }})
+                  {{ tournament.name }} ({{ tournament.sport_type || 'Unknown Sport' }})
                 </option>
               </select>
+              
+              <!-- No tournaments message -->
+              <div v-if="!isLoadingTournaments && tournaments.length === 0" class="text-sm text-amber-600 mt-1">
+                No tournaments available. Only tournaments that are "Registration Open" or "In Progress" can have matches created.
+              </div>
+              
               <p v-if="errors.tournament_id" class="form-error">{{ errors.tournament_id }}</p>
               <p v-if="selectedTournament" class="text-sm text-gray-600 mt-1">
                 Status: {{ formatTournamentStatus(selectedTournament.status) }} • 
@@ -53,7 +77,21 @@
         <div class="card p-6">
           <h2 class="text-xl font-semibold text-gray-900 mb-6">Teams</h2>
           
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div v-if="!form.tournament_id" class="text-center py-8 text-gray-500">
+            <p>Please select a tournament first to see available teams</p>
+          </div>
+          
+          <div v-else-if="isLoadingTeams" class="text-center py-8">
+            <div class="spinner w-6 h-6 mx-auto mb-2"></div>
+            <p class="text-gray-500">Loading teams...</p>
+          </div>
+          
+          <div v-else-if="availableTeams.length === 0" class="text-center py-8 text-amber-600">
+            <p>No teams are registered for this tournament yet.</p>
+            <p class="text-sm mt-2">Teams must be registered in the tournament before matches can be created.</p>
+          </div>
+          
+          <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Home Team -->
             <div>
               <label for="home_team_id" class="form-label">Home Team</label>
@@ -337,6 +375,8 @@ export default {
     const availableTeams = ref([])
     const referees = ref([])
     const isLoading = ref(false)
+    const isLoadingTournaments = ref(false)
+    const isLoadingTeams = ref(false)
     const errors = ref({})
     const generalError = ref('')
 
@@ -364,19 +404,49 @@ export default {
      * Fetch tournaments
      */
     const fetchTournaments = async () => {
+      isLoadingTournaments.value = true
       try {
-        const response = await tournamentAPI.getAll({ 
-          status: 'in_progress,registration_open',
-          per_page: 100 
-        })
+        console.log('Fetching tournaments...')
+        
+        // Try different approaches to get tournaments
+        let response
+        try {
+          // First try with status filter
+          response = await tournamentAPI.getAll({ 
+            status: 'registration_open,in_progress',
+            per_page: 100 
+          })
+        } catch (error) {
+          console.log('First attempt failed, trying without status filter...')
+          // If that fails, try without status filter
+          response = await tournamentAPI.getAll({ per_page: 100 })
+        }
+        
+        console.log('Tournament API response:', response)
         
         if (apiHelpers.isSuccess(response)) {
           const data = apiHelpers.getData(response)
-          tournaments.value = data.data || []
+          console.log('Tournament data:', data)
+          
+          // Handle both paginated and non-paginated responses
+          const tournamentList = data.data || data || []
+          
+          // Filter tournaments that can have matches created
+          tournaments.value = tournamentList.filter(tournament => 
+            ['registration_open', 'in_progress'].includes(tournament.status)
+          )
+          
+          console.log('Filtered tournaments:', tournaments.value)
+        } else {
+          console.error('Tournament API failed:', response)
+          tournaments.value = []
         }
       } catch (err) {
         console.error('Failed to fetch tournaments:', err)
         tournaments.value = []
+        window.$notify?.error('Failed to load tournaments')
+      } finally {
+        isLoadingTournaments.value = false
       }
     }
 
@@ -384,18 +454,35 @@ export default {
      * Fetch teams for selected tournament
      */
     const fetchTeamsForTournament = async (tournamentId) => {
+      if (!tournamentId) {
+        availableTeams.value = []
+        return
+      }
+
+      isLoadingTeams.value = true
       try {
+        console.log('Fetching teams for tournament:', tournamentId)
         const response = await tournamentAPI.getById(tournamentId)
+        
+        console.log('Tournament details response:', response)
         
         if (apiHelpers.isSuccess(response)) {
           const data = apiHelpers.getData(response)
+          console.log('Tournament detail data:', data)
+          
+          // The teams should be in the teams property
           availableTeams.value = data.teams || []
+          console.log('Available teams:', availableTeams.value)
         } else {
+          console.error('Failed to get tournament details:', response)
           availableTeams.value = []
         }
       } catch (err) {
         console.error('Failed to fetch tournament teams:', err)
         availableTeams.value = []
+        window.$notify?.error('Failed to load teams for tournament')
+      } finally {
+        isLoadingTeams.value = false
       }
     }
 
@@ -423,12 +510,14 @@ export default {
      * Handle tournament selection change
      */
     const onTournamentChange = () => {
+      console.log('Tournament changed to:', form.value.tournament_id)
       form.value.home_team_id = ''
       form.value.away_team_id = ''
-      availableTeams.value = []
       
       if (form.value.tournament_id) {
         fetchTeamsForTournament(form.value.tournament_id)
+      } else {
+        availableTeams.value = []
       }
     }
 
@@ -455,6 +544,8 @@ export default {
           round: form.value.round || null,
           venue: form.value.venue || null,
         }
+
+        console.log('Submitting match data:', matchData)
 
         const response = await matchAPI.create(matchData)
 
@@ -593,6 +684,7 @@ export default {
 
     // Initialize
     onMounted(() => {
+      console.log('CreateMatch component mounted')
       fetchTournaments()
       fetchReferees()
       
@@ -610,6 +702,8 @@ export default {
       availableTeams,
       referees,
       isLoading,
+      isLoadingTournaments,
+      isLoadingTeams,
       errors,
       generalError,
       minDateTime,
