@@ -259,7 +259,7 @@ import {
   TrophyIcon,
   ExclamationTriangleIcon as WarningIcon,
   XCircleIcon,
-  ArrowRightArrowLeftIcon,
+  ArrowsRightLeftIcon, // Cambiado de ArrowRightArrowLeftIcon
 } from '@heroicons/vue/24/solid'
 import { useAuthStore } from '@/stores/auth'
 import { matchAPI, apiHelpers } from '@/services/api'
@@ -460,7 +460,7 @@ export default {
         goal: TrophyIcon,
         yellow_card: WarningIcon,
         red_card: XCircleIcon,
-        substitution: ArrowRightArrowLeftIcon,
+        substitution: ArrowsRightLeftIcon, 
         own_goal: TrophyIcon,
       }
       return iconMap[eventType] || TrophyIcon
