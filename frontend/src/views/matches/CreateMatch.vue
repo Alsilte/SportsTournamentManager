@@ -16,10 +16,23 @@
       <!-- Debug Info (remove in production) -->
       <div v-if="process.env.NODE_ENV === 'development'" class="card p-4 mb-4 bg-yellow-50 border border-yellow-200">
         <h3 class="text-sm font-medium text-yellow-800 mb-2">Debug Info:</h3>
-        <p class="text-xs text-yellow-700">Tournaments loaded: {{ tournaments.length }}</p>
-        <p class="text-xs text-yellow-700">Loading state: {{ isLoading }}</p>
-        <p class="text-xs text-yellow-700">Selected tournament: {{ form.tournament_id }}</p>
-        <p class="text-xs text-yellow-700">Available teams: {{ availableTeams.length }}</p>
+        <div class="text-xs text-yellow-700 space-y-1">
+          <p>Tournaments loaded: {{ tournaments.length }}</p>
+          <p>Loading tournaments: {{ isLoadingTournaments }}</p>
+          <p>Loading teams: {{ isLoadingTeams }}</p>
+          <p>Selected tournament: {{ form.tournament_id }}</p>
+          <p>Available teams: {{ availableTeams.length }}</p>
+          <p>Auth user role: {{ authStore.user?.role }}</p>
+          <p>Is admin: {{ authStore.isAdmin }}</p>
+          <details v-if="tournaments.length > 0" class="mt-2">
+            <summary class="cursor-pointer">Tournament Details</summary>
+            <div class="mt-1 ml-2">
+              <div v-for="tournament in tournaments.slice(0, 3)" :key="tournament.id" class="text-xs">
+                • {{ tournament.name }} ({{ tournament.status }})
+              </div>
+            </div>
+          </details>
+        </div>
       </div>
 
       <form @submit.prevent="handleSubmit" class="space-y-8">
@@ -61,7 +74,13 @@
               
               <!-- No tournaments message -->
               <div v-if="!isLoadingTournaments && tournaments.length === 0" class="text-sm text-amber-600 mt-1">
-                No tournaments available. Only tournaments that are "Registration Open" or "In Progress" can have matches created.
+                <p>No tournaments available for creating matches.</p>
+                <p class="text-xs mt-1">
+                  Only tournaments with status "Registration Open" or "In Progress" can have matches created.
+                  <span v-if="process.env.NODE_ENV === 'development'">
+                    Check console for tournament details.
+                  </span>
+                </p>
               </div>
               
               <p v-if="errors.tournament_id" class="form-error">{{ errors.tournament_id }}</p>
@@ -408,19 +427,9 @@ export default {
       try {
         console.log('Fetching tournaments...')
         
-        // Try different approaches to get tournaments
-        let response
-        try {
-          // First try with status filter
-          response = await tournamentAPI.getAll({ 
-            status: 'registration_open,in_progress',
-            per_page: 100 
-          })
-        } catch (error) {
-          console.log('First attempt failed, trying without status filter...')
-          // If that fails, try without status filter
-          response = await tournamentAPI.getAll({ per_page: 100 })
-        }
+        // Since the backend doesn't handle comma-separated status,
+        // we'll fetch all tournaments and filter on frontend
+        const response = await tournamentAPI.getAll({ per_page: 100 })
         
         console.log('Tournament API response:', response)
         
@@ -436,7 +445,9 @@ export default {
             ['registration_open', 'in_progress'].includes(tournament.status)
           )
           
-          console.log('Filtered tournaments:', tournaments.value)
+          console.log('All tournaments:', tournamentList.length)
+          console.log('Filtered tournaments:', tournaments.value.length)
+          console.log('Tournament statuses:', tournamentList.map(t => ({ name: t.name, status: t.status })))
         } else {
           console.error('Tournament API failed:', response)
           tournaments.value = []
