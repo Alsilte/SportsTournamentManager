@@ -324,9 +324,9 @@
             <button v-if="hasActiveFilters" @click="clearFilters" class="btn-secondary">
               {{ $t('common.clearFilters') || 'Clear Filters' }}
             </button>
-            <button v-if="canManageTeam" @click="showAddPlayerModal = true" class="btn-primary">
-              {{ $t('teams.addPlayer') || 'Add Player' }}
-            </button>
+<button v-if="canManageTeam" @click="openAddPlayerModal" class="btn-primary">
+  {{ t('teams.addPlayer') || 'Add Players' }}
+</button>
           </div>
         </div>
       </div>
