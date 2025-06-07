@@ -65,7 +65,8 @@
       "subtitle": "Descubre los torneos más recientes y emocionantes en nuestra plataforma",
       "viewAll": "Ver Todos los Torneos",
       "noTournamentsDescription": "Sé el primero en crear un torneo increíble y unir comunidades deportivas",
-      "registrationProgress": "Progreso de Inscripción"
+      "registrationProgress": "Progreso de Inscripción",
+      "create": "Crear Torneo"
     }
   },
 
@@ -613,6 +614,7 @@
   "teams": {
     "title": "Equipos",
     "subtitle": "Explora y gestiona equipos deportivos",
+    "createTeam": "Crear Equipo",
     "create": {
       "title": "Crear Equipo",
       "subtitle": "Crea un nuevo equipo y comienza a construir tu plantilla",
