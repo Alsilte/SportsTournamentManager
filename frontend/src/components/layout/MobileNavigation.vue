@@ -225,8 +225,7 @@
   
       const userNavItems = [
         { name: 'dashboard', to: '/dashboard', icon: ChartBarIcon, label: 'Panel de Control' },
-        { name: 'profile', to: '/profile', icon: UserIcon, label: 'Perfil' },
-        { name: 'settings', to: '/settings', icon: CogIcon, label: 'Configuración' }
+        { name: 'profile', to: '/profile', icon: UserIcon, label: 'Perfil' }
       ]
   
       const adminNavItems = [

@@ -215,12 +215,6 @@ export default {
         to: '/profile', 
         icon: UserIcon,
         label: 'Perfil'
-      },
-      { 
-        name: 'Settings', 
-        to: '/settings', 
-        icon: CogIcon,
-        label: 'Configuración'
       }
     ]
 
