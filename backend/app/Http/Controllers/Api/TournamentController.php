@@ -312,27 +312,29 @@ $validatedData['status'] = $request->input('status', 'draft');
     /**
      * Register team for tournament
      */
-    public function registerTeam(Request $request, $id): JsonResponse
+   /**
+ * Register a team for a tournament
+ */
+public function registerTeam(Request $request, Tournament $tournament): JsonResponse
 {
-    $validator = Validator::make($request->all(), [
-        'team_id' => 'required|exists:teams,id'
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Validation errors',
-            'errors' => $validator->errors()
-        ], 422);
-    }
-
     try {
-        $tournament = Tournament::findOrFail($id);
-        $team = Team::findOrFail($request->team_id);
         $user = $request->user();
+        
+        $validator = Validator::make($request->all(), [
+            'team_id' => 'required|exists:teams,id'
+        ]);
 
-        // VERIFICACIÓN DE PERMISOS AGREGADA:
-        // Solo puede registrar equipos:
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation errors',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $team = Team::findOrFail($request->team_id);
+
+        // VERIFICACIONES DE PERMISOS:
         // 1. El admin (puede registrar cualquier equipo)
         // 2. El manager del equipo (solo puede registrar SUS equipos)
         if (!$user->isAdmin() && $team->manager_id !== $user->id) {
@@ -368,6 +370,21 @@ $validatedData['status'] = $request->input('status', 'draft');
             ], 422);
         }
 
+        // *** VALIDACIÓN CONDICIONAL DE JUGADORES ***
+        // Solo aplicar restricciones mínimas a managers, admins sin restricciones
+        if (!$user->isAdmin()) {
+            $activePlayersCount = $team->players()->wherePivot('is_active', true)->count();
+            
+            // Solo una restricción muy básica para managers
+            if ($activePlayersCount < 1) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El equipo debe tener al menos 1 jugador activo'
+                ], 422);
+            }
+        }
+        // Los admins no tienen restricciones de jugadores
+
         // Determinar el estado inicial del registro
         $registrationStatus = $user->isAdmin() ? 'approved' : 'pending';
 
@@ -385,13 +402,14 @@ $validatedData['status'] = $request->input('status', 'draft');
         return response()->json([
             'success' => true,
             'message' => $message,
-            'data' => $registration->load('team:id,name', 'tournament:id,name')
-        ], 201);
+            'data' => $registration->load(['team', 'tournament'])
+        ]);
+
     } catch (\Exception $e) {
         return response()->json([
             'success' => false,
             'message' => 'Failed to register team',
-            'error' => $e->getMessage()
+            'error' => $e->getMessage(),
         ], 500);
     }
 }

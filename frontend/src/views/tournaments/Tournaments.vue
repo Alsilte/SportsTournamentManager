@@ -433,7 +433,7 @@ export default {
         return
       }
 
-      if (!authStore.canManageTeams) {
+  if (!authStore.isAdmin && !authStore.canManageTeams) {
         window.$notify?.warning('Solo los gestores de equipos pueden registrar equipos')
         return
       }
