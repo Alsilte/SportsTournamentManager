@@ -251,6 +251,8 @@
             error.value = 'No tienes permisos para registrar este equipo'
           } else if (err.response?.status === 404) {
             error.value = 'Torneo o equipo no encontrado'
+          } else if (err.response?.status === 500) {
+            error.value = 'Error interno del servidor. Revisa los logs del servidor.'
           } else {
             error.value = 'Error al registrar equipo. Intenta nuevamente.'
           }
