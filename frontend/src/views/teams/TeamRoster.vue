@@ -287,13 +287,13 @@
       </RouterLink>
     </div>
 
-    <!-- Add Player Modal -->
-    <AddPlayerModal
-      v-if="showAddPlayerModal"
-      :team-id="Number(route.params.id)"
-      @close="handleCloseModal"
-      @success="handlePlayerAdded"
-    />
+<AddPlayerModal
+  v-if="showAddPlayerModal"
+  :show="showAddPlayerModal"
+  :team-id="Number(route.params.id)"
+  @close="handleCloseModal"
+  @success="handlePlayerAdded"
+/>
   </MainLayout>
 </template>
 
