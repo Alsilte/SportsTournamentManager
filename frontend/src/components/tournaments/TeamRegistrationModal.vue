@@ -74,8 +74,7 @@
 <script>
 import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { tournamentAPI, teamAPI } from '@/services/api'
-import { apiHelpers } from '@/utils/api'
+import { tournamentAPI, teamAPI, apiHelpers } from '@/services/api'
 
 export default {
   name: 'TeamRegistrationModal',
