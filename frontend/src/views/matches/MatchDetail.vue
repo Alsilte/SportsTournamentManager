@@ -6,8 +6,8 @@
           <ArrowLeftIcon class="w-5 h-5" />
         </button>
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">Match Details</h1>
-          <p class="text-gray-600 mt-1">View match information and events</p>
+          <h1 class="text-3xl font-bold text-gray-900">{{ $t('matches.details') }}</h1>
+          <p class="text-gray-600 mt-1">{{ $t('matches.viewMatchInfo') }}</p>
         </div>
       </div>
     </template>
@@ -50,7 +50,7 @@
               </span>
             </div>
             <h3 class="text-xl font-bold text-gray-900 mb-1">{{ match.home_team?.name }}</h3>
-            <p class="text-sm text-gray-600">Home</p>
+            <p class="text-sm text-gray-600">{{ $t('matches.home') }}</p>
           </div>
 
           <!-- Score -->
@@ -62,16 +62,16 @@
               
               <!-- Extra Time -->
               <div v-if="match.extra_time_home !== null && match.extra_time_away !== null" class="text-lg text-gray-600 mb-2">
-                Extra Time: {{ match.extra_time_home }} - {{ match.extra_time_away }}
+                {{ $t('matches.extraTime') }}: {{ match.extra_time_home }} - {{ match.extra_time_away }}
               </div>
               
               <!-- Penalties -->
               <div v-if="match.penalty_home !== null && match.penalty_away !== null" class="text-lg text-gray-600">
-                Penalties: {{ match.penalty_home }} - {{ match.penalty_away }}
+                {{ $t('matches.penalties') }}: {{ match.penalty_home }} - {{ match.penalty_away }}
               </div>
             </div>
             
-            <div v-else class="text-4xl font-bold text-gray-400 mb-4">VS</div>
+            <div v-else class="text-4xl font-bold text-gray-400 mb-4">{{ $t('matches.vs') }}</div>
             
             <!-- Match Time -->
             <div class="text-center">
@@ -92,7 +92,7 @@
               </span>
             </div>
             <h3 class="text-xl font-bold text-gray-900 mb-1">{{ match.away_team?.name }}</h3>
-            <p class="text-sm text-gray-600">Away</p>
+            <p class="text-sm text-gray-600">{{ $t('matches.away') }}</p>
           </div>
         </div>
 
@@ -100,24 +100,24 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center border-t pt-6">
           <div v-if="match.venue">
             <MapPinIcon class="w-5 h-5 text-gray-400 mx-auto mb-1" />
-            <div class="text-sm text-gray-600">Venue</div>
+            <div class="text-sm text-gray-600">{{ $t('matches.venue') }}</div>
             <div class="font-medium">{{ match.venue }}</div>
           </div>
           <div v-if="match.referee">
             <UserIcon class="w-5 h-5 text-gray-400 mx-auto mb-1" />
-            <div class="text-sm text-gray-600">Referee</div>
+            <div class="text-sm text-gray-600">{{ $t('matches.referee') }}</div>
             <div class="font-medium">{{ match.referee.name }}</div>
           </div>
           <div>
             <ClockIcon class="w-5 h-5 text-gray-400 mx-auto mb-1" />
-            <div class="text-sm text-gray-600">Duration</div>
+            <div class="text-sm text-gray-600">{{ $t('matches.duration') }}</div>
             <div class="font-medium">{{ getMatchDuration() }}</div>
           </div>
         </div>
 
         <!-- Winner Information -->
         <div v-if="match.status === 'completed' && match.winner_team_id" class="text-center mt-6 pt-6 border-t">
-          <div class="text-lg text-gray-600 mb-2">Winner</div>
+          <div class="text-lg text-gray-600 mb-2">{{ $t('matches.winner') }}</div>
           <div class="text-2xl font-bold text-success-600">
             {{ getWinnerTeamName() }}
           </div>
@@ -127,14 +127,14 @@
       <!-- Match Events -->
       <div class="card p-6">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl font-semibold text-gray-900">Match Events</h2>
+          <h2 class="text-xl font-semibold text-gray-900">{{ $t('matches.matchEvents') }}</h2>
           <button 
             v-if="canManageMatch"
             @click="refreshEvents"
             class="btn-secondary text-sm"
           >
             <ArrowPathIcon class="w-4 h-4 mr-2" />
-            Refresh
+            {{ $t('matches.refresh') }}
           </button>
         </div>
 
@@ -153,7 +153,7 @@
             <!-- Event Details -->
             <div class="flex-1">
               <div class="flex items-center space-x-2 mb-1">
-                <span class="font-medium text-gray-900">{{ event.player?.user?.name || 'Unknown Player' }}</span>
+                <span class="font-medium text-gray-900">{{ event.player?.user?.name || $t('matches.unknownPlayer') }}</span>
                 <span
                   :class="getEventBadgeClass(event.event_type)"
                   class="px-2 py-1 text-xs font-medium rounded-full"
@@ -162,7 +162,7 @@
                 </span>
               </div>
               <div class="text-sm text-gray-600">
-                {{ event.team?.name }} • {{ event.description || 'No description' }}
+                {{ event.team?.name }} • {{ event.description || $t('matches.noDescription') }}
               </div>
             </div>
 
@@ -178,16 +178,16 @@
 
         <div v-else class="text-center py-8 text-gray-500">
           <ClockIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-          <p>No match events recorded yet</p>
+          <p>{{ $t('matches.noEventsRecorded') }}</p>
           <p v-if="match.status === 'scheduled'" class="text-sm mt-2">
-            Events will appear here once the match starts
+            {{ $t('matches.eventsWillAppear') }}
           </p>
         </div>
       </div>
 
       <!-- Match Notes -->
       <div v-if="match.notes" class="card p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Match Notes</h2>
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ $t('matches.matchNotes') }}</h2>
         <div class="bg-gray-50 rounded-lg p-4">
           <p class="text-gray-700 whitespace-pre-line">{{ match.notes }}</p>
         </div>
@@ -195,7 +195,7 @@
 
       <!-- Actions -->
       <div v-if="canManageMatch" class="card p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Match Management</h2>
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ $t('matches.matchManagement') }}</h2>
         <div class="flex space-x-4">
           <button 
             v-if="match.status === 'scheduled'"
@@ -203,7 +203,7 @@
             class="btn-success"
           >
             <PlayIcon class="w-4 h-4 mr-2" />
-            Start Match
+            {{ $t('matches.startMatch') }}
           </button>
           <button 
             v-if="match.status === 'in_progress'"
@@ -211,14 +211,14 @@
             class="btn-primary"
           >
             <CheckCircleIcon class="w-4 h-4 mr-2" />
-            Complete Match
+            {{ $t('matches.completeMatch') }}
           </button>
           <RouterLink 
             :to="`/matches/${match.id}/edit`"
             class="btn-secondary"
           >
             <PencilIcon class="w-4 h-4 mr-2" />
-            Edit Match
+            {{ $t('matches.editMatch') }}
           </RouterLink>
         </div>
       </div>
@@ -227,10 +227,10 @@
     <!-- Error State -->
     <div v-else-if="error" class="text-center py-12">
       <ExclamationTriangleIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
-      <h3 class="text-lg font-medium text-gray-900 mb-2">Match not found</h3>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('matches.matchNotFound') }}</h3>
       <p class="text-gray-600 mb-6">{{ error }}</p>
       <RouterLink to="/matches" class="btn-primary">
-        Back to Matches
+        {{ $t('matches.backToMatches') }}
       </RouterLink>
     </div>
   </MainLayout>
@@ -264,6 +264,7 @@ import {
 import { useAuthStore } from '@/stores/auth'
 import { matchAPI, apiHelpers } from '@/services/api'
 import MainLayout from '@/components/layout/MainLayout.vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'MatchDetail',
@@ -282,6 +283,7 @@ export default {
   setup() {
     const route = useRoute()
     const authStore = useAuthStore()
+    const { t } = useI18n()
 
     // Data
     const match = ref(null)
@@ -346,7 +348,7 @@ export default {
      * Start match (change status to in_progress)
      */
     const startMatch = async () => {
-      if (!confirm('Start this match?')) return
+      if (!confirm(t('matches.startMatchConfirm'))) return
 
       try {
         const response = await matchAPI.update(match.value.id, {
@@ -355,11 +357,11 @@ export default {
 
         if (apiHelpers.isSuccess(response)) {
           match.value.status = 'in_progress'
-          window.$notify?.success('Match started successfully')
+          window.$notify?.success(t('matches.matchStartedSuccess'))
         }
       } catch (err) {
         console.error('Failed to start match:', err)
-        window.$notify?.error('Failed to start match')
+        window.$notify?.error(t('matches.failedToStartMatch'))
       }
     }
 
@@ -367,7 +369,7 @@ export default {
      * Complete match
      */
     const completeMatch = async () => {
-      if (!confirm('Mark this match as completed?')) return
+      if (!confirm(t('matches.completeMatchConfirm'))) return
 
       try {
         const response = await matchAPI.update(match.value.id, {
@@ -376,11 +378,11 @@ export default {
 
         if (apiHelpers.isSuccess(response)) {
           match.value.status = 'completed'
-          window.$notify?.success('Match completed successfully')
+          window.$notify?.success(t('matches.matchCompletedSuccess'))
         }
       } catch (err) {
         console.error('Failed to complete match:', err)
-        window.$notify?.error('Failed to complete match')
+        window.$notify?.error(t('matches.failedToCompleteMatch'))
       }
     }
 
@@ -404,9 +406,9 @@ export default {
       if (match.value?.status === 'completed') {
         return '90 min'
       } else if (match.value?.status === 'in_progress') {
-        return 'Live'
+        return t('matches.live')
       } else {
-        return 'N/A'
+        return t('common.na')
       }
     }
 
@@ -415,11 +417,11 @@ export default {
      */
     const formatStatus = (status) => {
       const statusMap = {
-        scheduled: 'Scheduled',
-        in_progress: 'Live',
-        completed: 'Final',
-        postponed: 'Postponed',
-        cancelled: 'Cancelled',
+        scheduled: t('matches.status.scheduled'),
+        in_progress: t('matches.status.inProgress'),
+        completed: t('matches.status.completed'),
+        postponed: t('matches.status.postponed'),
+        cancelled: t('matches.status.cancelled'),
       }
       return statusMap[status] || status
     }
@@ -443,11 +445,11 @@ export default {
      */
     const formatEventType = (eventType) => {
       const eventMap = {
-        goal: 'Goal',
-        yellow_card: 'Yellow Card',
-        red_card: 'Red Card',
-        substitution: 'Substitution',
-        own_goal: 'Own Goal',
+        goal: t('matches.events.goal'),
+        yellow_card: t('matches.events.yellowCard'),
+        red_card: t('matches.events.redCard'),
+        substitution: t('matches.events.substitution'),
+        own_goal: t('matches.events.ownGoal'),
       }
       return eventMap[eventType] || eventType
     }
@@ -498,8 +500,8 @@ export default {
      * Format match date
      */
     const formatMatchDate = (dateString) => {
-      if (!dateString) return 'TBD'
-      return new Date(dateString).toLocaleDateString('en-US', {
+      if (!dateString) return t('common.tbd')
+      return new Date(dateString).toLocaleDateString(undefined, {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
@@ -511,8 +513,8 @@ export default {
      * Format match time
      */
     const formatMatchTime = (dateString) => {
-      if (!dateString) return 'TBD'
-      return new Date(dateString).toLocaleTimeString('en-US', {
+      if (!dateString) return t('common.tbd')
+      return new Date(dateString).toLocaleTimeString(undefined, {
         hour: '2-digit',
         minute: '2-digit',
       })

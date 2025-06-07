@@ -3,12 +3,12 @@
     <template #header>
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">Matches</h1>
-          <p class="text-gray-600 mt-1">View match schedules and results</p>
+          <h1 class="text-3xl font-bold text-gray-900">{{ $t('matches.title') }}</h1>
+          <p class="text-gray-600 mt-1">{{ $t('matches.viewSchedulesResults') }}</p>
         </div>
         <button v-if="authStore.isAdmin" class="btn-primary" @click="$router.push('/matches/create')">
           <PlusIcon class="w-4 h-4 mr-2" />
-          Create Match
+          {{ $t('matches.createMatch') }}
         </button>
       </div>
     </template>
@@ -25,7 +25,7 @@
             <input
               v-model="filters.search"
               type="text"
-              placeholder="Search matches..."
+              :placeholder="$t('matches.searchMatches')"
               class="form-input pl-10"
               @input="debouncedSearch"
             />
@@ -35,19 +35,19 @@
         <!-- Status Filter -->
         <div>
           <select v-model="filters.status" @change="applyFilters" class="form-input">
-            <option value="">All Matches</option>
-            <option value="scheduled">Scheduled</option>
-            <option value="in_progress">In Progress</option>
-            <option value="completed">Completed</option>
-            <option value="postponed">Postponed</option>
-            <option value="cancelled">Cancelled</option>
+            <option value="">{{ $t('matches.allMatches') }}</option>
+            <option value="scheduled">{{ $t('matches.status.scheduled') }}</option>
+            <option value="in_progress">{{ $t('matches.status.inProgress') }}</option>
+            <option value="completed">{{ $t('matches.status.completed') }}</option>
+            <option value="postponed">{{ $t('matches.status.postponed') }}</option>
+            <option value="cancelled">{{ $t('matches.status.cancelled') }}</option>
           </select>
         </div>
 
         <!-- Tournament Filter -->
         <div>
           <select v-model="filters.tournament_id" @change="applyFilters" class="form-input">
-            <option value="">All Tournaments</option>
+            <option value="">{{ $t('matches.allTournaments') }}</option>
             <option v-for="tournament in tournaments" :key="tournament.id" :value="tournament.id">
               {{ tournament.name }}
             </option>
@@ -57,12 +57,12 @@
 
       <!-- Active Filters -->
       <div v-if="hasActiveFilters" class="flex flex-wrap gap-2 mt-4">
-        <span class="text-sm text-gray-600">Active filters:</span>
+        <span class="text-sm text-gray-600">{{ $t('matches.activeFilters') }}</span>
         <span
           v-if="filters.search"
           class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
         >
-          Search: "{{ filters.search }}"
+          {{ $t('matches.search') }}: "{{ filters.search }}"
           <button @click="clearFilter('search')" class="ml-2 hover:text-primary-900">
             <XMarkIcon class="w-3 h-3" />
           </button>
@@ -71,7 +71,7 @@
           v-if="filters.status"
           class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
         >
-          Status: {{ formatStatus(filters.status) }}
+          {{ $t('matches.status') }}: {{ formatStatus(filters.status) }}
           <button @click="clearFilter('status')" class="ml-2 hover:text-primary-900">
             <XMarkIcon class="w-3 h-3" />
           </button>
@@ -80,7 +80,7 @@
           @click="clearAllFilters"
           class="text-xs text-gray-500 hover:text-gray-700 underline"
         >
-          Clear all
+          {{ $t('matches.clearAll') }}
         </button>
       </div>
     </div>
@@ -107,19 +107,19 @@
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-primary-600">{{ totalMatches }}</div>
-          <div class="text-sm text-gray-600">Total Matches</div>
+          <div class="text-sm text-gray-600">{{ $t('matches.totalMatches') }}</div>
         </div>
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-success-600">{{ upcomingMatches }}</div>
-          <div class="text-sm text-gray-600">Upcoming</div>
+          <div class="text-sm text-gray-600">{{ $t('matches.upcoming') }}</div>
         </div>
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-warning-600">{{ inProgressMatches }}</div>
-          <div class="text-sm text-gray-600">In Progress</div>
+          <div class="text-sm text-gray-600">{{ $t('matches.inProgress') }}</div>
         </div>
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-secondary-600">{{ completedMatches }}</div>
-          <div class="text-sm text-gray-600">Completed</div>
+          <div class="text-sm text-gray-600">{{ $t('matches.completed') }}</div>
         </div>
       </div>
 
@@ -145,7 +145,7 @@
               <div class="flex items-center space-x-4 min-w-[300px]">
                 <div class="text-right flex-1">
                   <div class="font-medium text-gray-900">{{ match.home_team?.name }}</div>
-                  <div class="text-xs text-gray-500">Home</div>
+                  <div class="text-xs text-gray-500">{{ $t('matches.home') }}</div>
                 </div>
                 
                 <div class="text-center px-4">
@@ -155,7 +155,7 @@
                   <div v-else-if="match.status === 'in_progress'" class="text-lg font-bold text-primary-600">
                     {{ match.home_score || 0 }} - {{ match.away_score || 0 }}
                   </div>
-                  <div v-else class="text-gray-400 font-bold">VS</div>
+                  <div v-else class="text-gray-400 font-bold">{{ $t('matches.vs') }}</div>
                   <div class="text-xs mt-1">
                     <span
                       :class="getStatusBadgeClass(match.status)"
@@ -168,7 +168,7 @@
                 
                 <div class="text-left flex-1">
                   <div class="font-medium text-gray-900">{{ match.away_team?.name }}</div>
-                  <div class="text-xs text-gray-500">Away</div>
+                  <div class="text-xs text-gray-500">{{ $t('matches.away') }}</div>
                 </div>
               </div>
             </div>
@@ -182,7 +182,7 @@
               <div class="text-xs text-gray-500 mb-1">{{ match.tournament?.name }}</div>
               <div v-if="match.round" class="text-xs text-gray-500 mb-2">{{ match.round }}</div>
               <div v-if="match.referee" class="text-xs text-gray-500">
-                Referee: {{ match.referee.name }}
+                {{ $t('matches.referee') }}: {{ match.referee.name }}
               </div>
             </div>
           </div>
@@ -191,10 +191,10 @@
           <div v-if="match.status === 'completed' && (match.extra_time_home || match.penalty_home)" class="mt-4 pt-4 border-t border-gray-200">
             <div class="flex justify-center space-x-8 text-sm text-gray-600">
               <div v-if="match.extra_time_home !== null">
-                Extra Time: {{ match.extra_time_home }} - {{ match.extra_time_away }}
+                {{ $t('matches.extraTime') }}: {{ match.extra_time_home }} - {{ match.extra_time_away }}
               </div>
               <div v-if="match.penalty_home !== null">
-                Penalties: {{ match.penalty_home }} - {{ match.penalty_away }}
+                {{ $t('matches.penalties') }}: {{ match.penalty_home }} - {{ match.penalty_away }}
               </div>
             </div>
           </div>
@@ -209,7 +209,7 @@
             :disabled="pagination.current_page <= 1"
             class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Previous
+            {{ $t('matches.previous') }}
           </button>
 
           <template v-for="page in visiblePages" :key="page">
@@ -233,7 +233,7 @@
             :disabled="pagination.current_page >= pagination.last_page"
             class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Next
+            {{ $t('matches.next') }}
           </button>
         </nav>
       </div>
@@ -243,21 +243,21 @@
     <div v-else class="text-center py-12">
       <PlayIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
       <h3 class="text-lg font-medium text-gray-900 mb-2">
-        {{ hasActiveFilters ? 'No matches match your filters' : 'No matches scheduled yet' }}
+        {{ hasActiveFilters ? $t('matches.noMatchesFound') : $t('matches.noMatchesScheduled') }}
       </h3>
       <p class="text-gray-600 mb-6">
         {{
           hasActiveFilters
-            ? 'Try adjusting your search criteria to find matches.'
-            : 'Matches will appear here once tournaments start and matches are scheduled.'
+            ? $t('matches.tryAdjustingFilters')
+            : $t('matches.matchesWillAppear')
         }}
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <button v-if="hasActiveFilters" @click="clearAllFilters" class="btn-secondary">
-          Clear Filters
+          {{ $t('matches.clearFilters') }}
         </button>
         <RouterLink v-if="authStore.isAdmin" to="/matches/create" class="btn-primary">
-          Schedule Match
+          {{ $t('matches.scheduleMatch') }}
         </RouterLink>
       </div>
     </div>
@@ -282,6 +282,7 @@ import {
 import { useAuthStore } from '@/stores/auth'
 import { matchAPI, tournamentAPI, apiHelpers } from '@/services/api'
 import MainLayout from '@/components/layout/MainLayout.vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'Matches',
@@ -296,6 +297,7 @@ export default {
   setup() {
     const router = useRouter()
     const authStore = useAuthStore()
+    const { t } = useI18n()
 
     // Data
     const matches = ref([])
@@ -394,7 +396,7 @@ export default {
         }
       } catch (error) {
         console.error('Failed to fetch matches:', error)
-        window.$notify?.error('Failed to load matches')
+        window.$notify?.error(t('notifications.networkError'))
         matches.value = []
       } finally {
         isLoading.value = false
@@ -478,11 +480,11 @@ export default {
      */
     const formatStatus = (status) => {
       const statusMap = {
-        scheduled: 'Scheduled',
-        in_progress: 'Live',
-        completed: 'Completed',
-        postponed: 'Postponed',
-        cancelled: 'Cancelled',
+        scheduled: t('matches.status.scheduled'),
+        in_progress: t('matches.status.inProgress'),
+        completed: t('matches.status.completed'),
+        postponed: t('matches.status.postponed'),
+        cancelled: t('matches.status.cancelled'),
       }
       return statusMap[status] || status
     }
@@ -505,8 +507,8 @@ export default {
      * Format match date
      */
     const formatMatchDate = (dateString) => {
-      if (!dateString) return 'TBD'
-      return new Date(dateString).toLocaleDateString('en-US', {
+      if (!dateString) return t('common.tbd')
+      return new Date(dateString).toLocaleDateString(undefined, {
         month: 'short',
         day: 'numeric',
       })
@@ -516,8 +518,8 @@ export default {
      * Format match time
      */
     const formatMatchTime = (dateString) => {
-      if (!dateString) return 'TBD'
-      return new Date(dateString).toLocaleTimeString('en-US', {
+      if (!dateString) return t('common.tbd')
+      return new Date(dateString).toLocaleTimeString(undefined, {
         hour: '2-digit',
         minute: '2-digit',
       })
