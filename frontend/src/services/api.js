@@ -84,7 +84,8 @@ export const authAPI = {
   register: (userData) => api.post('/auth/register', userData),
   logout: () => api.post('/auth/logout'),
   profile: () => api.get('/auth/profile'),
-    updateProfile: (data) => api.put('/auth/profile', data),   refresh: () => api.post('/auth/refresh'),
+  updateProfile: (data) => api.put('/auth/profile', data),
+  refresh: () => api.post('/auth/refresh'),
 }
 
 export const tournamentAPI = {
@@ -101,13 +102,18 @@ export const tournamentAPI = {
 export const teamAPI = {
   getAll: (params) => api.get('/teams', { params }),
   getById: (id) => api.get(`/teams/${id}`),
+  show: (id) => api.get(`/teams/${id}`), // Alias para getById
   getRoster: (id) => api.get(`/teams/${id}/roster`),
   getStatistics: (id) => api.get(`/teams/${id}/statistics`),
   create: (data) => api.post('/teams', data),
   update: (id, data) => api.put(`/teams/${id}`, data),
   delete: (id) => api.delete(`/teams/${id}`),
-  addPlayer: (id, data) => api.post(`/teams/${id}/players`, data),
+  
+  // ✅ MÉTODOS DE JUGADORES CORREGIDOS
+  addPlayer: (teamId, playerData) => api.post(`/teams/${teamId}/players`, playerData),
+  getPlayers: (teamId) => api.get(`/teams/${teamId}/players`),
   removePlayer: (teamId, playerId) => api.delete(`/teams/${teamId}/players/${playerId}`),
+  getAvailablePlayers: (teamId) => api.get(`/teams/${teamId}/available-players`),
 }
 
 export const playerAPI = {

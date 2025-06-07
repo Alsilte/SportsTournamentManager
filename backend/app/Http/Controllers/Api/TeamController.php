@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Team;
 use App\Models\TeamPlayer;
+use App\Models\Player;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
@@ -283,81 +284,142 @@ public function index(Request $request): JsonResponse
      * Add player to team
      */
     public function addPlayer(Request $request, int $id): JsonResponse
-    {
-        try {
-            $team = Team::findOrFail($id);
+{
+    try {
+        $team = Team::findOrFail($id);
+        $user = $request->user();
 
-            // Check permissions
-            if (!$request->user()->isAdmin() && $team->manager_id !== $request->user()->id) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Unauthorized. Only team manager or admin can add players.',
-                ], 403);
-            }
-
-            $validator = Validator::make($request->all(), [
-                'player_id'    => 'required|exists:players,id',
-                'jersey_number' => 'required|integer|min:1|max:99',
-                'position'     => 'nullable|string|max:50',
-                'is_captain'   => 'boolean',
-                'joined_date'  => 'required|date',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation errors',
-                    'errors'  => $validator->errors(),
-                ], 422);
-            }
-
-            // Check if player is already in team
-            if ($team->players()
-                ->where('player_id', $request->player_id)
-                ->wherePivot('is_active', true)
-                ->exists()
-            ) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Player is already in this team',
-                ], 422);
-            }
-
-            // Check if jersey number is taken
-            if ($team->teamPlayers()
-                ->where('jersey_number', $request->jersey_number)
-                ->where('is_active', true)
-                ->exists()
-            ) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Jersey number is already taken',
-                ], 422);
-            }
-
-            $teamPlayer = TeamPlayer::create([
-                'team_id'       => $team->id,
-                'player_id'     => $request->player_id,
-                'jersey_number' => $request->jersey_number,
-                'position'      => $request->position,
-                'is_captain'    => $request->boolean('is_captain', false),
-                'is_active'     => true,
-                'joined_date'   => $request->joined_date,
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Player added to team successfully',
-                'data'    => $teamPlayer->load('player.user:id,name', 'team:id,name'),
-            ], 201);
-        } catch (\Exception $e) {
+        // PERMISOS BÁSICOS:
+        // - Admin puede añadir a cualquier equipo
+        // - Team Manager solo a sus equipos
+        if (!$user->isAdmin() && $team->manager_id !== $user->id) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to add player to team',
-                'error'   => $e->getMessage(),
-            ], 500);
+                'message' => 'No autorizado. Solo el manager del equipo o admin pueden añadir jugadores.'
+            ], 403);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'player_id'     => 'required|exists:players,id',
+            'jersey_number' => 'required|integer|min:1|max:99',
+            'position'      => 'nullable|string|max:50',
+            'is_captain'    => 'boolean',
+            'joined_date'   => 'required|date',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Errores de validación',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        // VERIFICACIONES BÁSICAS (admins pueden saltárselas con parámetro especial)
+        $isAdmin = $user->isAdmin();
+        $skipChecks = $isAdmin && $request->boolean('admin_override', false);
+
+        // 1. Verificar si el jugador ya está en el equipo
+        if ($team->players()->where('player_id', $request->player_id)->wherePivot('is_active', true)->exists()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El jugador ya está en este equipo'
+            ], 422);
+        }
+
+        // 2. Verificar número de camiseta (admin puede forzar)
+        $existingJersey = $team->teamPlayers()
+            ->where('jersey_number', $request->jersey_number)
+            ->where('is_active', true)
+            ->first();
+
+        if ($existingJersey && !$skipChecks) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El número de camiseta ya está ocupado'
+            ], 422);
+        } elseif ($existingJersey && $skipChecks) {
+            // Admin: Cambiar número al jugador existente
+            $existingJersey->update(['jersey_number' => $this->getNextAvailableNumber($team)]);
+        }
+
+        // 3. Verificar si jugador está en otro equipo (solo para team managers)
+        if (!$isAdmin) {
+            $player = Player::findOrFail($request->player_id);
+            $hasActiveTeam = $player->teams()->wherePivot('is_active', true)->exists();
+            
+            if ($hasActiveTeam) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El jugador ya está activo en otro equipo'
+                ], 422);
+            }
+        }
+
+        // 4. Manejar capitanía
+        if ($request->boolean('is_captain', false)) {
+            if ($skipChecks) {
+                // Admin: Quitar capitanía al actual
+                $team->teamPlayers()->where('is_captain', true)->update(['is_captain' => false]);
+            } else {
+                // Verificar que no haya capitán
+                $hasCaptain = $team->teamPlayers()->where('is_captain', true)->where('is_active', true)->exists();
+                if ($hasCaptain) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'El equipo ya tiene un capitán'
+                    ], 422);
+                }
+            }
+        }
+
+        // CREAR EL REGISTRO
+        $teamPlayer = TeamPlayer::create([
+            'team_id'       => $team->id,
+            'player_id'     => $request->player_id,
+            'jersey_number' => $request->jersey_number,
+            'position'      => $request->position,
+            'is_captain'    => $request->boolean('is_captain', false),
+            'is_active'     => true,
+            'joined_date'   => $request->joined_date,
+        ]);
+
+        $message = $skipChecks ? 
+            'Jugador añadido por admin (restricciones omitidas)' : 
+            'Jugador añadido al equipo correctamente';
+
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'data' => $teamPlayer->load('player.user:id,name', 'team:id,name'),
+        ], 201);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al añadir jugador al equipo',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
+/**
+ * Helper: Obtener siguiente número disponible
+ */
+private function getNextAvailableNumber(Team $team): int
+{
+    $usedNumbers = $team->teamPlayers()
+        ->where('is_active', true)
+        ->pluck('jersey_number')
+        ->toArray();
+
+    for ($i = 1; $i <= 99; $i++) {
+        if (!in_array($i, $usedNumbers)) {
+            return $i;
         }
     }
+    return 99; // Fallback
+}
 
     /**
      * Remove player from team
