@@ -347,6 +347,9 @@ export default {
           per_page: pagination.value.per_page,
           ...filters.value
         }
+        if (authStore.isAdmin) {
+  params.include_draft = true
+}
 
         // Clean empty filters
         Object.keys(params).forEach(key => {
