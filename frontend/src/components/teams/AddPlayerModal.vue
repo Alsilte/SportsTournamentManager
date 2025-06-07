@@ -128,7 +128,6 @@
 
 <script>
 import { XMarkIcon } from '@heroicons/vue/24/outline'
-import { teamAPI, apiHelpers } from '@/services/api'
 
 export default {
   name: 'AddPlayerModal',
@@ -188,36 +187,62 @@ export default {
 
     async fetchAvailablePlayers() {
       try {
-        const response = await teamAPI.getAvailablePlayers(this.teamId)
-        if (apiHelpers.isSuccess(response)) {
-          this.availablePlayers = apiHelpers.getData(response)
-        } else {
-          throw new Error(response.data?.message)
-        }
+        // AQUÍ VA TU LLAMADA A LA API REAL
+        // const response = await this.$api.get(`/teams/${this.teamId}/available-players`)
+        // this.availablePlayers = response.data.players
+
+        // MOCK DATA - reemplazar con API real
+        this.availablePlayers = [
+          {
+            id: 1,
+            user: { name: 'Carlos Rodriguez' },
+            position: 'Forward',
+            current_team: null
+          },
+          {
+            id: 2,
+            user: { name: 'Marco Silva' },
+            position: 'Midfielder',
+            current_team: { name: 'FC Barcelona' }
+          },
+          {
+            id: 3,
+            user: { name: 'John Smith' },
+            position: 'Defender',
+            current_team: null
+          }
+        ]
       } catch (err) {
         console.error('Error loading players:', err)
-        this.error = err.message || 'Error al cargar jugadores disponibles'
+        this.error = 'Error al cargar jugadores disponibles'
       }
     },
 
     async handleSubmit() {
       this.loading = true
       this.error = ''
+
       try {
-        const response = await teamAPI.addPlayer(this.teamId, this.form)
-        if (apiHelpers.isSuccess(response)) {
-          this.$emit('success')
-          this.$emit('close')
-          window.$notify?.success('Jugador añadido correctamente')
-        } else {
-          this.error = response.data?.message || 'Error al añadir jugador'
+        // AQUÍ VA TU LLAMADA A LA API REAL
+        // const response = await this.$api.post(`/teams/${this.teamId}/players`, this.form)
+        
+        // SIMULACIÓN - reemplazar con API real
+        console.log('Enviando:', this.form)
+        await new Promise(resolve => setTimeout(resolve, 1000)) // Simular delay
+
+        this.$emit('success')
+        this.$emit('close')
+        
+        // Mostrar notificación
+        if (window.$notify) {
+          window.$notify.success('Jugador añadido correctamente')
         }
       } catch (err) {
-        this.error = apiHelpers.handleError(err) || 'Error al añadir jugador'
+        this.error = err.response?.data?.message || 'Error al añadir jugador'
       } finally {
         this.loading = false
       }
-    },
+    }
   }
 }
 </script>
