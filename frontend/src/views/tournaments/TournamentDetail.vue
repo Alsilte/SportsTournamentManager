@@ -450,6 +450,7 @@
 
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import {
   ArrowLeftIcon,
   PlusIcon,
@@ -486,6 +487,7 @@ export default {
   setup() {
     const route = useRoute()
     const authStore = useAuthStore()
+    const { t } = useI18n()
 
     // Data
     const tournament = ref(null)
@@ -569,11 +571,11 @@ export default {
      */
     const formatStatus = (status) => {
       const statusMap = {
-        draft: $t('tournaments.status.draft'),
-        registration_open: $t('tournaments.status.registrationOpen'),
-        in_progress: $t('tournaments.status.inProgress'),
-        completed: $t('tournaments.status.completed'),
-        cancelled: $t('tournaments.status.cancelled'),
+        draft: t('tournaments.status.draft'),
+        registration_open: t('tournaments.status.registrationOpen'),
+        in_progress: t('tournaments.status.inProgress'),
+        completed: t('tournaments.status.completed'),
+        cancelled: t('tournaments.status.cancelled'),
       }
       return statusMap[status] || status
     }
@@ -597,9 +599,9 @@ export default {
      */
     const formatTournamentType = (type) => {
       const typeMap = {
-        league: $t('tournaments.formats.league'),
-        knockout: $t('tournaments.formats.knockout'),
-        group_knockout: $t('tournaments.formats.groupKnockout'),
+        league: t('tournaments.formats.league'),
+        knockout: t('tournaments.formats.knockout'),
+        group_knockout: t('tournaments.formats.groupKnockout'),
       }
       return typeMap[type] || type
     }
@@ -609,9 +611,9 @@ export default {
      */
     const formatTeamStatus = (status) => {
       const statusMap = {
-        pending: $t('tournaments.detail.teamStatus.pending'),
-        approved: $t('tournaments.detail.teamStatus.approved'),
-        rejected: $t('tournaments.detail.teamStatus.rejected'),
+        pending: t('tournaments.detail.teamStatus.pending'),
+        approved: t('tournaments.detail.teamStatus.approved'),
+        rejected: t('tournaments.detail.teamStatus.rejected'),
       }
       return statusMap[status] || status
     }
@@ -632,7 +634,7 @@ export default {
      * Format date for display
      */
     const formatDate = (dateString) => {
-      if (!dateString) return $t('common.tbd')
+      if (!dateString) return t('common.tbd')
       return new Date(dateString).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
