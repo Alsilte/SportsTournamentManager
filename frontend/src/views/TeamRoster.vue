@@ -8,10 +8,10 @@
           </button>
           <div>
             <h1 class="text-3xl font-bold text-gray-900">
-              {{ team?.name || 'Cargando...' }} - {{ t('teams.roster.title') }}
+              {{ team?.name || 'Cargando...' }} - Plantilla
             </h1>
             <p class="text-gray-600 mt-1">
-              {{ t('teams.roster.manageRoster') }}
+              Gestionar jugadores del equipo
             </p>
           </div>
         </div>
@@ -22,7 +22,7 @@
             class="btn-primary"
           >
             <PlusIcon class="w-4 h-4 mr-2" />
-            {{ t('teams.addPlayer') }}
+            Agregar Jugador
           </button>
         </div>
       </div>
@@ -31,13 +31,15 @@
     <!-- Debug Info (solo en desarrollo) -->
     <div v-if="showDebug" class="bg-yellow-100 border border-yellow-300 p-4 rounded mb-4">
       <h3 class="font-bold">Debug Info:</h3>
-      <p>Team ID: {{ route.params.id }}</p>
+      <p>Team ID: {{ teamId }}</p>
       <p>Loading: {{ isLoading }}</p>
       <p>Error: {{ error }}</p>
       <p>Team: {{ team ? 'Loaded' : 'Not loaded' }}</p>
       <p>Players: {{ players?.length || 0 }}</p>
       <p>Auth: {{ authStore.isAuthenticated ? 'Yes' : 'No' }}</p>
       <p>Role: {{ authStore.user?.role || 'None' }}</p>
+      <p>User ID: {{ authStore.user?.id || 'None' }}</p>
+      <p>Team Manager: {{ team?.manager_id || 'None' }}</p>
     </div>
 
     <!-- Loading State -->
@@ -233,7 +235,7 @@
     <AddPlayerModal
       v-if="showAddPlayerModal"
       :show="showAddPlayerModal"
-      :team-id="Number(route.params.id)"
+      :team-id="teamId"
       :is-admin="authStore.isAdmin"
       @close="handleCloseModal"
       @success="handlePlayerAdded"
@@ -244,7 +246,6 @@
 <script>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 import AddPlayerModal from '@/components/teams/AddPlayerModal.vue'
 import {
   ArrowLeftIcon,
@@ -278,7 +279,6 @@ export default {
   },
   setup() {
     const route = useRoute()
-    const { t } = useI18n()
     const authStore = useAuthStore()
 
     // Estado reactivo
@@ -288,7 +288,13 @@ export default {
     const isLoading = ref(true)
     const error = ref('')
     const showAddPlayerModal = ref(false)
-    const showDebug = ref(process.env.NODE_ENV === 'development')
+    const showDebug = ref(import.meta.env.DEV || process.env.NODE_ENV === 'development') // Solo en desarrollo
+
+    // Obtener el ID del equipo de forma segura
+    const teamId = computed(() => {
+      const id = route.params?.id
+      return id ? parseInt(id) : null
+    })
 
     // Filtros
     const filters = ref({
@@ -360,14 +366,14 @@ export default {
         isLoading.value = true
         error.value = ''
         
-        const teamId = parseInt(route.params.id)
-        if (!teamId || isNaN(teamId)) {
+        if (!teamId.value || isNaN(teamId.value)) {
           throw new Error('ID de equipo inválido')
         }
 
-        console.log('Fetching team roster for ID:', teamId)
+        console.log('Fetching team roster for ID:', teamId.value)
         
-        const response = await teamAPI.getRoster(teamId)
+        // USAR EL ENDPOINT CORRECTO: getRoster en lugar de getPlayers
+        const response = await teamAPI.getRoster(teamId.value)
         console.log('API Response:', response)
         
         if (apiHelpers.isSuccess(response)) {
@@ -375,7 +381,7 @@ export default {
           team.value = data.team
           players.value = data.players || []
           captain.value = data.captain
-          console.log('Team data loaded:', data)
+          console.log('Team roster loaded:', data)
         } else {
           throw new Error(response.data?.message || 'Error al cargar el roster del equipo')
         }
@@ -444,8 +450,8 @@ export default {
     }
 
     // Watchers
-    watch(() => route.params.id, (newId) => {
-      if (newId) {
+    watch(() => teamId.value, (newId) => {
+      if (newId && !isNaN(newId)) {
         fetchTeamRoster()
       }
     }, { immediate: true })
@@ -454,7 +460,12 @@ export default {
     onMounted(() => {
       console.log('TeamRoster component mounted')
       console.log('Route params:', route.params)
-      console.log('Auth store:', authStore)
+      console.log('Team ID:', teamId.value)
+      console.log('Auth store:', {
+        isAuthenticated: authStore.isAuthenticated,
+        user: authStore.user,
+        role: authStore.user?.role
+      })
     })
 
     return {
@@ -467,7 +478,7 @@ export default {
       showAddPlayerModal,
       showDebug,
       filters,
-      route,
+      teamId,
       authStore,
       
       // Computed
@@ -489,8 +500,7 @@ export default {
       formatPosition,
       formatDate,
       editPlayer,
-      removePlayer,
-      t
+      removePlayer
     }
   }
 }
@@ -498,11 +508,11 @@ export default {
 
 <style scoped>
 .btn-primary {
-  @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center;
 }
 
 .btn-secondary {
-  @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center;
 }
 
 .card {
@@ -511,5 +521,17 @@ export default {
 
 .spinner {
   @apply border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin;
+}
+
+.text-primary-600 {
+  @apply text-blue-600;
+}
+
+.bg-primary-100 {
+  @apply bg-blue-100;
+}
+
+.focus\:ring-primary-500:focus {
+  @apply ring-blue-500;
 }
 </style>

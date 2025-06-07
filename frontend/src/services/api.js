@@ -111,7 +111,6 @@ export const teamAPI = {
   
   // ✅ MÉTODOS DE JUGADORES CORREGIDOS
   addPlayer: (teamId, playerData) => api.post(`/teams/${teamId}/players`, playerData),
-  getPlayers: (teamId) => api.get(`/teams/${teamId}/players`),
   removePlayer: (teamId, playerId) => api.delete(`/teams/${teamId}/players/${playerId}`),
   getAvailablePlayers: (teamId) => api.get(`/teams/${teamId}/available-players`),
 }
