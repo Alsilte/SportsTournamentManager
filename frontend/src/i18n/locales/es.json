@@ -68,6 +68,23 @@
       "create": "Crear Torneo"
     }
   },
+  "teams": {
+    "roster" :{
+      "title": "Plantilla del Equipo",
+      "subtitle": "Gestiona y organiza a tus jugadores",
+      "addPlayer": "Añadir Jugador",
+      "editPlayer": "Editar Jugador",
+      "removePlayer": "Eliminar Jugador",
+      "playerName": "Nombre del Jugador",
+      "playerPosition": "Posición del Jugador",
+      "playerNumber": "Número del Jugador",
+      "playerNationality": "Nacionalidad del Jugador",
+      "playerAge": "Edad del Jugador",
+      "playerStats": "Estadísticas del Jugador",
+      "noPlayersInTeam": "Aún no hay jugadores en este equipo. ¡Añade algunos para comenzar!",
+      "addFirstPlayer": "Añadir Primer Jugador"
+    }
+  },
 
   "common": {
     "loading": "Cargando...",
