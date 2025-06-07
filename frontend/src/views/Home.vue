@@ -391,7 +391,7 @@
             class="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-2xl font-semibold hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
           >
             <PlusIcon class="w-5 h-5 mr-2" />
-            {{ $t('tournaments.create') }}
+            Crear Torneo
           </RouterLink>
         </div>
       </div>
