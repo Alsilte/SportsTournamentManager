@@ -239,8 +239,6 @@ import { tournamentAPI, apiHelpers } from '@/services/api'
 import MainLayout from '@/components/layout/MainLayout.vue'
 import TournamentCard from '@/components/tournaments/TournamentCard.vue'
 import TeamRegistrationModal from '@/components/tournaments/TeamRegistrationModal.vue'
-
-export default {
   name: 'Tournaments',
   components: {
     MainLayout,
@@ -433,10 +431,8 @@ export default {
         return
       }
 
-      // Verificar si el usuario puede gestionar equipos
-      const canManageTeams = authStore.isAdmin || authStore.canManageTeams || authStore.role === 'team_manager'
-      if (!canManageTeams) {
-        window.$notify?.warning('Solo los administradores y gestores de equipos pueden registrar equipos')
+  if (!authStore.isAdmin && !authStore.canManageTeams) {
+        window.$notify?.warning('Solo los gestores de equipos pueden registrar equipos')
         return
       }
 
