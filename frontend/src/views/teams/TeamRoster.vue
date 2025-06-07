@@ -396,16 +396,18 @@ export default {
     const { t } = useI18n()
     const route = useRoute()
     const authStore = useAuthStore()
-    
-    // Estado reactivo
+
     const team = ref(null)
     const players = ref([])
     const captain = ref(null)
     const isLoading = ref(false)
     const error = ref('')
+
+    // Añadimos status al filtro inicial
     const filters = ref({
       position: '',
-      search: ''
+      search: '',
+      status: ''
     })
 
     // Función para obtener el roster real desde la API
@@ -467,6 +469,62 @@ export default {
       window.$notify?.success(t('teams.playerAddedSuccess'))
     }
 
+    // Computeds y helpers para filtrar y estadísticas
+    const filteredPlayers = computed(() => {
+      let list = players.value
+      if (filters.value.search) {
+        list = list.filter(p =>
+          p.user?.name.toLowerCase().includes(filters.value.search.toLowerCase())
+        )
+      }
+      if (filters.value.position) {
+        list = list.filter(p => p.pivot?.position === filters.value.position)
+      }
+      if (filters.value.status === 'active') {
+        list = list.filter(p => p.pivot?.is_active)
+      } else if (filters.value.status === 'inactive') {
+        list = list.filter(p => !p.pivot?.is_active)
+      } else if (filters.value.status === 'captain') {
+        list = list.filter(p => p.pivot?.is_captain)
+      }
+      return list
+    })
+
+    const uniquePositions = computed(() =>
+      [...new Set(players.value.map(p => p.pivot?.position).filter(Boolean))]
+    )
+    const totalPlayers = computed(() => players.value.length)
+    const activePlayersCount = computed(() =>
+      players.value.filter(p => p.pivot?.is_active).length
+    )
+    const captainsCount = computed(() =>
+      players.value.filter(p => p.pivot?.is_captain).length
+    )
+    const positionsCount = computed(() => uniquePositions.value.length)
+    const hasActiveFilters = computed(() =>
+      Boolean(filters.value.search || filters.value.position || filters.value.status)
+    )
+
+    function applyFilters() {
+      // no-op: los computeds se recalculan automáticamente
+    }
+    function editPlayer(player) {
+      // TODO: implementar edición de jugador
+    }
+    function confirmRemovePlayer(player) {
+      // TODO: implementar confirmación de borrado
+    }
+    function clearFilters() {
+      filters.value.search = ''
+      filters.value.position = ''
+      filters.value.status = ''
+    }
+    function calculateAge(dateString) {
+      if (!dateString) return '-'
+      const diff = Date.now() - new Date(dateString).getTime()
+      return Math.floor(diff / (1000 * 3600 * 24 * 365.25))
+    }
+
     // Initialize
     onMounted(() => {
       fetchTeamRoster()
@@ -487,7 +545,21 @@ export default {
       formatDate,
       openAddPlayerModal,
       handleCloseModal,
-      handlePlayerAdded
+      handlePlayerAdded,
+
+      // nuevos
+      filteredPlayers,
+      uniquePositions,
+      totalPlayers,
+      activePlayersCount,
+      captainsCount,
+      positionsCount,
+      hasActiveFilters,
+      applyFilters,
+      editPlayer,
+      confirmRemovePlayer,
+      clearFilters,
+      calculateAge
     }
   }
 }
