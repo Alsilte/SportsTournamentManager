@@ -3,8 +3,8 @@
     <template #header>
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">Profile</h1>
-          <p class="text-gray-600 mt-1">Manage your account settings</p>
+          <h1 class="text-3xl font-bold text-gray-900">{{ $t('profile.title') }}</h1>
+          <p class="text-gray-600 mt-1">{{ $t('profile.subtitle') }}</p>
         </div>
       </div>
     </template>
@@ -25,51 +25,51 @@
         <!-- Formulario editable -->
         <form @submit.prevent="updateProfile" class="space-y-4">
           <div>
-            <label class="form-label">Full Name</label>
+            <label class="form-label">{{ $t('profile.form.fullName') }}</label>
             <input 
               v-model="form.name"
               type="text" 
               class="form-input"
               :class="{ 'border-danger-300': errors.name }"
               :disabled="isLoading"
-              placeholder="Enter your full name"
+              :placeholder="$t('profile.form.fullNamePlaceholder')"
             />
             <p v-if="errors.name" class="form-error">{{ errors.name }}</p>
           </div>
 
           <div>
-            <label class="form-label">Email</label>
+            <label class="form-label">{{ $t('profile.form.email') }}</label>
             <input
               type="email"
               :value="authStore.userEmail"
               disabled
               class="form-input bg-gray-50"
             />
-            <p class="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+            <p class="text-xs text-gray-500 mt-1">{{ $t('profile.form.emailNotChangeable') }}</p>
           </div>
 
           <div>
-            <label class="form-label">Phone (Optional)</label>
+            <label class="form-label">{{ $t('profile.form.phone') }}</label>
             <input
               v-model="form.phone"
               type="tel"
               class="form-input"
               :class="{ 'border-danger-300': errors.phone }"
               :disabled="isLoading"
-              placeholder="Enter your phone number"
+              :placeholder="$t('profile.form.phonePlaceholder')"
             />
             <p v-if="errors.phone" class="form-error">{{ errors.phone }}</p>
           </div>
 
           <div>
-            <label class="form-label">Role</label>
+            <label class="form-label">{{ $t('profile.form.role') }}</label>
             <input
               type="text"
               :value="authStore.userRole"
               disabled
               class="form-input bg-gray-50 capitalize"
             />
-            <p class="text-xs text-gray-500 mt-1">Role cannot be changed</p>
+            <p class="text-xs text-gray-500 mt-1">{{ $t('profile.form.roleNotChangeable') }}</p>
           </div>
 
           <!-- Error general -->
@@ -89,9 +89,9 @@
             >
               <div v-if="isLoading" class="flex items-center">
                 <div class="spinner w-4 h-4 mr-2"></div>
-                Updating...
+                {{ $t('profile.form.updating') }}
               </div>
-              <span v-else>Update Profile</span>
+              <span v-else>{{ $t('profile.form.updateProfile') }}</span>
             </button>
             <button 
               type="button"
@@ -99,7 +99,7 @@
               class="btn-secondary"
               :disabled="isLoading"
             >
-              Reset
+              {{ $t('profile.form.reset') }}
             </button>
           </div>
         </form>

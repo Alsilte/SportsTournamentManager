@@ -7,9 +7,9 @@
             <ExclamationTriangleIcon class="w-16 h-16 text-primary-600" />
           </div>
           <h1 class="text-6xl font-bold text-gray-900 mb-2">404</h1>
-          <h2 class="text-2xl font-semibold text-gray-700 mb-4">Page Not Found</h2>
+          <h2 class="text-2xl font-semibold text-gray-700 mb-4">{{ $t('notFound.title') }}</h2>
           <p class="text-gray-600 mb-8">
-            The page you're looking for doesn't exist or has been moved.
+            {{ $t('notFound.message') }}
           </p>
         </div>
   
@@ -20,41 +20,41 @@
             class="btn-secondary flex items-center justify-center"
           >
             <ArrowLeftIcon class="w-4 h-4 mr-2" />
-            Go Back
+            {{ $t('notFound.goBack') }}
           </button>
           <RouterLink to="/" class="btn-primary flex items-center justify-center">
             <HomeIcon class="w-4 h-4 mr-2" />
-            Go Home
+            {{ $t('notFound.goHome') }}
           </RouterLink>
         </div>
   
         <!-- Helpful Links -->
         <div class="mt-12 pt-8 border-t border-gray-200">
-          <p class="text-sm text-gray-600 mb-4">You might be looking for:</p>
+          <p class="text-sm text-gray-600 mb-4">{{ $t('notFound.helpfulLinks') }}</p>
           <div class="grid grid-cols-2 gap-4 text-sm">
             <RouterLink 
               to="/tournaments" 
               class="text-primary-600 hover:text-primary-700 transition-colors"
             >
-              Tournaments
+              {{ $t('navigation.tournaments') }}
             </RouterLink>
             <RouterLink 
               to="/teams" 
               class="text-primary-600 hover:text-primary-700 transition-colors"
             >
-              Teams
+              {{ $t('navigation.teams') }}
             </RouterLink>
             <RouterLink 
               to="/players" 
               class="text-primary-600 hover:text-primary-700 transition-colors"
             >
-              Players
+              {{ $t('navigation.players') }}
             </RouterLink>
             <RouterLink 
               to="/matches" 
               class="text-primary-600 hover:text-primary-700 transition-colors"
             >
-              Matches
+              {{ $t('navigation.matches') }}
             </RouterLink>
           </div>
         </div>

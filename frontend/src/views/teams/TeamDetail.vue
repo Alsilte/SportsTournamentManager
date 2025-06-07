@@ -15,7 +15,7 @@
                   team?.is_active ? 'bg-success-100 text-success-800' : 'bg-gray-100 text-gray-800',
                 ]"
               >
-                {{ team?.is_active ? 'Active' : 'Inactive' }}
+                {{ team?.is_active ? $t('teams.detail.status.active') : $t('teams.detail.status.inactive') }}
               </span>
               <span v-if="team?.short_name" class="text-gray-600">{{ team.short_name }}</span>
             </div>
@@ -25,12 +25,12 @@
         <div class="flex items-center space-x-3">
           <RouterLink v-if="canManageTeam" :to="`/teams/${team?.id}/roster`" class="btn-secondary">
             <UsersIcon class="w-4 h-4 mr-2" />
-            Manage Roster
+            {{ $t('teams.detail.manageRoster') }}
           </RouterLink>
 
           <button v-if="canManageTeam" @click="showEditModal = true" class="btn-primary">
             <PencilIcon class="w-4 h-4 mr-2" />
-            Edit Team
+            {{ $t('teams.detail.editTeam') }}
           </button>
         </div>
       </div>
@@ -55,21 +55,21 @@
         <div class="lg:col-span-2 space-y-6">
           <!-- Description -->
           <div class="card p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">About this Team</h2>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ $t('teams.detail.aboutThisTeam') }}</h2>
             <p class="text-gray-700 leading-relaxed">
-              {{ team.description || 'No description available.' }}
+              {{ team.description || $t('teams.detail.noDescription') }}
             </p>
           </div>
 
           <!-- Recent Matches -->
           <div class="card p-6">
             <div class="flex items-center justify-between mb-4">
-              <h2 class="text-xl font-semibold text-gray-900">Recent Matches</h2>
+              <h2 class="text-xl font-semibold text-gray-900">{{ $t('teams.detail.recentMatches') }}</h2>
               <RouterLink
                 :to="`/teams/${team.id}/matches`"
                 class="text-primary-600 hover:text-primary-700 text-sm font-medium"
               >
-                View All
+                {{ $t('teams.detail.viewAll') }}
               </RouterLink>
             </div>
 
@@ -83,17 +83,17 @@
                   <div class="flex items-center space-x-3">
                     <div class="text-center">
                       <div class="font-medium text-gray-900">{{ match.home_team?.name }}</div>
-                      <div class="text-xs text-gray-500">Home</div>
+                      <div class="text-xs text-gray-500">{{ $t('teams.detail.home') }}</div>
                     </div>
                     <div class="text-center">
                       <div class="text-xl font-bold text-gray-900">
                         {{ match.home_score }} - {{ match.away_score }}
                       </div>
-                      <div class="text-xs text-gray-500">Final</div>
+                      <div class="text-xs text-gray-500">{{ $t('teams.detail.final') }}</div>
                     </div>
                     <div class="text-center">
                       <div class="font-medium text-gray-900">{{ match.away_team?.name }}</div>
-                      <div class="text-xs text-gray-500">Away</div>
+                      <div class="text-xs text-gray-500">{{ $t('teams.detail.away') }}</div>
                     </div>
                   </div>
                 </div>
@@ -106,7 +106,7 @@
 
             <div v-else class="text-center py-8 text-gray-500">
               <PlayIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-              <p>No recent matches</p>
+              <p>{{ $t('teams.detail.noRecentMatches') }}</p>
             </div>
           </div>
         </div>
@@ -115,26 +115,26 @@
         <div class="space-y-6">
           <!-- Team Stats -->
           <div class="card p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Team Statistics</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('teams.detail.teamStatistics') }}</h3>
             <div class="space-y-4">
               <div class="flex justify-between">
-                <span class="text-gray-600">Founded</span>
-                <span class="font-medium">{{ team.founded_year || 'Unknown' }}</span>
+                <span class="text-gray-600">{{ $t('teams.detail.founded') }}</span>
+                <span class="font-medium">{{ team.founded_year || $t('teams.detail.unknown') }}</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-gray-600">Players</span>
+                <span class="text-gray-600">{{ $t('teams.detail.players') }}</span>
                 <span class="font-medium">{{ team.players_count || 0 }}</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-gray-600">Tournaments</span>
+                <span class="text-gray-600">{{ $t('teams.detail.tournaments') }}</span>
                 <span class="font-medium">{{ activeTournaments }}</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-gray-600">Win Rate</span>
+                <span class="text-gray-600">{{ $t('teams.detail.winRate') }}</span>
                 <span class="font-medium">{{ teamStats.win_rate || 0 }}%</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-gray-600">Total Goals</span>
+                <span class="text-gray-600">{{ $t('teams.detail.totalGoals') }}</span>
                 <span class="font-medium">{{ teamStats.goals_for || 0 }}</span>
               </div>
             </div>
@@ -142,21 +142,21 @@
 
           <!-- Contact Info -->
           <div class="card p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('teams.detail.contactInformation') }}</h3>
             <div class="space-y-3">
               <div class="flex items-center">
                 <UserIcon class="w-5 h-5 text-gray-400 mr-3" />
                 <div>
                   <div class="font-medium text-gray-900">
-                    {{ team.manager?.name || 'No manager assigned' }}
+                    {{ team.manager?.name || $t('teams.detail.noManagerAssigned') }}
                   </div>
-                  <div class="text-sm text-gray-600">Team Manager</div>
+                  <div class="text-sm text-gray-600">{{ $t('teams.detail.teamManager') }}</div>
                 </div>
               </div>
               <div class="flex items-center">
                 <EnvelopeIcon class="w-5 h-5 text-gray-400 mr-3" />
                 <div class="text-sm text-gray-600">
-                  {{ team.contact_email || 'No email provided' }}
+                  {{ team.contact_email || $t('teams.detail.noEmailProvided') }}
                 </div>
               </div>
               <div v-if="team.contact_phone" class="flex items-center">
@@ -172,28 +172,28 @@
 
           <!-- Quick Actions -->
           <div class="card p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('teams.detail.quickActions') }}</h3>
             <div class="space-y-3">
               <RouterLink
                 :to="`/teams/${team.id}/roster`"
                 class="btn-secondary w-full text-center block"
               >
                 <UsersIcon class="w-4 h-4 mr-2 inline" />
-                View Roster
+                {{ $t('teams.detail.viewRoster') }}
               </RouterLink>
               <RouterLink
                 :to="`/teams/${team.id}/statistics`"
                 class="btn-secondary w-full text-center block"
               >
                 <ChartBarIcon class="w-4 h-4 mr-2 inline" />
-                View Statistics
+                {{ $t('teams.detail.viewStatistics') }}
               </RouterLink>
               <RouterLink
                 :to="`/teams/${team.id}/matches`"
                 class="btn-secondary w-full text-center block"
               >
                 <PlayIcon class="w-4 h-4 mr-2 inline" />
-                Match History
+                {{ $t('teams.detail.matchHistory') }}
               </RouterLink>
             </div>
           </div>
@@ -214,7 +214,7 @@
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
             ]"
           >
-            {{ tab.name }}
+            {{ $t(`teams.detail.${tab.name}Tab`) }}
             <span
               v-if="tab.count !== undefined"
               class="ml-2 px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600"
@@ -248,7 +248,7 @@
                   <div>
                     <h3 class="font-semibold text-gray-900">{{ player.user?.name }}</h3>
                     <p class="text-sm text-gray-600">
-                      {{ player.pivot?.position || 'No position' }}
+                      {{ player.pivot?.position || $t('teams.detail.noPosition') }}
                     </p>
                   </div>
                 </div>
@@ -256,17 +256,17 @@
                   <div class="text-lg font-bold text-primary-600">
                     {{ player.pivot?.jersey_number || '-' }}
                   </div>
-                  <div class="text-xs text-gray-500">Jersey</div>
+                  <div class="text-xs text-gray-500">{{ $t('teams.detail.jersey') }}</div>
                 </div>
               </div>
 
               <div class="space-y-2 text-sm text-gray-600 mb-4">
                 <div v-if="player.pivot?.is_captain" class="flex items-center">
                   <StarIcon class="w-4 h-4 mr-2 text-warning-500" />
-                  <span class="font-medium text-warning-700">Team Captain</span>
+                  <span class="font-medium text-warning-700">{{ $t('teams.detail.teamCaptain') }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span>Joined:</span>
+                  <span>{{ $t('teams.detail.joined') }}:</span>
                   <span class="font-medium">{{ formatDate(player.pivot?.joined_date) }}</span>
                 </div>
               </div>
@@ -275,21 +275,21 @@
                 :to="`/players/${player.id}`"
                 class="btn-secondary text-xs px-3 py-1 w-full text-center block"
               >
-                View Profile
+                {{ $t('teams.detail.viewProfile') }}
               </RouterLink>
             </div>
           </div>
 
           <div v-else class="text-center py-12">
             <UsersIcon class="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <h3 class="text-lg font-medium text-gray-900 mb-2">No players registered</h3>
-            <p class="text-gray-600">Start building your team by adding players</p>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('teams.detail.noPlayersRegistered') }}</h3>
+            <p class="text-gray-600">{{ $t('teams.detail.startBuildingTeam') }}</p>
             <RouterLink
               v-if="canManageTeam"
               :to="`/teams/${team.id}/roster`"
               class="btn-primary mt-4"
             >
-              Add Players
+              {{ $t('teams.detail.addPlayers') }}
             </RouterLink>
           </div>
         </div>
@@ -314,17 +314,17 @@
 
               <div class="space-y-2 text-sm text-gray-600 mb-4">
                 <div class="flex justify-between">
-                  <span>Sport:</span>
+                  <span>{{ $t('teams.detail.sport') }}:</span>
                   <span class="font-medium">{{ tournament.sport_type }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span>Format:</span>
+                  <span>{{ $t('teams.detail.format') }}:</span>
                   <span class="font-medium">{{
                     formatTournamentType(tournament.tournament_type)
                   }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span>Start Date:</span>
+                  <span>{{ $t('teams.detail.startDate') }}:</span>
                   <span class="font-medium">{{ formatDate(tournament.start_date) }}</span>
                 </div>
               </div>
@@ -333,15 +333,15 @@
                 :to="`/tournaments/${tournament.id}`"
                 class="btn-secondary text-xs px-3 py-1 w-full text-center block"
               >
-                View Tournament
+                {{ $t('teams.detail.viewTournament') }}
               </RouterLink>
             </div>
           </div>
 
           <div v-else class="text-center py-12">
             <TrophyIcon class="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <h3 class="text-lg font-medium text-gray-900 mb-2">No tournaments</h3>
-            <p class="text-gray-600">This team hasn't participated in any tournaments yet</p>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('teams.detail.noTournaments') }}</h3>
+            <p class="text-gray-600">{{ $t('teams.detail.noTournamentsParticipated') }}</p>
           </div>
         </div>
 
@@ -353,59 +353,59 @@
               <div class="text-3xl font-bold text-primary-600">
                 {{ teamStats.total_matches || 0 }}
               </div>
-              <div class="text-sm text-gray-600">Total Matches</div>
+              <div class="text-sm text-gray-600">{{ $t('teams.detail.totalMatches') }}</div>
             </div>
             <div class="card p-6 text-center">
               <div class="text-3xl font-bold text-success-600">{{ teamStats.wins || 0 }}</div>
-              <div class="text-sm text-gray-600">Wins</div>
+              <div class="text-sm text-gray-600">{{ $t('teams.detail.wins') }}</div>
             </div>
             <div class="card p-6 text-center">
               <div class="text-3xl font-bold text-warning-600">{{ teamStats.draws || 0 }}</div>
-              <div class="text-sm text-gray-600">Draws</div>
+              <div class="text-sm text-gray-600">{{ $t('teams.detail.draws') }}</div>
             </div>
             <div class="card p-6 text-center">
               <div class="text-3xl font-bold text-danger-600">{{ teamStats.losses || 0 }}</div>
-              <div class="text-sm text-gray-600">Losses</div>
+              <div class="text-sm text-gray-600">{{ $t('teams.detail.losses') }}</div>
             </div>
           </div>
 
           <!-- More detailed stats if available -->
           <div v-if="hasStatistics" class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="card p-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">Offensive Stats</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('teams.detail.offensiveStats') }}</h3>
               <div class="space-y-3">
                 <div class="flex justify-between">
-                  <span class="text-gray-600">Goals For</span>
+                  <span class="text-gray-600">{{ $t('teams.detail.goalsFor') }}</span>
                   <span class="font-medium">{{ teamStats.goals_for || 0 }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="text-gray-600">Goals Against</span>
+                  <span class="text-gray-600">{{ $t('teams.detail.goalsAgainst') }}</span>
                   <span class="font-medium">{{ teamStats.goals_against || 0 }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="text-gray-600">Goal Difference</span>
+                  <span class="text-gray-600">{{ $t('teams.detail.goalDifference') }}</span>
                   <span class="font-medium">{{ teamStats.goal_difference || 0 }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="text-gray-600">Clean Sheets</span>
+                  <span class="text-gray-600">{{ $t('teams.detail.cleanSheets') }}</span>
                   <span class="font-medium">{{ teamStats.clean_sheets || 0 }}</span>
                 </div>
               </div>
             </div>
 
             <div class="card p-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">Performance</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('teams.detail.performance') }}</h3>
               <div class="space-y-3">
                 <div class="flex justify-between">
-                  <span class="text-gray-600">Win Rate</span>
+                  <span class="text-gray-600">{{ $t('teams.detail.winRate') }}</span>
                   <span class="font-medium">{{ teamStats.win_rate || 0 }}%</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="text-gray-600">Goals per Match</span>
+                  <span class="text-gray-600">{{ $t('teams.detail.goalsPerMatch') }}</span>
                   <span class="font-medium">{{ teamStats.goals_per_match || 0 }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="text-gray-600">Goals Conceded per Match</span>
+                  <span class="text-gray-600">{{ $t('teams.detail.goalsConcededPerMatch') }}</span>
                   <span class="font-medium">{{ teamStats.goals_conceded_per_match || 0 }}</span>
                 </div>
               </div>
@@ -415,8 +415,8 @@
           <!-- No statistics available -->
           <div v-if="!hasStatistics" class="text-center py-12">
             <ChartBarIcon class="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <h3 class="text-lg font-medium text-gray-900 mb-2">No statistics available</h3>
-            <p class="text-gray-600">Statistics will appear once the team starts playing matches</p>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('teams.detail.noStatisticsAvailable') }}</h3>
+            <p class="text-gray-600">{{ $t('teams.detail.statisticsWillAppear') }}</p>
           </div>
         </div>
       </div>
@@ -425,9 +425,9 @@
     <!-- Error State -->
     <div v-else-if="error" class="text-center py-12">
       <ExclamationTriangleIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
-      <h3 class="text-lg font-medium text-gray-900 mb-2">Team not found</h3>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('teams.detail.teamNotFound') }}</h3>
       <p class="text-gray-600 mb-6">{{ error }}</p>
-      <RouterLink to="/teams" class="btn-primary"> Back to Teams </RouterLink>
+      <RouterLink to="/teams" class="btn-primary">{{ $t('teams.detail.backToTeams') }}</RouterLink>
     </div>
   </MainLayout>
 </template>
@@ -457,6 +457,7 @@ import {
 import { useAuthStore } from '@/stores/auth'
 import { teamAPI, apiHelpers } from '@/services/api'
 import MainLayout from '@/components/layout/MainLayout.vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'TeamDetail',
@@ -478,6 +479,7 @@ export default {
   setup() {
     const route = useRoute()
     const authStore = useAuthStore()
+    const { t } = useI18n()
 
     // Data
     const team = ref(null)
@@ -506,9 +508,9 @@ export default {
     })
 
     const tabs = computed(() => [
-      { id: 'players', name: 'Players', count: teamPlayers.value.length },
-      { id: 'tournaments', name: 'Tournaments', count: teamTournaments.value.length },
-      { id: 'statistics', name: 'Statistics' },
+      { id: 'players', name: 'players', count: teamPlayers.value.length },
+      { id: 'tournaments', name: 'tournaments', count: teamTournaments.value.length },
+      { id: 'statistics', name: 'statistics' },
     ])
 
     /**
@@ -582,11 +584,11 @@ export default {
      */
     const formatTournamentStatus = (status) => {
       const statusMap = {
-        draft: 'Draft',
-        registration_open: 'Registration Open',
-        in_progress: 'In Progress',
-        completed: 'Completed',
-        cancelled: 'Cancelled',
+        draft: t('teams.detail.tournamentStatus.draft'),
+        registration_open: t('teams.detail.tournamentStatus.registrationOpen'),
+        in_progress: t('teams.detail.tournamentStatus.inProgress'),
+        completed: t('teams.detail.tournamentStatus.completed'),
+        cancelled: t('teams.detail.tournamentStatus.cancelled'),
       }
       return statusMap[status] || status
     }
@@ -610,9 +612,9 @@ export default {
      */
     const formatTournamentType = (type) => {
       const typeMap = {
-        league: 'League',
-        knockout: 'Knockout',
-        group_knockout: 'Group + Knockout',
+        league: t('teams.detail.tournamentFormat.league'),
+        knockout: t('teams.detail.tournamentFormat.knockout'),
+        group_knockout: t('teams.detail.tournamentFormat.groupKnockout'),
       }
       return typeMap[type] || type
     }

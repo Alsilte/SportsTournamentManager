@@ -7,7 +7,7 @@
             <ArrowLeftIcon class="w-5 h-5" />
           </button>
           <div>
-            <h1 class="text-3xl font-bold text-gray-900">{{ player?.user?.name || 'Player Profile' }}</h1>
+            <h1 class="text-3xl font-bold text-gray-900">{{ player?.user?.name || $t('players.profile') }}</h1>
             <div class="flex items-center space-x-4 mt-2">
               <span
                 v-if="player?.position"
@@ -27,7 +27,7 @@
             class="btn-primary"
           >
             <PencilIcon class="w-4 h-4 mr-2" />
-            Edit Profile
+            {{ $t('players.editProfile') }}
           </button>
         </div>
       </div>
@@ -83,7 +83,7 @@
                 <div class="grid grid-cols-2 gap-4 text-sm">
                   <div v-if="player.age" class="flex items-center text-gray-600">
                     <CalendarIcon class="w-4 h-4 mr-2" />
-                    <span>{{ player.age }} years old</span>
+                    <span>{{ player.age }} {{ $t('players.yearsOld') }}</span>
                   </div>
                   <div v-if="player.nationality" class="flex items-center text-gray-600">
                     <FlagIcon class="w-4 h-4 mr-2" />
@@ -99,7 +99,7 @@
                   </div>
                   <div v-if="player.preferred_foot" class="flex items-center text-gray-600">
                     <HandRaisedIcon class="w-4 h-4 mr-2" />
-                    <span class="capitalize">{{ player.preferred_foot }} footed</span>
+                    <span class="capitalize">{{ player.preferred_foot }} {{ $t('players.footed') }}</span>
                   </div>
                   <div v-if="player.user?.email" class="flex items-center text-gray-600">
                     <EnvelopeIcon class="w-4 h-4 mr-2" />
@@ -111,14 +111,14 @@
 
             <!-- Biography -->
             <div v-if="player.biography" class="pt-6 border-t border-gray-200">
-              <h3 class="text-lg font-semibold text-gray-900 mb-3">About</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ $t('players.about') }}</h3>
               <p class="text-gray-700 leading-relaxed">{{ player.biography }}</p>
             </div>
           </div>
 
           <!-- Current Teams -->
           <div class="card p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Current Teams</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('players.currentTeams') }}</h3>
             
             <div v-if="player.active_teams?.length" class="space-y-4">
               <div 
@@ -137,7 +137,7 @@
                       <span v-if="team.pivot?.jersey_number">#{{ team.pivot.jersey_number }}</span>
                       <span v-if="team.pivot?.is_captain" class="text-warning-600 font-medium">
                         <StarIcon class="w-4 h-4 inline mr-1" />
-                        Captain
+                        {{ $t('players.captain') }}
                       </span>
                     </div>
                   </div>
@@ -146,14 +146,14 @@
                   :to="`/teams/${team.id}`"
                   class="btn-secondary text-xs px-3 py-1"
                 >
-                  View Team
+                  {{ $t('players.viewTeam') }}
                 </RouterLink>
               </div>
             </div>
 
             <div v-else class="text-center py-8 text-gray-500">
               <UserGroupIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-              <p>No active teams</p>
+              <p>{{ $t('players.noActiveTeams') }}</p>
             </div>
           </div>
         </div>
@@ -162,24 +162,24 @@
         <div class="space-y-6">
           <!-- Statistics Card -->
           <div class="card p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Statistics</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('players.statistics') }}</h3>
             <div class="space-y-4">
               <div class="text-center p-4 bg-primary-50 rounded-lg">
                 <div class="text-2xl font-bold text-primary-600">{{ playerStats.total_matches || 0 }}</div>
-                <div class="text-sm text-gray-600">Matches Played</div>
+                <div class="text-sm text-gray-600">{{ $t('players.matchesPlayed') }}</div>
               </div>
               <div class="text-center p-4 bg-success-50 rounded-lg">
                 <div class="text-2xl font-bold text-success-600">{{ playerStats.goals || 0 }}</div>
-                <div class="text-sm text-gray-600">Goals Scored</div>
+                <div class="text-sm text-gray-600">{{ $t('players.goalsScored') }}</div>
               </div>
               <div class="grid grid-cols-2 gap-4">
                 <div class="text-center p-3 bg-warning-50 rounded-lg">
                   <div class="text-lg font-bold text-warning-600">{{ playerStats.yellow_cards || 0 }}</div>
-                  <div class="text-xs text-gray-600">Yellow Cards</div>
+                  <div class="text-xs text-gray-600">{{ $t('players.yellowCards') }}</div>
                 </div>
                 <div class="text-center p-3 bg-danger-50 rounded-lg">
                   <div class="text-lg font-bold text-danger-600">{{ playerStats.red_cards || 0 }}</div>
-                  <div class="text-xs text-gray-600">Red Cards</div>
+                  <div class="text-xs text-gray-600">{{ $t('players.redCards') }}</div>
                 </div>
               </div>
             </div>
@@ -187,35 +187,35 @@
 
           <!-- Quick Actions -->
           <div class="card p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('players.quickActions') }}</h3>
             <div class="space-y-3">
               <RouterLink
                 :to="`/players/${player.id}/statistics`"
                 class="btn-secondary w-full text-center block"
               >
                 <ChartBarIcon class="w-4 h-4 mr-2 inline" />
-                Detailed Stats
+                {{ $t('players.detailedStats') }}
               </RouterLink>
               <RouterLink
                 :to="`/players/${player.id}/team-history`"
                 class="btn-secondary w-full text-center block"
               >
                 <ClockIcon class="w-4 h-4 mr-2 inline" />
-                Team History
+                {{ $t('players.teamHistory') }}
               </RouterLink>
               <RouterLink
                 :to="`/players/${player.id}/matches`"
                 class="btn-secondary w-full text-center block"
               >
                 <PlayIcon class="w-4 h-4 mr-2 inline" />
-                Match History
+                {{ $t('players.matchHistory') }}
               </RouterLink>
             </div>
           </div>
 
           <!-- Achievement Highlights -->
           <div class="card p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Achievements</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('players.achievements') }}</h3>
             <div class="space-y-3">
               <div 
                 v-if="playerStats.goals && playerStats.goals > 0"
@@ -225,8 +225,8 @@
                   <TrophyIcon class="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <div class="font-medium text-primary-900">Goal Scorer</div>
-                  <div class="text-sm text-primary-700">{{ playerStats.goals }} goals scored</div>
+                  <div class="font-medium text-primary-900">{{ $t('players.goalScorer') }}</div>
+                  <div class="text-sm text-primary-700">{{ playerStats.goals }} {{ $t('players.goals') }}</div>
                 </div>
               </div>
               
@@ -238,8 +238,8 @@
                   <StarIcon class="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <div class="font-medium text-warning-900">Team Captain</div>
-                  <div class="text-sm text-warning-700">Leadership role</div>
+                  <div class="font-medium text-warning-900">{{ $t('players.teamCaptain') }}</div>
+                  <div class="text-sm text-warning-700">{{ $t('players.leadershipRole') }}</div>
                 </div>
               </div>
 
@@ -251,14 +251,14 @@
                   <CheckCircleIcon class="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <div class="font-medium text-success-900">Experienced Player</div>
-                  <div class="text-sm text-success-700">{{ playerStats.total_matches }}+ matches</div>
+                  <div class="font-medium text-success-900">{{ $t('players.experiencedPlayer') }}</div>
+                  <div class="text-sm text-success-700">{{ playerStats.total_matches }}+ {{ $t('players.matches') }}</div>
                 </div>
               </div>
 
               <div v-if="!hasAnyAchievements" class="text-center py-4 text-gray-500">
                 <TrophyIcon class="w-8 h-8 mx-auto mb-2 text-gray-300" />
-                <p class="text-sm">No achievements yet</p>
+                <p class="text-sm">{{ $t('players.noAchievementsYet') }}</p>
               </div>
             </div>
           </div>
@@ -291,10 +291,10 @@
           <!-- Estado vacío - no hay endpoint para historial de partidos -->
           <div class="text-center py-12 text-gray-500">
             <PlayIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-            <h3 class="text-lg font-medium text-gray-900 mb-2">Match History</h3>
-            <p>Match history feature will be available once the backend endpoint is implemented.</p>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('players.matchHistory') }}</h3>
+            <p>{{ $t('players.matchHistoryNote') }}</p>
             <p class="text-sm text-gray-400 mt-2">
-              Endpoint needed: <code class="bg-gray-100 px-2 py-1 rounded">GET /api/players/{id}/matches</code>
+              {{ $t('players.endpointNeeded') }} <code class="bg-gray-100 px-2 py-1 rounded">GET /api/players/{id}/matches</code>
             </p>
           </div>
         </div>
@@ -304,18 +304,18 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Performance Metrics -->
             <div class="card p-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">Performance Metrics</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('players.performanceMetrics') }}</h3>
               <div class="space-y-4">
                 <div class="flex justify-between items-center">
-                  <span class="text-gray-600">Goals per Match</span>
+                  <span class="text-gray-600">{{ $t('players.goalsPerMatch') }}</span>
                   <span class="font-medium">{{ goalsPerMatch }}</span>
                 </div>
                 <div class="flex justify-between items-center">
-                  <span class="text-gray-600">Cards per Match</span>
+                  <span class="text-gray-600">{{ $t('players.cardsPerMatch') }}</span>
                   <span class="font-medium">{{ cardsPerMatch }}</span>
                 </div>
                 <div class="flex justify-between items-center">
-                  <span class="text-gray-600">Active Teams</span>
+                  <span class="text-gray-600">{{ $t('players.activeTeams') }}</span>
                   <span class="font-medium">{{ player.active_teams?.length || 0 }}</span>
                 </div>
               </div>
@@ -323,18 +323,18 @@
 
             <!-- Team History -->
             <div class="card p-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">Career Info</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('players.careerInfo') }}</h3>
               <div class="space-y-3">
                 <div v-if="player.user?.created_at" class="flex justify-between items-center">
-                  <span class="text-gray-600">Joined Platform</span>
+                  <span class="text-gray-600">{{ $t('players.joinedPlatform') }}</span>
                   <span class="font-medium">{{ formatDate(player.user.created_at) }}</span>
                 </div>
                 <div v-if="player.date_of_birth" class="flex justify-between items-center">
-                  <span class="text-gray-600">Date of Birth</span>
+                  <span class="text-gray-600">{{ $t('players.dateOfBirth') }}</span>
                   <span class="font-medium">{{ formatDate(player.date_of_birth) }}</span>
                 </div>
                 <div class="text-center py-4 text-gray-500">
-                  <p class="text-sm">More career statistics will be available as the player participates in tournaments.</p>
+                  <p class="text-sm">{{ $t('players.careerStatsNote') }}</p>
                 </div>
               </div>
             </div>
@@ -346,10 +346,10 @@
     <!-- Error State -->
     <div v-else-if="error" class="text-center py-12">
       <ExclamationTriangleIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
-      <h3 class="text-lg font-medium text-gray-900 mb-2">Player not found</h3>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('players.playerNotFound') }}</h3>
       <p class="text-gray-600 mb-6">{{ error }}</p>
       <RouterLink to="/players" class="btn-primary">
-        Back to Players
+        {{ $t('players.backToPlayers') }}
       </RouterLink>
     </div>
   </MainLayout>
@@ -385,6 +385,7 @@ import {
 import { useAuthStore } from '@/stores/auth'
 import { playerAPI, apiHelpers } from '@/services/api'
 import MainLayout from '@/components/layout/MainLayout.vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'PlayerDetail',
@@ -411,6 +412,7 @@ export default {
   setup() {
     const route = useRoute()
     const authStore = useAuthStore()
+    const { t } = useI18n()
 
     // Data - Solo datos reales de la API
     const player = ref(null)
@@ -450,8 +452,8 @@ export default {
     })
 
     const tabs = [
-      { id: 'matches', name: 'Match History' },
-      { id: 'performance', name: 'Performance' },
+      { id: 'matches', name: t('players.matchHistoryTab') },
+      { id: 'performance', name: t('players.performance') },
     ]
 
     /**
@@ -544,8 +546,8 @@ export default {
      * Format date for display
      */
     const formatDate = (dateString) => {
-      if (!dateString) return 'N/A'
-      return new Date(dateString).toLocaleDateString('en-US', {
+      if (!dateString) return t('common.na')
+      return new Date(dateString).toLocaleDateString(undefined, {
         month: 'short',
         day: 'numeric'
       })
@@ -555,8 +557,8 @@ export default {
      * Format time for display
      */
     const formatTime = (dateString) => {
-      if (!dateString) return 'N/A'
-      return new Date(dateString).toLocaleTimeString('en-US', {
+      if (!dateString) return t('common.na')
+      return new Date(dateString).toLocaleTimeString(undefined, {
         hour: '2-digit',
         minute: '2-digit'
       })

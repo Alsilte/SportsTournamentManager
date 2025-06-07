@@ -3,8 +3,8 @@
     <template #header>
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">Players</h1>
-          <p class="text-gray-600 mt-1">Browse player profiles and statistics</p>
+          <h1 class="text-3xl font-bold text-gray-900">{{ $t('players.title') }}</h1>
+          <p class="text-gray-600 mt-1">{{ $t('players.subtitle') }}</p>
         </div>
       </div>
     </template>
@@ -21,7 +21,7 @@
             <input
               v-model="filters.search"
               type="text"
-              placeholder="Search players..."
+              :placeholder="$t('players.searchPlayers')"
               class="form-input pl-10"
               @input="debouncedSearch"
             />
@@ -31,18 +31,18 @@
         <!-- Position Filter -->
         <div>
           <select v-model="filters.position" @change="applyFilters" class="form-input">
-            <option value="">All Positions</option>
-            <option value="Goalkeeper">Goalkeeper</option>
-            <option value="Defender">Defender</option>
-            <option value="Midfielder">Midfielder</option>
-            <option value="Forward">Forward</option>
+            <option value="">{{ $t('players.allPositions') }}</option>
+            <option value="Goalkeeper">{{ $t('players.positions.goalkeeper') }}</option>
+            <option value="Defender">{{ $t('players.positions.defender') }}</option>
+            <option value="Midfielder">{{ $t('players.positions.midfielder') }}</option>
+            <option value="Forward">{{ $t('players.positions.forward') }}</option>
           </select>
         </div>
 
         <!-- Nationality Filter -->
         <div>
           <select v-model="filters.nationality" @change="applyFilters" class="form-input">
-            <option value="">All Nationalities</option>
+            <option value="">{{ $t('players.allNationalities') }}</option>
             <option value="Spain">Spain</option>
             <option value="France">France</option>
             <option value="Germany">Germany</option>
@@ -55,12 +55,12 @@
 
       <!-- Active Filters -->
       <div v-if="hasActiveFilters" class="flex flex-wrap gap-2 mt-4">
-        <span class="text-sm text-gray-600">Active filters:</span>
+        <span class="text-sm text-gray-600">{{ $t('players.activeFilters') }}</span>
         <span
           v-if="filters.search"
           class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
         >
-          Search: "{{ filters.search }}"
+          {{ $t('players.search') }}: "{{ filters.search }}"
           <button @click="clearFilter('search')" class="ml-2 hover:text-primary-900">
             <XMarkIcon class="w-3 h-3" />
           </button>
@@ -69,7 +69,7 @@
           v-if="filters.position"
           class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
         >
-          Position: {{ filters.position }}
+          {{ $t('players.position') }}: {{ getPositionTranslation(filters.position) }}
           <button @click="clearFilter('position')" class="ml-2 hover:text-primary-900">
             <XMarkIcon class="w-3 h-3" />
           </button>
@@ -78,7 +78,7 @@
           v-if="filters.nationality"
           class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
         >
-          Nationality: {{ filters.nationality }}
+          {{ $t('players.nationality') }}: {{ filters.nationality }}
           <button @click="clearFilter('nationality')" class="ml-2 hover:text-primary-900">
             <XMarkIcon class="w-3 h-3" />
           </button>
@@ -87,7 +87,7 @@
           @click="clearAllFilters"
           class="text-xs text-gray-500 hover:text-gray-700 underline"
         >
-          Clear all
+          {{ $t('players.clearAll') }}
         </button>
       </div>
     </div>
@@ -110,19 +110,19 @@
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-primary-600">{{ totalPlayers }}</div>
-          <div class="text-sm text-gray-600">Total Players</div>
+          <div class="text-sm text-gray-600">{{ $t('players.totalPlayers') }}</div>
         </div>
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-success-600">{{ activePlayers }}</div>
-          <div class="text-sm text-gray-600">Active Players</div>
+          <div class="text-sm text-gray-600">{{ $t('players.activePlayers') }}</div>
         </div>
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-warning-600">{{ averageAge }}</div>
-          <div class="text-sm text-gray-600">Average Age</div>
+          <div class="text-sm text-gray-600">{{ $t('players.averageAge') }}</div>
         </div>
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-secondary-600">{{ totalGoals }}</div>
-          <div class="text-sm text-gray-600">Total Goals</div>
+          <div class="text-sm text-gray-600">{{ $t('players.totalGoals') }}</div>
         </div>
       </div>
 
@@ -137,12 +137,12 @@
                 v-if="player.position"
                 class="px-2 py-1 rounded-full text-xs font-medium bg-white bg-opacity-90 text-primary-800"
               >
-                {{ player.position }}
+                {{ getPositionTranslation(player.position) }}
               </span>
             </div>
             <div class="absolute bottom-4 left-4 right-4">
               <h3 class="text-white text-lg font-bold truncate">
-                {{ player.user?.name || 'Unknown Player' }}
+                {{ player.user?.name || $t('players.unknownPlayer') }}
               </h3>
               <p v-if="player.nationality" class="text-primary-100 text-sm">
                 {{ player.nationality }}
@@ -157,7 +157,7 @@
               <!-- Age -->
               <div v-if="player.age" class="flex items-center text-sm text-gray-600">
                 <CalendarIcon class="w-4 h-4 mr-2 text-gray-400" />
-                <span>{{ player.age }} years old</span>
+                <span>{{ player.age }} {{ $t('players.yearsOld') }}</span>
               </div>
 
               <!-- Height & Weight -->
@@ -176,7 +176,7 @@
               <!-- Preferred Foot -->
               <div v-if="player.preferred_foot" class="flex items-center text-sm text-gray-600">
                 <HandRaisedIcon class="w-4 h-4 mr-2 text-gray-400" />
-                <span class="capitalize">{{ player.preferred_foot }} footed</span>
+                <span class="capitalize">{{ player.preferred_foot }} {{ $t('players.footed') }}</span>
               </div>
 
               <!-- Current Teams -->
@@ -185,7 +185,7 @@
                 class="flex items-center text-sm text-gray-600"
               >
                 <UserGroupIcon class="w-4 h-4 mr-2 text-gray-400" />
-                <span>{{ player.active_teams.length }} team(s)</span>
+                <span>{{ player.active_teams.length }} {{ $t('players.teams') }}</span>
               </div>
             </div>
 
@@ -195,19 +195,19 @@
                 <div class="text-lg font-bold text-gray-900">
                   {{ playerStats[player.id]?.goals || 0 }}
                 </div>
-                <div class="text-xs text-gray-500">Goals</div>
+                <div class="text-xs text-gray-500">{{ $t('players.goals') }}</div>
               </div>
               <div class="text-center">
                 <div class="text-lg font-bold text-gray-900">
                   {{ playerStats[player.id]?.matches || 0 }}
                 </div>
-                <div class="text-xs text-gray-500">Matches</div>
+                <div class="text-xs text-gray-500">{{ $t('players.matches') }}</div>
               </div>
               <div class="text-center">
                 <div class="text-lg font-bold text-gray-900">
                   {{ playerStats[player.id]?.cards || 0 }}
                 </div>
-                <div class="text-xs text-gray-500">Cards</div>
+                <div class="text-xs text-gray-500">{{ $t('players.cards') }}</div>
               </div>
             </div>
 
@@ -217,7 +217,7 @@
                 :to="{ name: 'player-detail', params: { id: player.id } }"
                 class="btn-primary flex-1 text-center"
               >
-                View Profile
+                {{ $t('players.viewProfile') }}
               </RouterLink>
             </div>
           </div>
@@ -232,7 +232,7 @@
             :disabled="pagination.current_page <= 1"
             class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Previous
+            {{ $t('players.previous') }}
           </button>
 
           <template v-for="page in visiblePages" :key="page">
@@ -256,7 +256,7 @@
             :disabled="pagination.current_page >= pagination.last_page"
             class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Next
+            {{ $t('players.next') }}
           </button>
         </nav>
       </div>
@@ -266,21 +266,21 @@
     <div v-else class="text-center py-12">
       <UsersIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
       <h3 class="text-lg font-medium text-gray-900 mb-2">
-        {{ hasActiveFilters ? 'No players match your filters' : 'No players yet' }}
+        {{ hasActiveFilters ? $t('players.noPlayersFound') : $t('players.noPlayersYet') }}
       </h3>
       <p class="text-gray-600 mb-6">
         {{
           hasActiveFilters
-            ? 'Try adjusting your search criteria to find players.'
-            : 'Players will appear here once they register on the platform.'
+            ? $t('players.tryAdjustingFilters')
+            : $t('players.playersWillAppear')
         }}
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <button v-if="hasActiveFilters" @click="clearAllFilters" class="btn-secondary">
-          Clear Filters
+          {{ $t('players.clearFilters') }}
         </button>
         <RouterLink v-if="authStore.isAuthenticated" to="/register" class="btn-primary">
-          Register as Player
+          {{ $t('players.registerAsPlayer') }}
         </RouterLink>
       </div>
     </div>
@@ -306,6 +306,7 @@ import {
 import { useAuthStore } from '@/stores/auth'
 import { playerAPI, apiHelpers } from '@/services/api'
 import MainLayout from '@/components/layout/MainLayout.vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'Players',
@@ -321,6 +322,7 @@ export default {
   },
   setup() {
     const authStore = useAuthStore()
+    const { t } = useI18n()
 
     const handlePlayerClick = (player) => {
       console.log('Navigating to player:', player)
@@ -390,6 +392,19 @@ export default {
     })
 
     /**
+     * Get position translation
+     */
+    const getPositionTranslation = (position) => {
+      const positionMap = {
+        'Goalkeeper': t('players.positions.goalkeeper'),
+        'Defender': t('players.positions.defender'),
+        'Midfielder': t('players.positions.midfielder'),
+        'Forward': t('players.positions.forward'),
+      }
+      return positionMap[position] || position
+    }
+
+    /**
      * Fetch players with current filters
      */
     const fetchPlayers = async (page = 1) => {
@@ -437,7 +452,7 @@ export default {
       } catch (error) {
         console.error('Failed to fetch players:', error)
         players.value = []
-        window.$notify?.error('Failed to load players')
+        window.$notify?.error(t('notifications.networkError'))
       } finally {
         isLoading.value = false
       }
@@ -544,6 +559,7 @@ export default {
       clearAllFilters,
       goToPage,
       handlePlayerClick,
+      getPositionTranslation,
     }
   },
 }

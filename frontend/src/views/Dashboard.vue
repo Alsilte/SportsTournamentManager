@@ -137,38 +137,38 @@ export default {
         case 'admin':
           return {
             primary: '45',
-            primaryLabel: t('dashboard.totalTournaments'),
+            primaryLabel: t('dashboard.stats.totalTournaments'),
             secondary: '180',
-            secondaryLabel: t('dashboard.registeredTeams'),
+            secondaryLabel: t('dashboard.stats.registeredTeams'),
             tertiary: '850',
-            tertiaryLabel: t('dashboard.activeUsers'),
+            tertiaryLabel: t('dashboard.stats.activeUsers'),
           }
         case 'team_manager':
           return {
             primary: '3',
-            primaryLabel: t('dashboard.myTeams'),
+            primaryLabel: t('dashboard.stats.myTeams'),
             secondary: '42',
-            secondaryLabel: t('dashboard.totalPlayers'),
+            secondaryLabel: t('dashboard.stats.totalPlayers'),
             tertiary: '12',
-            tertiaryLabel: t('dashboard.upcomingMatches'),
+            tertiaryLabel: t('dashboard.stats.upcomingMatches'),
           }
         case 'referee':
           return {
             primary: '24',
-            primaryLabel: t('dashboard.matchesOfficiated'),
+            primaryLabel: t('dashboard.stats.matchesOfficiated'),
             secondary: '8',
-            secondaryLabel: t('dashboard.upcomingMatches'),
+            secondaryLabel: t('dashboard.stats.upcomingMatches'),
             tertiary: '4.3',
-            tertiaryLabel: t('dashboard.averageRating'),
+            tertiaryLabel: t('dashboard.stats.averageRating'),
           }
         default: // player
           return {
             primary: '15',
-            primaryLabel: t('dashboard.matchesPlayed'),
+            primaryLabel: t('dashboard.stats.matchesPlayed'),
             secondary: '8',
-            secondaryLabel: t('dashboard.goalsScored'),
+            secondaryLabel: t('dashboard.stats.goalsScored'),
             tertiary: '2',
-            tertiaryLabel: t('dashboard.activeTeams'),
+            tertiaryLabel: t('dashboard.stats.activeTeams'),
           }
       }
     })
