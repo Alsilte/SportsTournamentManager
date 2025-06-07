@@ -345,7 +345,9 @@ export default {
 
     // Computed properties
     const canManageTeam = computed(() => {
-      return authStore.isAdmin || team.value?.manager_id === authStore.user?.id
+      return authStore.isAdmin || 
+             team.value?.manager_id === authStore.user?.id ||
+             authStore.role === 'team_manager'
     })
 
     const filteredPlayers = computed(() => {
