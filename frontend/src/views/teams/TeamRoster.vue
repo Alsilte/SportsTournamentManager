@@ -16,7 +16,7 @@
             </RouterLink>
             <div>
               <h1 class="text-2xl font-bold text-gray-900">{{ team.name }}</h1>
-              <p class="text-gray-600">{{ $t('teams.roster.title') }}</p>
+              <p class="text-gray-600">Gestión de Plantilla</p>
             </div>
           </div>
           <button 
@@ -25,7 +25,7 @@
             class="btn-primary flex items-center"
           >
             <PlusIcon class="w-5 h-5 mr-2" />
-            {{ $t('teams.roster.addPlayer') }}
+            Agregar Jugador
           </button>
         </div>
 
@@ -33,19 +33,19 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
           <div class="bg-primary-50 rounded-lg p-4 text-center">
             <div class="text-lg font-bold text-primary-600">{{ totalPlayers }}</div>
-            <div class="text-xs text-gray-600">{{ $t('common.total') }}</div>
+            <div class="text-xs text-gray-600">Total</div>
           </div>
           <div class="bg-success-50 rounded-lg p-4 text-center">
             <div class="text-lg font-bold text-success-600">{{ activePlayersCount }}</div>
-            <div class="text-xs text-gray-600">{{ $t('common.active') }}</div>
+            <div class="text-xs text-gray-600">Activos</div>
           </div>
           <div class="bg-warning-50 rounded-lg p-4 text-center">
             <div class="text-lg font-bold text-warning-600">{{ captainsCount }}</div>
-            <div class="text-xs text-gray-600">{{ $t('teams.roster.captains') }}</div>
+            <div class="text-xs text-gray-600">Capitanes</div>
           </div>
           <div class="bg-secondary-50 rounded-lg p-4 text-center">
             <div class="text-lg font-bold text-secondary-600">{{ positionsCount }}</div>
-            <div class="text-xs text-gray-600">{{ $t('teams.roster.positions') }}</div>
+            <div class="text-xs text-gray-600">Posiciones</div>
           </div>
         </div>
       </div>
@@ -55,13 +55,13 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <!-- Search -->
           <div>
-            <label class="form-label">{{ $t('common.search') }}</label>
+            <label class="form-label">Buscar</label>
             <div class="relative">
               <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 v-model="filters.search"
                 type="text"
-                :placeholder="$t('teams.roster.searchPlayers')"
+                placeholder="Buscar jugadores..."
                 class="form-input pl-10"
               />
             </div>
@@ -69,9 +69,9 @@
 
           <!-- Position Filter -->
           <div>
-            <label class="form-label">{{ $t('teams.roster.position') }}</label>
+            <label class="form-label">Posición</label>
             <select v-model="filters.position" class="form-input">
-              <option value="">{{ $t('teams.roster.allPositions') }}</option>
+              <option value="">Todas las posiciones</option>
               <option v-for="position in uniquePositions" :key="position" :value="position">
                 {{ position }}
               </option>
@@ -80,12 +80,12 @@
 
           <!-- Status Filter -->
           <div>
-            <label class="form-label">{{ $t('common.status') }}</label>
+            <label class="form-label">Estado</label>
             <select v-model="filters.status" class="form-input">
-              <option value="">{{ $t('teams.roster.allPlayers') }}</option>
-              <option value="active">{{ $t('common.active') }}</option>
-              <option value="inactive">{{ $t('common.inactive') }}</option>
-              <option value="captain">{{ $t('teams.roster.captains') }}</option>
+              <option value="">Todos los jugadores</option>
+              <option value="active">Activos</option>
+              <option value="inactive">Inactivos</option>
+              <option value="captain">Capitanes</option>
             </select>
           </div>
         </div>
@@ -93,7 +93,7 @@
         <!-- Clear Filters Button -->
         <div v-if="hasActiveFilters" class="mt-4">
           <button @click="clearFilters" class="btn-secondary text-sm">
-            {{ $t('teams.roster.clearFilters') }}
+            Limpiar filtros
           </button>
         </div>
       </div>
@@ -102,10 +102,10 @@
       <div class="card p-6">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-xl font-semibold text-gray-900">
-            {{ $t('teams.roster.playerRoster') }}
+            Plantilla de Jugadores
           </h2>
           <div class="text-sm text-gray-600">
-            {{ filteredPlayers.length }} {{ $t('teams.roster.players') }}
+            {{ filteredPlayers.length }} jugadores
           </div>
         </div>
 
@@ -115,22 +115,22 @@
             <thead class="bg-gray-50">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {{ $t('teams.roster.jerseyNumber') }}
+                  Dorsal
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {{ $t('teams.roster.player') }}
+                  Jugador
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {{ $t('teams.roster.position') }}
+                  Posición
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {{ $t('teams.roster.age') }}
+                  Edad
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {{ $t('teams.roster.joinedDate') }}
+                  Fecha de Unión
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {{ $t('common.status') }}
+                  Estado
                 </th>
               </tr>
             </thead>
@@ -168,7 +168,7 @@
 
                 <!-- Position -->
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {{ player.pivot?.position || $t('teams.roster.noPosition') }}
+                  {{ player.pivot?.position || 'Sin posición' }}
                 </td>
 
                 <!-- Age -->
@@ -189,7 +189,7 @@
                       ? 'bg-success-100 text-success-800' 
                       : 'bg-gray-100 text-gray-800'
                   ]">
-                    {{ player.pivot?.is_active ? $t('common.active') : $t('common.inactive') }}
+                    {{ player.pivot?.is_active ? 'Activo' : 'Inactivo' }}
                   </span>
                 </td>
               </tr>
@@ -219,7 +219,7 @@
                       class="w-4 h-4 ml-2 text-warning-500" 
                     />
                   </h3>
-                  <p class="text-sm text-gray-600">{{ player.pivot?.position || $t('teams.roster.noPosition') }}</p>
+                  <p class="text-sm text-gray-600">{{ player.pivot?.position || 'Sin posición' }}</p>
                 </div>
               </div>
               <span :class="[
@@ -228,25 +228,25 @@
                   ? 'bg-success-100 text-success-800' 
                   : 'bg-gray-100 text-gray-800'
               ]">
-                {{ player.pivot?.is_active ? $t('common.active') : $t('common.inactive') }}
+                {{ player.pivot?.is_active ? 'Activo' : 'Inactivo' }}
               </span>
             </div>
 
             <div class="space-y-2 text-sm text-gray-600">
               <div class="flex justify-between">
-                <span>{{ $t('teams.players.age') }}:</span>
+                <span>Edad:</span>
                 <span>{{ calculateAge(player.date_of_birth) }}</span>
               </div>
               <div class="flex justify-between">
-                <span>{{ $t('teams.players.nationality') }}:</span>
-                <span>{{ player.nationality || $t('teams.players.unknown') }}</span>
+                <span>Nacionalidad:</span>
+                <span>{{ player.nationality || 'Desconocida' }}</span>
               </div>
               <div class="flex justify-between">
-                <span>{{ $t('teams.roster.joinedDate') }}:</span>
+                <span>Fecha de unión:</span>
                 <span>{{ formatDate(player.pivot?.joined_date) }}</span>
               </div>
               <div class="flex justify-between">
-                <span>{{ $t('common.email') }}:</span>
+                <span>Correo:</span>
                 <span>{{ player.user?.email }}</span>
               </div>
             </div>
@@ -257,20 +257,20 @@
         <div v-if="filteredPlayers.length === 0" class="text-center py-12">
           <UsersIcon class="w-12 h-12 text-gray-300 mx-auto mb-4" />
           <h3 class="text-lg font-medium text-gray-900 mb-2">
-            {{ hasActiveFilters ? $t('teams.roster.noPlayersMatch') : $t('teams.roster.noPlayersYet') }}
+            {{ hasActiveFilters ? 'No hay jugadores que coincidan' : 'Aún no hay jugadores' }}
           </h3>
           <p class="text-gray-600 mb-6">
             {{ hasActiveFilters 
-              ? $t('teams.roster.tryDifferentFilters') 
-              : $t('teams.roster.addFirstPlayer') 
+              ? 'Prueba con filtros diferentes' 
+              : 'Agrega tu primer jugador para comenzar' 
             }}
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <button v-if="hasActiveFilters" @click="clearFilters" class="btn-secondary">
-              {{ $t('teams.roster.clearFilters') }}
+              Limpiar filtros
             </button>
             <button v-if="canManageTeam" @click="showAddPlayerModal = true" class="btn-primary">
-              {{ $t('teams.roster.addPlayer') }}
+              Agregar Jugador
             </button>
           </div>
         </div>
@@ -280,10 +280,10 @@
     <!-- Error State -->
     <div v-else-if="error" class="text-center py-12">
       <ExclamationTriangleIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
-      <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('errors.teamNotFound') }}</h3>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">Equipo no encontrado</h3>
       <p class="text-gray-600 mb-6">{{ error }}</p>
       <RouterLink to="/teams" class="btn-primary">
-        {{ $t('teams.roster.backToTeams') }}
+        Volver a equipos
       </RouterLink>
     </div>
 
@@ -300,7 +300,6 @@
 <script>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 import AddPlayerModal from '@/components/teams/AddPlayerModal.vue'
 import {
   ArrowLeftIcon,
@@ -329,7 +328,6 @@ export default {
     ExclamationTriangleIcon,
   },
   setup() {
-    const { t } = useI18n()
     const route = useRoute()
     const authStore = useAuthStore()
 
@@ -417,7 +415,7 @@ export default {
 
     // Helper functions
     const formatDate = (dateString) => {
-      if (!dateString) return t('common.na')
+      if (!dateString) return 'N/A'
       return new Date(dateString).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
@@ -451,7 +449,7 @@ export default {
     const handlePlayerAdded = async () => {
       await fetchTeamRoster()
       handleCloseModal()
-      window.$notify?.success(t('teams.playerAddedSuccess'))
+      window.$notify?.success('Jugador agregado exitosamente')
     }
 
     // Initialize
@@ -460,7 +458,6 @@ export default {
     })
 
     return {
-      t,
       route,
       authStore,
       team,

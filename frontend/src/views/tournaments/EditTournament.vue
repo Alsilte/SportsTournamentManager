@@ -7,16 +7,16 @@
           <button 
             @click="$router.back()"
             class="btn-ghost p-2"
-            :title="$t('common.back')"
+            title="Atrás"
           >
             <ArrowLeftIcon class="h-5 w-5" />
           </button>
           <div>
             <h1 class="text-3xl font-bold text-gray-900">
-              {{ $t('tournaments.edit.title') }}
+              Editar Torneo
             </h1>
             <p class="text-gray-600 mt-1">
-              {{ $t('tournaments.edit.subtitle') }}
+              Modificar detalles del torneo
             </p>
           </div>
         </div>
@@ -25,7 +25,7 @@
       <!-- Loading State -->
       <div v-if="isLoading" class="flex justify-center items-center py-12">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span class="ml-3 text-gray-600">{{ $t('common.loading') }}</span>
+        <span class="ml-3 text-gray-600">Cargando...</span>
       </div>
 
       <!-- Error State -->
@@ -38,7 +38,7 @@
           @click="fetchTournament"
           class="mt-4 btn-secondary"
         >
-          {{ $t('common.retry') }}
+          Reintentar
         </button>
       </div>
 
@@ -56,7 +56,7 @@
           <!-- Tournament Status -->
           <div>
             <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
-              Tournament Status *
+              Estado del Torneo *
             </label>
             <select
               id="status"
@@ -64,22 +64,22 @@
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               :class="{ 'border-red-500': errors.status }"
             >
-              <option value="draft">Draft (Not visible to public)</option>
-              <option value="registration_open">Registration Open</option>
+              <option value="draft">Borrador (No visible al público)</option>
+              <option value="registration_open">Inscripciones Abiertas</option>
               <option 
                 value="in_progress" 
                 :disabled="!canSetInProgress"
-                :title="canSetInProgress ? '' : 'Registration must be open first'"
+                :title="canSetInProgress ? '' : 'Las inscripciones deben estar abiertas primero'"
               >
-                In Progress
+                En Progreso
               </option>
-              <option value="cancelled">Cancelled</option>
+              <option value="cancelled">Cancelado</option>
             </select>
             <p v-if="errors.status" class="mt-1 text-sm text-red-600">
               {{ errors.status }}
             </p>
             <p class="mt-1 text-xs text-gray-500">
-              Current status: <span class="font-medium">{{ formatStatus(originalStatus) }}</span>
+              Estado actual: <span class="font-medium">{{ formatStatus(originalStatus) }}</span>
             </p>
             <div v-if="statusChangeWarning" class="mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
               <div class="flex items-center">
@@ -92,7 +92,7 @@
           <!-- Tournament Name -->
           <div>
             <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ $t('tournaments.form.name') }} *
+              Nombre del Torneo *
             </label>
             <input
               id="name"
@@ -101,7 +101,7 @@
               required
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               :class="{ 'border-red-500': errors.name }"
-              :placeholder="$t('tournaments.form.namePlaceholder')"
+              placeholder="Ej: Copa de Fútbol 2024"
             />
             <p v-if="errors.name" class="mt-1 text-sm text-red-600">
               {{ errors.name }}
@@ -111,7 +111,7 @@
           <!-- Location -->
           <div>
             <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ $t('tournaments.form.location') }} *
+              Ubicación *
             </label>
             <div class="relative">
               <MapPinIcon class="absolute left-3 top-3 h-5 w-5 text-gray-400" />
@@ -122,7 +122,7 @@
                 required
                 class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 :class="{ 'border-red-500': errors.location }"
-                :placeholder="$t('tournaments.form.locationPlaceholder')"
+                placeholder="Ej: Madrid, España"
               />
             </div>
             <p v-if="errors.location" class="mt-1 text-sm text-red-600">
@@ -133,7 +133,7 @@
           <!-- Prize Pool -->
           <div>
             <label for="prize_pool" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ $t('tournaments.form.prizePool') }}
+              Premio en Metálico
             </label>
             <div class="relative">
               <span class="absolute left-3 top-3 text-gray-500">$</span>
@@ -145,7 +145,7 @@
                 step="100"
                 class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 :class="{ 'border-red-500': errors.prize_pool }"
-                :placeholder="$t('tournaments.form.prizePoolPlaceholder')"
+                placeholder="0"
               />
             </div>
             <p v-if="errors.prize_pool" class="mt-1 text-sm text-red-600">
@@ -156,7 +156,7 @@
           <!-- Description -->
           <div>
             <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-              {{ $t('tournaments.form.description') }}
+              Descripción
             </label>
             <textarea
               id="description"
@@ -164,7 +164,7 @@
               rows="4"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               :class="{ 'border-red-500': errors.description }"
-              :placeholder="$t('tournaments.form.descriptionPlaceholder')"
+              placeholder="Describe el torneo, reglas especiales, etc."
             ></textarea>
             <p v-if="errors.description" class="mt-1 text-sm text-red-600">
               {{ errors.description }}
@@ -181,9 +181,9 @@
             >
               <span v-if="isSubmitting" class="flex items-center">
                 <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                {{ $t('tournaments.form.updating') }}
+                Actualizando...
               </span>
-              <span v-else>{{ $t('tournaments.form.updateTournament') }}</span>
+              <span v-else>Actualizar Torneo</span>
             </button>
             
             <button
@@ -192,7 +192,7 @@
               class="btn-secondary flex-1 sm:flex-none"
               :disabled="isSubmitting"
             >
-              {{ $t('common.cancel') }}
+              Cancelar
             </button>
           </div>
         </form>
@@ -267,12 +267,12 @@ export default {
       if (form.value.status === originalStatus.value) return ''
       
       const warnings = {
-        'draft_to_registration_open': 'Tournament will become visible to public and teams can register.',
-        'registration_open_to_in_progress': 'Registration will close and matches can begin.',
-        'registration_open_to_cancelled': 'Tournament will be cancelled. Registered teams will be notified.',
-        'draft_to_cancelled': 'Tournament will be cancelled and deleted.',
-        'in_progress_to_cancelled': 'Tournament will be cancelled. All matches will be stopped.',
-        'any_to_draft': 'Tournament will become private again.'
+        'draft_to_registration_open': 'El torneo será visible al público y los equipos podrán inscribirse.',
+        'registration_open_to_in_progress': 'Las inscripciones se cerrarán y podrán comenzar los partidos.',
+        'registration_open_to_cancelled': 'El torneo será cancelado. Se notificará a los equipos inscritos.',
+        'draft_to_cancelled': 'El torneo será cancelado y eliminado.',
+        'in_progress_to_cancelled': 'El torneo será cancelado. Todos los partidos se detendrán.',
+        'any_to_draft': 'El torneo volverá a ser privado.'
       }
 
       const key = `${originalStatus.value}_to_${form.value.status}`
@@ -284,11 +284,11 @@ export default {
      */
     const formatStatus = (status) => {
       const statusMap = {
-        draft: 'Draft',
-        registration_open: 'Registration Open',
-        in_progress: 'In Progress',
-        completed: 'Completed',
-        cancelled: 'Cancelled',
+        draft: 'Borrador',
+        registration_open: 'Inscripciones Abiertas',
+        in_progress: 'En Progreso',
+        completed: 'Completado',
+        cancelled: 'Cancelado',
       }
       return statusMap[status] || status
     }
@@ -300,36 +300,36 @@ export default {
       errors.value = {}
       
       if (!form.value.name.trim()) {
-        errors.value.name = 'Tournament name is required'
+        errors.value.name = 'El nombre del torneo es requerido'
       } else if (form.value.name.length < 3) {
-        errors.value.name = 'Tournament name must be at least 3 characters'
+        errors.value.name = 'El nombre del torneo debe tener al menos 3 caracteres'
       } else if (form.value.name.length > 100) {
-        errors.value.name = 'Tournament name must be less than 100 characters'
+        errors.value.name = 'El nombre del torneo debe tener menos de 100 caracteres'
       }
 
       if (!form.value.location.trim()) {
-        errors.value.location = 'Location is required'
+        errors.value.location = 'La ubicación es requerida'
       } else if (form.value.location.length < 3) {
-        errors.value.location = 'Location must be at least 3 characters'
+        errors.value.location = 'La ubicación debe tener al menos 3 caracteres'
       } else if (form.value.location.length > 100) {
-        errors.value.location = 'Location must be less than 100 characters'
+        errors.value.location = 'La ubicación debe tener menos de 100 caracteres'
       }
 
       if (form.value.prize_pool < 0) {
-        errors.value.prize_pool = 'Prize pool cannot be negative'
+        errors.value.prize_pool = 'El premio no puede ser negativo'
       }
 
       if (form.value.description && form.value.description.length > 1000) {
-        errors.value.description = 'Description must be less than 1000 characters'
+        errors.value.description = 'La descripción debe tener menos de 1000 caracteres'
       }
 
       if (!form.value.status) {
-        errors.value.status = 'Status is required'
+        errors.value.status = 'El estado es requerido'
       }
 
       // Validate status transitions
       if (form.value.status === 'in_progress' && !canSetInProgress.value) {
-        errors.value.status = 'Cannot set to In Progress. Registration must be open first.'
+        errors.value.status = 'No se puede establecer En Progreso. Las inscripciones deben estar abiertas primero.'
       }
 
       return Object.keys(errors.value).length === 0
@@ -400,8 +400,8 @@ export default {
         if (apiHelpers.isSuccess(response)) {
           const statusChanged = form.value.status !== originalStatus.value
           const message = statusChanged 
-            ? `Tournament updated successfully! Status changed to ${formatStatus(form.value.status)}.`
-            : 'Tournament updated successfully!'
+            ? `Torneo actualizado exitosamente! Estado cambiado a ${formatStatus(form.value.status)}.`
+            : 'Torneo actualizado exitosamente!'
             
           window.$notify?.success(message)
           

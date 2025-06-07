@@ -3,16 +3,12 @@
     <template #header>
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">{{ $t('tournaments.title') }}</h1>
-          <p class="text-gray-600 mt-1">{{ $t('tournaments.subtitle') }}</p>
+          <h1 class="text-3xl font-bold text-gray-900">Torneos</h1>
+          <p class="text-gray-600 mt-1">Explorar y participar en torneos deportivos</p>
         </div>
         <div class="flex items-center space-x-4">
           <RouterLink 
             v-if="authStore.isAdmin"
-
-
-
-
             to="/tournaments/create" 
             class="btn-primary"
           >
@@ -33,7 +29,7 @@
             <input
               v-model="filters.search"
               type="text"
-              :placeholder="$t('tournaments.filters.searchTournaments')"
+              placeholder="Buscar torneos..."
               class="form-input pl-10"
               @input="debouncedSearch"
             />
@@ -43,35 +39,35 @@
         <!-- Status Filter -->
         <div>
           <select v-model="filters.status" @change="applyFilters" class="form-input">
-            <option value="">{{ $t('tournaments.filters.allStatus') }}</option>
-            <option value="draft">{{ $t('tournaments.status.draft') }}</option>
-            <option value="registration_open">{{ $t('tournaments.status.registrationOpen') }}</option>
-            <option value="in_progress">{{ $t('tournaments.status.inProgress') }}</option>
-            <option value="completed">{{ $t('tournaments.status.completed') }}</option>
+            <option value="">Todos los estados</option>
+            <option value="draft">Borrador</option>
+            <option value="registration_open">Inscripciones Abiertas</option>
+            <option value="in_progress">En Progreso</option>
+            <option value="completed">Completado</option>
           </select>
         </div>
 
         <!-- Sport Type Filter -->
         <div>
           <select v-model="filters.sport_type" @change="applyFilters" class="form-input">
-            <option value="">{{ $t('tournaments.filters.allSports') }}</option>
-            <option value="Football">{{ $t('tournaments.sports.football') }}</option>
-            <option value="Basketball">{{ $t('tournaments.sports.basketball') }}</option>
-            <option value="Tennis">{{ $t('tournaments.sports.tennis') }}</option>
-            <option value="Volleyball">{{ $t('tournaments.sports.volleyball') }}</option>
-            <option value="Other">{{ $t('tournaments.sports.other') }}</option>
+            <option value="">Todos los deportes</option>
+            <option value="Football">Fútbol</option>
+            <option value="Basketball">Baloncesto</option>
+            <option value="Tennis">Tenis</option>
+            <option value="Volleyball">Voleibol</option>
+            <option value="Other">Otro</option>
           </select>
         </div>
       </div>
 
       <!-- Active Filters -->
       <div v-if="hasActiveFilters" class="flex flex-wrap gap-2 mt-4">
-        <span class="text-sm text-gray-600">{{ $t('tournaments.filters.activeFilters') }}</span>
+        <span class="text-sm text-gray-600">Filtros activos:</span>
         <span 
           v-if="filters.search"
           class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
         >
-          {{ $t('tournaments.filters.search') }}: "{{ filters.search }}"
+          Búsqueda: "{{ filters.search }}"
           <button @click="clearFilter('search')" class="ml-2 hover:text-primary-900">
             <XMarkIcon class="w-3 h-3" />
           </button>
@@ -80,7 +76,7 @@
           v-if="filters.status"
           class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
         >
-          {{ $t('tournaments.filters.status') }}: {{ formatStatus(filters.status) }}
+          Estado: {{ formatStatus(filters.status) }}
           <button @click="clearFilter('status')" class="ml-2 hover:text-primary-900">
             <XMarkIcon class="w-3 h-3" />
           </button>
@@ -89,7 +85,7 @@
           v-if="filters.sport_type"
           class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
         >
-          {{ $t('tournaments.filters.sport') }}: {{ filters.sport_type }}
+          Deporte: {{ filters.sport_type }}
           <button @click="clearFilter('sport_type')" class="ml-2 hover:text-primary-900">
             <XMarkIcon class="w-3 h-3" />
           </button>
@@ -98,7 +94,7 @@
           @click="clearAllFilters"
           class="text-xs text-gray-500 hover:text-gray-700 underline"
         >
-          {{ $t('tournaments.filters.clearAll') }}
+          Limpiar todo
         </button>
       </div>
     </div>
@@ -121,19 +117,19 @@
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-primary-600">{{ totalTournaments }}</div>
-          <div class="text-sm text-gray-600">{{ $t('tournaments.stats.totalTournaments') }}</div>
+          <div class="text-sm text-gray-600">Total torneos</div>
         </div>
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-success-600">{{ openRegistrations }}</div>
-          <div class="text-sm text-gray-600">{{ $t('tournaments.stats.openForRegistration') }}</div>
+          <div class="text-sm text-gray-600">Abiertos para registro</div>
         </div>
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-warning-600">{{ inProgress }}</div>
-          <div class="text-sm text-gray-600">{{ $t('tournaments.stats.inProgress') }}</div>
+          <div class="text-sm text-gray-600">En progreso</div>
         </div>
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-secondary-600">{{ completed }}</div>
-          <div class="text-sm text-gray-600">{{ $t('tournaments.stats.completed') }}</div>
+          <div class="text-sm text-gray-600">Completados</div>
         </div>
       </div>
 
@@ -155,7 +151,7 @@
             :disabled="pagination.current_page <= 1"
             class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {{ $t('common.previous') }}
+            Anterior
           </button>
           
           <template v-for="page in visiblePages" :key="page">
@@ -179,7 +175,7 @@
             :disabled="pagination.current_page >= pagination.last_page"
             class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {{ $t('common.next') }}
+            Siguiente
           </button>
         </nav>
       </div>
@@ -189,12 +185,12 @@
     <div v-else class="text-center py-12">
       <CalendarIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
       <h3 class="text-lg font-medium text-gray-900 mb-2">
-        {{ hasActiveFilters ? $t('tournaments.noTournamentsFiltered') : $t('tournaments.noTournaments') }}
+        {{ hasActiveFilters ? 'No se encontraron torneos' : 'No hay torneos disponibles' }}
       </h3>
       <p class="text-gray-600 mb-6">
         {{ hasActiveFilters 
-          ? $t('tournaments.tryAdjustingFilters')
-          : $t('tournaments.createFirst') 
+          ? 'Prueba ajustando los filtros para encontrar lo que buscas'
+          : 'Crea el primer torneo para comenzar' 
         }}
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -203,7 +199,7 @@
           @click="clearAllFilters"
           class="btn-secondary"
         >
-          {{ $t('tournaments.clearFilters') }}
+          Limpiar filtros
         </button>
         <RouterLink 
           v-if="authStore.isAdmin"
@@ -257,7 +253,6 @@ export default {
     XMarkIcon
   },
   setup() {
-    const { t } = useI18n()
     const authStore = useAuthStore()
     
     // Data
@@ -348,8 +343,8 @@ export default {
           ...filters.value
         }
         if (authStore.isAdmin) {
-  params.include_draft = true
-}
+          params.include_draft = true
+        }
 
         // Clean empty filters
         Object.keys(params).forEach(key => {
@@ -374,7 +369,7 @@ export default {
         }
       } catch (error) {
         console.error('Failed to fetch tournaments:', error)
-        window.$notify?.error('Failed to load tournaments')
+        window.$notify?.error('Error al cargar torneos')
         tournaments.value = []
       } finally {
         isLoading.value = false
@@ -435,12 +430,12 @@ export default {
      */
     const handleTeamRegistration = (tournament) => {
       if (!authStore.isAuthenticated) {
-        window.$notify?.warning(t('tournaments.messages.loginToRegister'))
+        window.$notify?.warning('Debes iniciar sesión para registrar un equipo')
         return
       }
 
       if (!authStore.canManageTeams) {
-        window.$notify?.warning(t('tournaments.messages.onlyManagersCanRegister'))
+        window.$notify?.warning('Solo los gestores de equipos pueden registrar equipos')
         return
       }
 
@@ -454,7 +449,7 @@ export default {
     const handleRegistrationSuccess = () => {
       showRegistrationModal.value = false
       selectedTournament.value = null
-      window.$notify?.success(t('tournaments.messages.teamRegisteredSuccess'))
+      window.$notify?.success('Equipo registrado exitosamente')
       // Refresh tournaments to update registration counts
       fetchTournaments(pagination.value.current_page)
     }
@@ -464,11 +459,11 @@ export default {
      */
     const formatStatus = (status) => {
       const statusMap = {
-        'draft': t('tournaments.status.draft'),
-        'registration_open': t('tournaments.status.registrationOpen'),
-        'in_progress': t('tournaments.status.inProgress'),
-        'completed': t('tournaments.status.completed'),
-        'cancelled': t('tournaments.status.cancelled')
+        'draft': 'Borrador',
+        'registration_open': 'Inscripciones Abiertas',
+        'in_progress': 'En Progreso',
+        'completed': 'Completado',
+        'cancelled': 'Cancelado'
       }
       return statusMap[status] || status
     }

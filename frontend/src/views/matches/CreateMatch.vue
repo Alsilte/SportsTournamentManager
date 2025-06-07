@@ -6,8 +6,8 @@
           <ArrowLeftIcon class="w-5 h-5" />
         </button>
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">{{ $t('matches.createMatch') }}</h1>
-          <p class="text-gray-600 mt-1">{{ $t('matches.scheduleNewMatch') }}</p>
+          <h1 class="text-3xl font-bold text-gray-900">Crear Partido</h1>
+          <p class="text-gray-600 mt-1">Programar un nuevo partido</p>
         </div>
       </div>
     </template>
@@ -16,12 +16,12 @@
       <form @submit.prevent="handleSubmit" class="space-y-8">
         <!-- Tournament Selection -->
         <div class="card p-6">
-          <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('matches.tournament') }}</h2>
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Torneo</h2>
           
           <div class="grid grid-cols-1 gap-6">
             <!-- Tournament -->
             <div>
-              <label for="tournament_id" class="form-label">{{ $t('matches.tournament') }}</label>
+              <label for="tournament_id" class="form-label">Torneo</label>
               <select
                 id="tournament_id"
                 v-model="form.tournament_id"
@@ -31,7 +31,7 @@
                 :class="{ 'border-danger-300': errors.tournament_id }"
                 @change="onTournamentChange"
               >
-                <option value="">{{ $t('matches.selectTournament') }}</option>
+                <option value="">Seleccionar torneo</option>
                 <option 
                   v-for="tournament in tournaments" 
                   :key="tournament.id" 
@@ -42,8 +42,8 @@
               </select>
               <p v-if="errors.tournament_id" class="form-error">{{ errors.tournament_id }}</p>
               <p v-if="selectedTournament" class="text-sm text-gray-600 mt-1">
-                {{ $t('matches.status') }}: {{ formatTournamentStatus(selectedTournament.status) }} • 
-                {{ selectedTournament.registered_teams_count || 0 }} {{ $t('matches.teamsRegistered') }}
+                Estado: {{ formatTournamentStatus(selectedTournament.status) }} • 
+                {{ selectedTournament.registered_teams_count || 0 }} equipos registrados
               </p>
             </div>
           </div>
@@ -51,12 +51,12 @@
 
         <!-- Team Selection -->
         <div class="card p-6">
-          <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('matches.teams') }}</h2>
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Equipos</h2>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Home Team -->
             <div>
-              <label for="home_team_id" class="form-label">{{ $t('matches.homeTeam') }}</label>
+              <label for="home_team_id" class="form-label">Equipo Local</label>
               <select
                 id="home_team_id"
                 v-model="form.home_team_id"
@@ -65,7 +65,7 @@
                 class="form-input"
                 :class="{ 'border-danger-300': errors.home_team_id }"
               >
-                <option value="">{{ $t('matches.selectHomeTeam') }}</option>
+                <option value="">Seleccionar equipo local</option>
                 <option 
                   v-for="team in availableTeams" 
                   :key="`home-${team.id}`" 
@@ -80,7 +80,7 @@
 
             <!-- Away Team -->
             <div>
-              <label for="away_team_id" class="form-label">{{ $t('matches.awayTeam') }}</label>
+              <label for="away_team_id" class="form-label">Equipo Visitante</label>
               <select
                 id="away_team_id"
                 v-model="form.away_team_id"
@@ -89,7 +89,7 @@
                 class="form-input"
                 :class="{ 'border-danger-300': errors.away_team_id }"
               >
-                <option value="">{{ $t('matches.selectAwayTeam') }}</option>
+                <option value="">Seleccionar equipo visitante</option>
                 <option 
                   v-for="team in availableTeams" 
                   :key="`away-${team.id}`" 
@@ -108,12 +108,12 @@
             <div class="flex items-center justify-center space-x-8">
               <div class="text-center">
                 <h3 class="font-semibold text-gray-900">{{ getTeamName(form.home_team_id) }}</h3>
-                <p class="text-sm text-gray-600">{{ $t('matches.home') }}</p>
+                <p class="text-sm text-gray-600">Local</p>
               </div>
-              <div class="text-2xl font-bold text-gray-400">{{ $t('matches.vs') }}</div>
+              <div class="text-2xl font-bold text-gray-400">VS</div>
               <div class="text-center">
                 <h3 class="font-semibold text-gray-900">{{ getTeamName(form.away_team_id) }}</h3>
-                <p class="text-sm text-gray-600">{{ $t('matches.away') }}</p>
+                <p class="text-sm text-gray-600">Visitante</p>
               </div>
             </div>
           </div>
@@ -121,12 +121,12 @@
 
         <!-- Match Details -->
         <div class="card p-6">
-          <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('matches.matchDetails') }}</h2>
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Detalles del Partido</h2>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Match Date -->
             <div>
-              <label for="match_date" class="form-label">{{ $t('matches.matchDateTime') }}</label>
+              <label for="match_date" class="form-label">Fecha y Hora del Partido</label>
               <input
                 id="match_date"
                 v-model="form.match_date"
@@ -142,7 +142,7 @@
 
             <!-- Round -->
             <div>
-              <label for="round" class="form-label">{{ $t('matches.roundStage') }}</label>
+              <label for="round" class="form-label">Ronda/Etapa</label>
               <input
                 id="round"
                 v-model="form.round"
@@ -150,14 +150,14 @@
                 :disabled="isLoading"
                 class="form-input"
                 :class="{ 'border-danger-300': errors.round }"
-                :placeholder="$t('matches.roundPlaceholder')"
+                placeholder="Ej: Ronda 1, Cuartos de Final"
               />
               <p v-if="errors.round" class="form-error">{{ errors.round }}</p>
             </div>
 
             <!-- Venue -->
             <div>
-              <label for="venue" class="form-label">{{ $t('matches.venue') }}</label>
+              <label for="venue" class="form-label">Sede</label>
               <input
                 id="venue"
                 v-model="form.venue"
@@ -165,14 +165,14 @@
                 :disabled="isLoading"
                 class="form-input"
                 :class="{ 'border-danger-300': errors.venue }"
-                :placeholder="$t('matches.venuePlaceholder')"
+                placeholder="Nombre del estadio o lugar"
               />
               <p v-if="errors.venue" class="form-error">{{ errors.venue }}</p>
             </div>
 
             <!-- Referee -->
             <div>
-              <label for="referee_id" class="form-label">{{ $t('matches.referee') }}</label>
+              <label for="referee_id" class="form-label">Árbitro</label>
               <select
                 id="referee_id"
                 v-model="form.referee_id"
@@ -180,7 +180,7 @@
                 class="form-input"
                 :class="{ 'border-danger-300': errors.referee_id }"
               >
-                <option value="">{{ $t('matches.noRefereeAssigned') }}</option>
+                <option value="">Sin árbitro asignado</option>
                 <option 
                   v-for="referee in referees" 
                   :key="referee.id" 
@@ -191,7 +191,7 @@
               </select>
               <p v-if="errors.referee_id" class="form-error">{{ errors.referee_id }}</p>
               <p v-if="referees.length === 0" class="text-xs text-gray-500 mt-1">
-                {{ $t('matches.noRefereesAvailable') }}
+                No hay árbitros disponibles
               </p>
             </div>
           </div>
@@ -199,7 +199,7 @@
 
         <!-- Match Preview -->
         <div v-if="isFormValid" class="card p-6 bg-gray-50">
-          <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('matches.matchPreview') }}</h2>
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Vista Previa del Partido</h2>
           <div class="bg-white rounded-lg p-6 border-2 border-dashed border-gray-200">
             <!-- Tournament Info -->
             <div class="text-center mb-6">
@@ -216,10 +216,10 @@
                   </span>
                 </div>
                 <h4 class="font-semibold text-gray-900">{{ getTeamName(form.home_team_id) }}</h4>
-                <p class="text-sm text-gray-600">{{ $t('matches.home') }}</p>
+                <p class="text-sm text-gray-600">Local</p>
               </div>
               
-              <div class="text-3xl font-bold text-gray-400">{{ $t('matches.vs') }}</div>
+              <div class="text-3xl font-bold text-gray-400">VS</div>
               
               <div class="text-center">
                 <div class="w-16 h-16 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-2">
@@ -228,7 +228,7 @@
                   </span>
                 </div>
                 <h4 class="font-semibold text-gray-900">{{ getTeamName(form.away_team_id) }}</h4>
-                <p class="text-sm text-gray-600">{{ $t('matches.away') }}</p>
+                <p class="text-sm text-gray-600">Visitante</p>
               </div>
             </div>
 
@@ -236,17 +236,17 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center border-t pt-6">
               <div>
                 <CalendarIcon class="w-5 h-5 text-gray-400 mx-auto mb-1" />
-                <div class="text-sm text-gray-600">{{ $t('matches.dateTime') }}</div>
+                <div class="text-sm text-gray-600">Fecha y Hora</div>
                 <div class="font-medium">{{ formatPreviewDateTime(form.match_date) }}</div>
               </div>
               <div v-if="form.venue">
                 <MapPinIcon class="w-5 h-5 text-gray-400 mx-auto mb-1" />
-                <div class="text-sm text-gray-600">{{ $t('matches.venue') }}</div>
+                <div class="text-sm text-gray-600">Sede</div>
                 <div class="font-medium">{{ form.venue }}</div>
               </div>
               <div v-if="form.referee_id">
                 <UserIcon class="w-5 h-5 text-gray-400 mx-auto mb-1" />
-                <div class="text-sm text-gray-600">{{ $t('matches.referee') }}</div>
+                <div class="text-sm text-gray-600">Árbitro</div>
                 <div class="font-medium">{{ getRefereeName(form.referee_id) }}</div>
               </div>
             </div>
@@ -269,7 +269,7 @@
             :disabled="isLoading" 
             class="btn-secondary"
           >
-            {{ $t('matches.cancel') }}
+            Cancelar
           </button>
           <button 
             type="submit" 
@@ -278,9 +278,9 @@
           >
             <div v-if="isLoading" class="flex items-center">
               <div class="spinner w-4 h-4 mr-2"></div>
-              {{ $t('matches.creatingMatch') }}
+              Creando partido...
             </div>
-            <span v-else>{{ $t('matches.createMatch') }}</span>
+            <span v-else>Crear Partido</span>
           </button>
         </div>
       </form>
@@ -306,7 +306,6 @@ import {
 import { useAuthStore } from '@/stores/auth'
 import { matchAPI, tournamentAPI, teamAPI, apiHelpers } from '@/services/api'
 import MainLayout from '@/components/layout/MainLayout.vue'
-import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'CreateMatch',
@@ -321,7 +320,6 @@ export default {
   setup() {
     const router = useRouter()
     const authStore = useAuthStore()
-    const { t } = useI18n()
 
     // Form data
     const form = ref({
@@ -462,10 +460,10 @@ export default {
 
         if (apiHelpers.isSuccess(response)) {
           const match = apiHelpers.getData(response)
-          window.$notify?.success(t('matches.matchCreatedSuccess'))
+          window.$notify?.success('Partido creado exitosamente')
           router.push(`/matches/${match.id}`)
         } else {
-          generalError.value = response.data?.message || t('matches.matchCreationFailed')
+          generalError.value = response.data?.message || 'Error al crear el partido'
         }
       } catch (error) {
         console.error('Match creation failed:', error)
@@ -483,31 +481,31 @@ export default {
 
       // Tournament validation
       if (!form.value.tournament_id) {
-        newErrors.tournament_id = t('matches.tournamentRequired')
+        newErrors.tournament_id = 'El torneo es requerido'
       }
 
       // Teams validation
       if (!form.value.home_team_id) {
-        newErrors.home_team_id = t('matches.homeTeamRequired')
+        newErrors.home_team_id = 'El equipo local es requerido'
       }
 
       if (!form.value.away_team_id) {
-        newErrors.away_team_id = t('matches.awayTeamRequired')
+        newErrors.away_team_id = 'El equipo visitante es requerido'
       }
 
       if (form.value.home_team_id === form.value.away_team_id) {
-        newErrors.away_team_id = t('matches.teamsMustBeDifferent')
+        newErrors.away_team_id = 'Los equipos deben ser diferentes'
       }
 
       // Date validation
       if (!form.value.match_date) {
-        newErrors.match_date = t('matches.matchDateRequired')
+        newErrors.match_date = 'La fecha del partido es requerida'
       } else {
         const matchDate = new Date(form.value.match_date)
         const now = new Date()
         
         if (matchDate <= now) {
-          newErrors.match_date = t('matches.matchDateFuture')
+          newErrors.match_date = 'La fecha del partido debe ser en el futuro'
         }
       }
 
@@ -520,7 +518,7 @@ export default {
      */
     const getTeamName = (teamId) => {
       const team = availableTeams.value.find(t => t.id == teamId)
-      return team?.name || `${t('common.unknown')} Team`
+      return team?.name || 'Equipo Desconocido'
     }
 
     /**
@@ -536,7 +534,7 @@ export default {
      */
     const getRefereeName = (refereeId) => {
       const referee = referees.value.find(r => r.id == refereeId)
-      return referee?.name || `${t('common.unknown')} Referee`
+      return referee?.name || 'Árbitro Desconocido'
     }
 
     /**
@@ -544,11 +542,11 @@ export default {
      */
     const formatTournamentStatus = (status) => {
       const statusMap = {
-        draft: t('tournaments.status.draft'),
-        registration_open: t('tournaments.status.registrationOpen'),
-        in_progress: t('tournaments.status.inProgress'),
-        completed: t('tournaments.status.completed'),
-        cancelled: t('tournaments.status.cancelled'),
+        draft: 'Borrador',
+        registration_open: 'Registro abierto',
+        in_progress: 'En progreso',
+        completed: 'Completado',
+        cancelled: 'Cancelado',
       }
       return statusMap[status] || status
     }
@@ -557,7 +555,7 @@ export default {
      * Format date and time for preview
      */
     const formatPreviewDateTime = (dateString) => {
-      if (!dateString) return t('common.tbd')
+      if (!dateString) return 'Por determinar'
       return new Date(dateString).toLocaleString(undefined, {
         weekday: 'long',
         year: 'numeric',

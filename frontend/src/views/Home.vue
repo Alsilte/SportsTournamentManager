@@ -41,16 +41,16 @@
             <span
               class="block text-transparent bg-clip-text bg-gradient-to-r from-white to-primary-200"
             >
-              {{ $t('home.hero.title') }}
+              Gestión de Torneos
             </span>
             <span class="block text-4xl md:text-6xl mt-2 text-primary-200">
-              {{ $t('home.hero.subtitle') }}
+              Deportivos
             </span>
           </h1>
 
           <!-- Description -->
           <p class="text-xl md:text-2xl mb-8 text-primary-100 max-w-3xl mx-auto leading-relaxed">
-            {{ $t('home.hero.description') }}
+            Organiza, gestiona y participa en torneos deportivos de manera profesional
           </p>
 
           <!-- CTA Buttons -->
@@ -60,7 +60,7 @@
               to="/register"
               class="group relative px-8 py-4 bg-white text-primary-600 rounded-2xl font-bold text-lg hover:bg-primary-50 transition-all duration-300 transform hover:scale-105 shadow-2xl"
             >
-              <span class="relative z-10">{{ $t('home.cta.getStarted') }}</span>
+              <span class="relative z-10">Comenzar</span>
               <div
                 class="absolute inset-0 bg-gradient-to-r from-primary-400 to-primary-600 rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-300"
               ></div>
@@ -70,14 +70,14 @@
               to="/dashboard"
               class="group relative px-8 py-4 bg-white text-primary-600 rounded-2xl font-bold text-lg hover:bg-primary-50 transition-all duration-300 transform hover:scale-105 shadow-2xl"
             >
-              <span class="relative z-10">{{ $t('home.cta.dashboard') }}</span>
+              <span class="relative z-10">Ir al Dashboard</span>
             </RouterLink>
 
             <RouterLink
               to="/tournaments"
               class="group px-8 py-4 bg-transparent border-2 border-white text-white rounded-2xl font-bold text-lg hover:bg-white hover:text-primary-600 transition-all duration-300 transform hover:scale-105"
             >
-              {{ $t('home.cta.viewTournaments') }}
+              Ver Torneos
               <ArrowRightIcon
                 class="w-5 h-5 ml-2 inline-block group-hover:translate-x-1 transition-transform duration-300"
               />
@@ -88,15 +88,15 @@
           <div class="flex flex-wrap justify-center items-center gap-8 opacity-80">
             <div class="flex items-center space-x-2">
               <StarIcon class="w-5 h-5 text-yellow-400" />
-              <span class="text-sm">{{ $t('home.trust.rating') }}</span>
+              <span class="text-sm">4.9/5 estrellas</span>
             </div>
             <div class="flex items-center space-x-2">
               <UserGroupIcon class="w-5 h-5 text-primary-200" />
-              <span class="text-sm">{{ $t('home.trust.users') }}</span>
+              <span class="text-sm">2,000+ usuarios activos</span>
             </div>
             <div class="flex items-center space-x-2">
               <ShieldCheckIcon class="w-5 h-5 text-green-400" />
-              <span class="text-sm">{{ $t('home.trust.secure') }}</span>
+              <span class="text-sm">100% Seguro</span>
             </div>
           </div>
         </div>
@@ -127,10 +127,10 @@
         <!-- Section Header -->
         <div class="text-center mb-20">
           <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {{ $t('home.features.title') }}
+            Características Principales
           </h2>
           <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            {{ $t('home.features.subtitle') }}
+            Todas las herramientas que necesitas para gestionar torneos profesionales
           </p>
         </div>
 
@@ -160,10 +160,10 @@
             <h3
               class="text-xl font-bold text-gray-900 mb-4 group-hover:text-primary-600 transition-colors duration-300"
             >
-              {{ $t(`home.features.items.${feature.key}.title`) }}
+              {{ getFeatureTitle(feature.key) }}
             </h3>
             <p class="text-gray-600 leading-relaxed">
-              {{ $t(`home.features.items.${feature.key}.description`) }}
+              {{ getFeatureDescription(feature.key) }}
             </p>
 
             <!-- Hover Effect -->
@@ -185,10 +185,10 @@
       <div class="container-custom relative z-10">
         <div class="text-center mb-16">
           <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {{ $t('home.stats.title') }}
+            Números que Hablan
           </h2>
           <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-            {{ $t('home.stats.subtitle') }}
+            Únete a miles de organizadores y atletas que confían en nuestra plataforma
           </p>
         </div>
 
@@ -213,7 +213,7 @@
               ></div>
             </div>
             <div class="text-gray-600 font-medium text-lg">
-              {{ $t(`home.stats.items.${stat.key}`) }}
+              {{ getStatLabel(stat.key) }}
             </div>
           </div>
         </div>
@@ -228,17 +228,17 @@
         >
           <div>
             <h2 class="text-4xl font-bold text-gray-900 mb-4">
-              {{ $t('home.tournaments.title') }}
+              Torneos Recientes
             </h2>
             <p class="text-gray-600 text-lg">
-              {{ $t('home.tournaments.subtitle') }}
+              Descubre los últimos torneos y únete a la competencia
             </p>
           </div>
           <RouterLink
             to="/tournaments"
             class="group flex items-center px-6 py-3 bg-primary-600 text-white rounded-2xl font-semibold hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
           >
-            {{ $t('home.tournaments.viewAll') }}
+            Ver Todos
             <ArrowRightIcon
               class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300"
             />
@@ -296,7 +296,7 @@
                   :class="getStatusBadgeClass(tournament.status)"
                   class="px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm"
                 >
-                  {{ $t(`tournaments.status.${tournament.status}`) }}
+                  {{ formatStatus(tournament.status) }}
                 </span>
               </div>
 
@@ -336,7 +336,7 @@
                   <UserGroupIcon class="w-4 h-4 mr-2 text-gray-400" />
                   <span
                     >{{ tournament.registered_teams_count || 0 }}/{{ tournament.max_teams }}
-                    {{ $t('teams.title').toLowerCase() }}</span
+                    equipos</span
                   >
                 </div>
 
@@ -349,7 +349,7 @@
               <!-- Progress Bar -->
               <div v-if="tournament.status === 'registration_open'" class="mb-4">
                 <div class="flex justify-between text-xs text-gray-600 mb-1">
-                  <span>{{ $t('tournaments.registrationProgress') }}</span>
+                  <span>Progreso de inscripciones</span>
                   <span>{{ Math.round(getRegistrationProgress(tournament)) }}%</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2">
@@ -365,7 +365,7 @@
                 :to="`/tournaments/${tournament.id}`"
                 class="block w-full text-center py-3 bg-gray-100 hover:bg-primary-600 text-gray-700 hover:text-white rounded-xl font-semibold transition-all duration-300 group-hover:bg-primary-500 group-hover:text-white"
               >
-                {{ $t('tournaments.viewDetails') }}
+                Ver Detalles
               </RouterLink>
             </div>
           </div>
@@ -380,10 +380,10 @@
             ></div>
           </div>
           <h3 class="text-2xl font-bold text-gray-900 mb-4">
-            {{ $t('tournaments.noTournaments') }}
+            No hay torneos disponibles
           </h3>
           <p class="text-gray-600 mb-8 max-w-md mx-auto">
-            {{ $t('home.tournaments.noTournamentsDescription') }}
+            Sé el primero en crear un torneo emocionante
           </p>
           <RouterLink
             v-if="authStore.isAdmin"
@@ -416,10 +416,10 @@
       <div class="container-custom text-center relative z-10">
         <div class="max-w-4xl mx-auto">
           <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
-            {{ $t('home.cta.title') }}
+            ¿Listo para Comenzar?
           </h2>
           <p class="text-xl text-primary-100 mb-10 max-w-2xl mx-auto leading-relaxed">
-            {{ $t('home.cta.description') }}
+            Únete a miles de organizadores y atletas. Crea tu cuenta gratis hoy.
           </p>
 
           <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -428,7 +428,7 @@
               to="/register"
               class="group px-8 py-4 bg-white text-primary-600 rounded-2xl font-bold text-lg hover:bg-primary-50 transition-all duration-300 transform hover:scale-105 shadow-2xl"
             >
-              {{ $t('home.cta.signUpNow') }}
+              Registrarse Ahora
               <ArrowRightIcon
                 class="w-5 h-5 ml-2 inline-block group-hover:translate-x-1 transition-transform duration-300"
               />
@@ -438,7 +438,7 @@
               to="/tournaments"
               class="group px-8 py-4 bg-transparent border-2 border-white text-white rounded-2xl font-bold text-lg hover:bg-white hover:text-primary-600 transition-all duration-300 transform hover:scale-105"
             >
-              {{ $t('home.cta.browseTournaments') }}
+              Explorar Torneos
               <EyeIcon
                 class="w-5 h-5 ml-2 inline-block group-hover:scale-110 transition-transform duration-300"
               />
@@ -498,7 +498,6 @@ export default {
     EyeIcon,
   },
   setup() {
-    const { t } = useI18n()
     const authStore = useAuthStore()
     const recentTournaments = ref([])
     const isLoadingTournaments = ref(false)
@@ -618,11 +617,25 @@ export default {
     }
 
     /**
+     * Format status for display
+     */
+    const formatStatus = (status) => {
+      const statusMap = {
+        draft: 'Borrador',
+        registration_open: 'Inscripciones Abiertas',
+        in_progress: 'En Progreso',
+        completed: 'Completado',
+        cancelled: 'Cancelado',
+      }
+      return statusMap[status] || status
+    }
+
+    /**
      * Format date for display
      */
     const formatDate = (dateString) => {
-      if (!dateString) return t('common.tbd')
-      return new Date(dateString).toLocaleDateString(authStore.locale || 'en', {
+      if (!dateString) return 'Por determinar'
+      return new Date(dateString).toLocaleDateString('es-ES', {
         month: 'short',
         day: 'numeric',
         year: 'numeric',
@@ -636,6 +649,49 @@ export default {
       return Number(amount).toLocaleString()
     }
 
+    /**
+     * Get feature title in Spanish
+     */
+    const getFeatureTitle = (key) => {
+      const titles = {
+        tournament_management: 'Gestión de Torneos',
+        team_organization: 'Organización de Equipos',
+        match_scheduling: 'Programación de Partidos',
+        live_statistics: 'Estadísticas en Vivo',
+        user_management: 'Gestión de Usuarios',
+        awards_recognition: 'Premios y Reconocimientos'
+      }
+      return titles[key] || key
+    }
+
+    /**
+     * Get feature description in Spanish
+     */
+    const getFeatureDescription = (key) => {
+      const descriptions = {
+        tournament_management: 'Crea y administra torneos con facilidad. Gestiona inscripciones, calendario y resultados.',
+        team_organization: 'Organiza equipos, gestiona jugadores y mantén toda la información actualizada.',
+        match_scheduling: 'Programa partidos automáticamente y mantén a todos informados sobre horarios.',
+        live_statistics: 'Seguimiento en tiempo real de estadísticas de jugadores y equipos.',
+        user_management: 'Sistema completo de gestión de usuarios con roles y permisos.',
+        awards_recognition: 'Sistema de premios y reconocimientos para motivar a los participantes.'
+      }
+      return descriptions[key] || key
+    }
+
+    /**
+     * Get stat label in Spanish
+     */
+    const getStatLabel = (key) => {
+      const labels = {
+        tournaments: 'Torneos',
+        teams: 'Equipos',
+        players: 'Jugadores',
+        matches: 'Partidos'
+      }
+      return labels[key] || key
+    }
+
     onMounted(() => {
       fetchRecentTournaments()
     })
@@ -646,8 +702,12 @@ export default {
       stats,
       recentTournaments,
       isLoadingTournaments,
+      getFeatureTitle,
+      getFeatureDescription,
+      getStatLabel,
       getRegistrationProgress,
       getStatusBadgeClass,
+      formatStatus,
       formatTournamentType,
       formatDate,
       formatMoney,

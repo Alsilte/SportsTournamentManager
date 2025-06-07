@@ -6,8 +6,8 @@
           <ArrowLeftIcon class="w-5 h-5" />
         </button>
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">{{ $t('matches.details') }}</h1>
-          <p class="text-gray-600 mt-1">{{ $t('matches.viewMatchInfo') }}</p>
+          <h1 class="text-3xl font-bold text-gray-900">Detalles del Partido</h1>
+          <p class="text-gray-600 mt-1">Ver información del partido</p>
         </div>
       </div>
     </template>
@@ -50,7 +50,7 @@
               </span>
             </div>
             <h3 class="text-xl font-bold text-gray-900 mb-1">{{ match.home_team?.name }}</h3>
-            <p class="text-sm text-gray-600">{{ $t('matches.home') }}</p>
+            <p class="text-sm text-gray-600">Local</p>
           </div>
 
           <!-- Score -->
@@ -62,16 +62,16 @@
               
               <!-- Extra Time -->
               <div v-if="match.extra_time_home !== null && match.extra_time_away !== null" class="text-lg text-gray-600 mb-2">
-                {{ $t('matches.extraTime') }}: {{ match.extra_time_home }} - {{ match.extra_time_away }}
+                Tiempo extra: {{ match.extra_time_home }} - {{ match.extra_time_away }}
               </div>
               
               <!-- Penalties -->
               <div v-if="match.penalty_home !== null && match.penalty_away !== null" class="text-lg text-gray-600">
-                {{ $t('matches.penalties') }}: {{ match.penalty_home }} - {{ match.penalty_away }}
+                Penales: {{ match.penalty_home }} - {{ match.penalty_away }}
               </div>
             </div>
             
-            <div v-else class="text-4xl font-bold text-gray-400 mb-4">{{ $t('matches.vs') }}</div>
+            <div v-else class="text-4xl font-bold text-gray-400 mb-4">VS</div>
             
             <!-- Match Time -->
             <div class="text-center">
@@ -92,7 +92,7 @@
               </span>
             </div>
             <h3 class="text-xl font-bold text-gray-900 mb-1">{{ match.away_team?.name }}</h3>
-            <p class="text-sm text-gray-600">{{ $t('matches.away') }}</p>
+            <p class="text-sm text-gray-600">Visitante</p>
           </div>
         </div>
 
@@ -100,24 +100,24 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center border-t pt-6">
           <div v-if="match.venue">
             <MapPinIcon class="w-5 h-5 text-gray-400 mx-auto mb-1" />
-            <div class="text-sm text-gray-600">{{ $t('matches.venue') }}</div>
+            <div class="text-sm text-gray-600">Sede</div>
             <div class="font-medium">{{ match.venue }}</div>
           </div>
           <div v-if="match.referee">
             <UserIcon class="w-5 h-5 text-gray-400 mx-auto mb-1" />
-            <div class="text-sm text-gray-600">{{ $t('matches.referee') }}</div>
+            <div class="text-sm text-gray-600">Árbitro</div>
             <div class="font-medium">{{ match.referee.name }}</div>
           </div>
           <div>
             <ClockIcon class="w-5 h-5 text-gray-400 mx-auto mb-1" />
-            <div class="text-sm text-gray-600">{{ $t('matches.duration') }}</div>
+            <div class="text-sm text-gray-600">Duración</div>
             <div class="font-medium">{{ getMatchDuration() }}</div>
           </div>
         </div>
 
         <!-- Winner Information -->
         <div v-if="match.status === 'completed' && match.winner_team_id" class="text-center mt-6 pt-6 border-t">
-          <div class="text-lg text-gray-600 mb-2">{{ $t('matches.winner') }}</div>
+          <div class="text-lg text-gray-600 mb-2">Ganador</div>
           <div class="text-2xl font-bold text-success-600">
             {{ getWinnerTeamName() }}
           </div>
@@ -127,14 +127,14 @@
       <!-- Match Events -->
       <div class="card p-6">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl font-semibold text-gray-900">{{ $t('matches.matchEvents') }}</h2>
+          <h2 class="text-xl font-semibold text-gray-900">Eventos del Partido</h2>
           <button 
             v-if="canManageMatch"
             @click="refreshEvents"
             class="btn-secondary text-sm"
           >
             <ArrowPathIcon class="w-4 h-4 mr-2" />
-            {{ $t('matches.refresh') }}
+            Actualizar
           </button>
         </div>
 
@@ -153,7 +153,7 @@
             <!-- Event Details -->
             <div class="flex-1">
               <div class="flex items-center space-x-2 mb-1">
-                <span class="font-medium text-gray-900">{{ event.player?.user?.name || $t('matches.unknownPlayer') }}</span>
+                <span class="font-medium text-gray-900">{{ event.player?.user?.name || 'Jugador desconocido' }}</span>
                 <span
                   :class="getEventBadgeClass(event.event_type)"
                   class="px-2 py-1 text-xs font-medium rounded-full"
@@ -162,7 +162,7 @@
                 </span>
               </div>
               <div class="text-sm text-gray-600">
-                {{ event.team?.name }} • {{ event.description || $t('matches.noDescription') }}
+                {{ event.team?.name }} • {{ event.description || 'Sin descripción' }}
               </div>
             </div>
 
@@ -178,16 +178,16 @@
 
         <div v-else class="text-center py-8 text-gray-500">
           <ClockIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-          <p>{{ $t('matches.noEventsRecorded') }}</p>
+          <p>No hay eventos registrados</p>
           <p v-if="match.status === 'scheduled'" class="text-sm mt-2">
-            {{ $t('matches.eventsWillAppear') }}
+            Los eventos aparecerán cuando comience el partido
           </p>
         </div>
       </div>
 
       <!-- Match Notes -->
       <div v-if="match.notes" class="card p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ $t('matches.matchNotes') }}</h2>
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Notas del Partido</h2>
         <div class="bg-gray-50 rounded-lg p-4">
           <p class="text-gray-700 whitespace-pre-line">{{ match.notes }}</p>
         </div>
@@ -195,7 +195,7 @@
 
       <!-- Actions -->
       <div v-if="canManageMatch" class="card p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ $t('matches.matchManagement') }}</h2>
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Gestión del Partido</h2>
         <div class="flex space-x-4">
           <button 
             v-if="match.status === 'scheduled'"
@@ -203,7 +203,7 @@
             class="btn-success"
           >
             <PlayIcon class="w-4 h-4 mr-2" />
-            {{ $t('matches.startMatch') }}
+            Iniciar Partido
           </button>
           <button 
             v-if="match.status === 'in_progress'"
@@ -211,14 +211,14 @@
             class="btn-primary"
           >
             <CheckCircleIcon class="w-4 h-4 mr-2" />
-            {{ $t('matches.completeMatch') }}
+            Finalizar Partido
           </button>
           <RouterLink 
             :to="`/matches/${match.id}/edit`"
             class="btn-secondary"
           >
             <PencilIcon class="w-4 h-4 mr-2" />
-            {{ $t('matches.editMatch') }}
+            Editar Partido
           </RouterLink>
         </div>
       </div>
@@ -227,10 +227,10 @@
     <!-- Error State -->
     <div v-else-if="error" class="text-center py-12">
       <ExclamationTriangleIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
-      <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('matches.matchNotFound') }}</h3>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">Partido no encontrado</h3>
       <p class="text-gray-600 mb-6">{{ error }}</p>
       <RouterLink to="/matches" class="btn-primary">
-        {{ $t('matches.backToMatches') }}
+        Volver a Partidos
       </RouterLink>
     </div>
   </MainLayout>
@@ -264,7 +264,6 @@ import {
 import { useAuthStore } from '@/stores/auth'
 import { matchAPI, apiHelpers } from '@/services/api'
 import MainLayout from '@/components/layout/MainLayout.vue'
-import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'MatchDetail',
@@ -283,7 +282,6 @@ export default {
   setup() {
     const route = useRoute()
     const authStore = useAuthStore()
-    const { t } = useI18n()
 
     // Data
     const match = ref(null)
@@ -348,7 +346,7 @@ export default {
      * Start match (change status to in_progress)
      */
     const startMatch = async () => {
-      if (!confirm(t('matches.startMatchConfirm'))) return
+      if (!confirm('¿Estás seguro de que quieres iniciar este partido?')) return
 
       try {
         const response = await matchAPI.update(match.value.id, {
@@ -357,11 +355,11 @@ export default {
 
         if (apiHelpers.isSuccess(response)) {
           match.value.status = 'in_progress'
-          window.$notify?.success(t('matches.matchStartedSuccess'))
+          window.$notify?.success('Partido iniciado exitosamente')
         }
       } catch (err) {
         console.error('Failed to start match:', err)
-        window.$notify?.error(t('matches.failedToStartMatch'))
+        window.$notify?.error('Error al iniciar el partido')
       }
     }
 
@@ -369,7 +367,7 @@ export default {
      * Complete match
      */
     const completeMatch = async () => {
-      if (!confirm(t('matches.completeMatchConfirm'))) return
+      if (!confirm('¿Estás seguro de que quieres finalizar este partido?')) return
 
       try {
         const response = await matchAPI.update(match.value.id, {
@@ -378,11 +376,11 @@ export default {
 
         if (apiHelpers.isSuccess(response)) {
           match.value.status = 'completed'
-          window.$notify?.success(t('matches.matchCompletedSuccess'))
+          window.$notify?.success('Partido finalizado exitosamente')
         }
       } catch (err) {
         console.error('Failed to complete match:', err)
-        window.$notify?.error(t('matches.failedToCompleteMatch'))
+        window.$notify?.error('Error al finalizar el partido')
       }
     }
 
@@ -406,9 +404,9 @@ export default {
       if (match.value?.status === 'completed') {
         return '90 min'
       } else if (match.value?.status === 'in_progress') {
-        return t('matches.live')
+        return 'En vivo'
       } else {
-        return t('common.na')
+        return 'N/A'
       }
     }
 
@@ -417,11 +415,11 @@ export default {
      */
     const formatStatus = (status) => {
       const statusMap = {
-        scheduled: t('matches.status.scheduled'),
-        in_progress: t('matches.status.inProgress'),
-        completed: t('matches.status.completed'),
-        postponed: t('matches.status.postponed'),
-        cancelled: t('matches.status.cancelled'),
+        scheduled: 'Programado',
+        in_progress: 'En progreso',
+        completed: 'Completado',
+        postponed: 'Pospuesto',
+        cancelled: 'Cancelado',
       }
       return statusMap[status] || status
     }
@@ -445,11 +443,11 @@ export default {
      */
     const formatEventType = (eventType) => {
       const eventMap = {
-        goal: t('matches.events.goal'),
-        yellow_card: t('matches.events.yellowCard'),
-        red_card: t('matches.events.redCard'),
-        substitution: t('matches.events.substitution'),
-        own_goal: t('matches.events.ownGoal'),
+        goal: 'Gol',
+        yellow_card: 'Tarjeta Amarilla',
+        red_card: 'Tarjeta Roja',
+        substitution: 'Sustitución',
+        own_goal: 'Gol en Contra',
       }
       return eventMap[eventType] || eventType
     }
@@ -500,7 +498,7 @@ export default {
      * Format match date
      */
     const formatMatchDate = (dateString) => {
-      if (!dateString) return t('common.tbd')
+      if (!dateString) return 'Por determinar'
       return new Date(dateString).toLocaleDateString(undefined, {
         weekday: 'long',
         year: 'numeric',
@@ -513,7 +511,7 @@ export default {
      * Format match time
      */
     const formatMatchTime = (dateString) => {
-      if (!dateString) return t('common.tbd')
+      if (!dateString) return 'Por determinar'
       return new Date(dateString).toLocaleTimeString(undefined, {
         hour: '2-digit',
         minute: '2-digit',

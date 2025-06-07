@@ -3,8 +3,8 @@
     <template #header>
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">{{ $t('teams.title') }}</h1>
-          <p class="text-gray-600 mt-1">{{ $t('teams.subtitle') }}</p>
+          <h1 class="text-3xl font-bold text-gray-900">Equipos</h1>
+          <p class="text-gray-600 mt-1">Gestionar y explorar equipos</p>
         </div>
         <div class="flex items-center space-x-4">
           <RouterLink v-if="authStore.canManageTeams" to="/teams/create" class="btn-primary">
@@ -27,7 +27,7 @@
             <input
               v-model="filters.search"
               type="text"
-              :placeholder="$t('teams.searchTeams')"
+              placeholder="Buscar equipos..."
               class="form-input pl-10"
               @input="debouncedSearch"
             />
@@ -37,21 +37,21 @@
         <!-- Status Filter -->
         <div>
           <select v-model="filters.active" @change="applyFilters" class="form-input">
-            <option value="">{{ $t('teams.allTeams') }}</option>
-            <option value="true">{{ $t('teams.activeTeams') }}</option>
-            <option value="false">{{ $t('teams.inactiveTeams') }}</option>
+            <option value="">Todos los equipos</option>
+            <option value="true">Equipos activos</option>
+            <option value="false">Equipos inactivos</option>
           </select>
         </div>
       </div>
 
       <!-- Active Filters -->
       <div v-if="hasActiveFilters" class="flex flex-wrap gap-2 mt-4">
-        <span class="text-sm text-gray-600">{{ $t('teams.activeFilters') }}</span>
+        <span class="text-sm text-gray-600">Filtros activos:</span>
         <span
           v-if="filters.search"
           class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
         >
-          {{ $t('teams.search') }}: "{{ filters.search }}"
+          Búsqueda: "{{ filters.search }}"
           <button @click="clearFilter('search')" class="ml-2 hover:text-primary-900">
             <XMarkIcon class="w-3 h-3" />
           </button>
@@ -60,7 +60,7 @@
           v-if="filters.active"
           class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
         >
-          {{ $t('common.status') }}: {{ filters.active === 'true' ? $t('common.active') : $t('common.inactive') }}
+          Estado: {{ filters.active === 'true' ? 'Activo' : 'Inactivo' }}
           <button @click="clearFilter('active')" class="ml-2 hover:text-primary-900">
             <XMarkIcon class="w-3 h-3" />
           </button>
@@ -69,7 +69,7 @@
           @click="clearAllFilters"
           class="text-xs text-gray-500 hover:text-gray-700 underline"
         >
-          {{ $t('teams.clearAll') }}
+          Limpiar todo
         </button>
       </div>
     </div>
@@ -91,19 +91,19 @@
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-primary-600">{{ totalTeams }}</div>
-          <div class="text-sm text-gray-600">{{ $t('teams.stats.totalTeams') }}</div>
+          <div class="text-sm text-gray-600">Total equipos</div>
         </div>
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-success-600">{{ activeTeams }}</div>
-          <div class="text-sm text-gray-600">{{ $t('teams.stats.activeTeams') }}</div>
+          <div class="text-sm text-gray-600">Equipos activos</div>
         </div>
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-warning-600">{{ totalPlayers }}</div>
-          <div class="text-sm text-gray-600">{{ $t('teams.stats.totalPlayers') }}</div>
+          <div class="text-sm text-gray-600">Total jugadores</div>
         </div>
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-secondary-600">{{ activeTournaments }}</div>
-          <div class="text-sm text-gray-600">{{ $t('teams.stats.inTournaments') }}</div>
+          <div class="text-sm text-gray-600">En torneos</div>
         </div>
       </div>
 
@@ -120,7 +120,7 @@
                   team.is_active ? 'bg-success-100 text-success-800' : 'bg-gray-100 text-gray-800',
                 ]"
               >
-                {{ team.is_active ? $t('common.active') : $t('common.inactive') }}
+                {{ team.is_active ? 'Activo' : 'Inactivo' }}
               </span>
             </div>
             <div class="absolute bottom-4 left-4 right-4">
@@ -141,19 +141,19 @@
               <!-- Manager -->
               <div class="flex items-center text-sm text-gray-600">
                 <UserIcon class="w-4 h-4 mr-2 text-gray-400" />
-                <span>{{ team.manager?.name || $t('teams.noManager') }}</span>
+                <span>{{ team.manager?.name || 'Sin gestor' }}</span>
               </div>
 
               <!-- Players Count -->
               <div class="flex items-center text-sm text-gray-600">
                 <UsersIcon class="w-4 h-4 mr-2 text-gray-400" />
-                <span>{{ team.players_count || 0 }} {{ $t('teams.players') }}</span>
+                <span>{{ team.players_count || 0 }} jugadores</span>
               </div>
 
               <!-- Founded Year -->
               <div v-if="team.founded_year" class="flex items-center text-sm text-gray-600">
                 <CalendarIcon class="w-4 h-4 mr-2 text-gray-400" />
-                <span>{{ $t('teams.founded') }} {{ team.founded_year }}</span>
+                <span>Fundado {{ team.founded_year }}</span>
               </div>
 
               <!-- Home Venue -->
@@ -172,7 +172,7 @@
             <!-- Actions -->
             <div class="flex gap-3">
               <RouterLink :to="`/teams/${team.id}`" class="btn-primary flex-1 text-center">
-                {{ $t('teams.viewDetails') }}
+                Ver detalles
               </RouterLink>
 
               <RouterLink
@@ -195,7 +195,7 @@
             :disabled="pagination.current_page <= 1"
             class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {{ $t('common.previous') }}
+            Anterior
           </button>
 
           <template v-for="page in visiblePages" :key="page">
@@ -219,7 +219,7 @@
             :disabled="pagination.current_page >= pagination.last_page"
             class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {{ $t('common.next') }}
+            Siguiente
           </button>
         </nav>
       </div>
@@ -229,18 +229,18 @@
     <div v-else class="text-center py-12">
       <UserGroupIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
       <h3 class="text-lg font-medium text-gray-900 mb-2">
-        {{ hasActiveFilters ? $t('teams.noTeamsFiltered') : $t('teams.noTeamsYet') }}
+        {{ hasActiveFilters ? 'No se encontraron equipos' : 'Aún no hay equipos' }}
       </h3>
       <p class="text-gray-600 mb-6">
         {{
           hasActiveFilters
-            ? $t('teams.tryAdjustingFilters')
-            : $t('teams.createFirstTeam')
+            ? 'Intenta ajustar los filtros para encontrar lo que buscas'
+            : 'Crea tu primer equipo para comenzar'
         }}
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <button v-if="hasActiveFilters" @click="clearAllFilters" class="btn-secondary">
-          {{ $t('teams.clearFilters') }}
+          Limpiar filtros
         </button>
         <RouterLink v-if="authStore.canManageTeams" to="/teams/create" class="btn-primary">
           Crear Equipo
@@ -395,7 +395,7 @@ export default {
         }
       } catch (error) {
         console.error('Failed to fetch teams:', error)
-        window.$notify?.error('Failed to load teams')
+        window.$notify?.error('Error al cargar equipos')
         teams.value = []
       } finally {
         isLoading.value = false

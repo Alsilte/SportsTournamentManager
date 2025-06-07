@@ -27,7 +27,7 @@
             class="btn-primary"
           >
             <PlusIcon class="w-4 h-4 mr-2" />
-            {{ $t('tournaments.registration.registerTeam') }}
+            Registrar Equipo
           </button>
 
           <!-- Edit Tournament Button -->
@@ -37,7 +37,7 @@
             class="btn-secondary"
           >
             <PencilIcon class="w-4 h-4 mr-2" />
-            {{ $t('tournaments.detail.editTournament') }}
+            Editar Torneo
           </button>
         </div>
       </div>
@@ -62,40 +62,40 @@
         <div class="lg:col-span-2 space-y-6">
           <!-- Description -->
           <div class="card p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ $t('tournaments.detail.aboutThisTournament') }}</h2>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Acerca de este torneo</h2>
             <p class="text-gray-700 leading-relaxed">
-              {{ tournament.description || $t('tournaments.detail.noDescription') }}
+              {{ tournament.description || 'No hay descripción disponible' }}
             </p>
           </div>
 
           <!-- Tournament Schedule -->
           <div class="card p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ $t('tournaments.detail.schedule') }}</h2>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Cronograma</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <h3 class="text-sm font-medium text-gray-700 mb-2">{{ $t('tournaments.detail.registrationPeriod') }}</h3>
+                <h3 class="text-sm font-medium text-gray-700 mb-2">Período de Inscripciones</h3>
                 <div class="space-y-1">
                   <div class="flex items-center text-sm text-gray-600">
                     <CalendarIcon class="w-4 h-4 mr-2" />
-                    <span>{{ $t('tournaments.detail.start') }}: {{ formatDate(tournament.registration_start) }}</span>
+                    <span>Inicio: {{ formatDate(tournament.registration_start) }}</span>
                   </div>
                   <div class="flex items-center text-sm text-gray-600">
                     <CalendarIcon class="w-4 h-4 mr-2" />
-                    <span>{{ $t('tournaments.detail.end') }}: {{ formatDate(tournament.registration_end) }}</span>
+                    <span>Fin: {{ formatDate(tournament.registration_end) }}</span>
                   </div>
                 </div>
               </div>
 
               <div>
-                <h3 class="text-sm font-medium text-gray-700 mb-2">{{ $t('tournaments.detail.tournamentPeriod') }}</h3>
+                <h3 class="text-sm font-medium text-gray-700 mb-2">Período del Torneo</h3>
                 <div class="space-y-1">
                   <div class="flex items-center text-sm text-gray-600">
                     <CalendarIcon class="w-4 h-4 mr-2" />
-                    <span>{{ $t('tournaments.detail.start') }}: {{ formatDate(tournament.start_date) }}</span>
+                    <span>Inicio: {{ formatDate(tournament.start_date) }}</span>
                   </div>
                   <div v-if="tournament.end_date" class="flex items-center text-sm text-gray-600">
                     <CalendarIcon class="w-4 h-4 mr-2" />
-                    <span>{{ $t('tournaments.detail.end') }}: {{ formatDate(tournament.end_date) }}</span>
+                    <span>Fin: {{ formatDate(tournament.end_date) }}</span>
                   </div>
                 </div>
               </div>
@@ -104,7 +104,7 @@
 
           <!-- Rules (if available) -->
           <div v-if="tournament.rules" class="card p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ $t('tournaments.rules') }}</h2>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Reglas</h2>
             <div class="text-gray-700 whitespace-pre-line">{{ tournament.rules }}</div>
           </div>
         </div>
@@ -113,30 +113,30 @@
         <div class="space-y-6">
           <!-- Quick Stats -->
           <div class="card p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('tournaments.detail.tournamentStats') }}</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Estadísticas del Torneo</h3>
             <div class="space-y-4">
               <div class="flex justify-between">
-                <span class="text-gray-600">{{ $t('tournaments.detail.format') }}</span>
+                <span class="text-gray-600">Formato</span>
                 <span class="font-medium">{{
                   formatTournamentType(tournament.tournament_type)
                 }}</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-gray-600">{{ $t('tournaments.detail.teams') }}</span>
+                <span class="text-gray-600">Equipos</span>
                 <span class="font-medium"
                   >{{ tournament.registered_teams_count || 0 }}/{{ tournament.max_teams }}</span
                 >
               </div>
               <div v-if="tournament.location" class="flex justify-between">
-                <span class="text-gray-600">{{ $t('tournaments.location') }}</span>
+                <span class="text-gray-600">Ubicación</span>
                 <span class="font-medium">{{ tournament.location }}</span>
               </div>
               <div v-if="tournament.prize_pool" class="flex justify-between">
-                <span class="text-gray-600">{{ $t('tournaments.prizePool') }}</span>
+                <span class="text-gray-600">Premio</span>
                 <span class="font-medium">${{ formatMoney(tournament.prize_pool) }}</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-gray-600">{{ $t('tournaments.detail.createdBy') }}</span>
+                <span class="text-gray-600">Creado por</span>
                 <span class="font-medium">{{ tournament.creator?.name }}</span>
               </div>
             </div>
@@ -144,7 +144,7 @@
             <!-- Registration Progress -->
             <div v-if="tournament.status === 'registration_open'" class="mt-6">
               <div class="flex justify-between text-sm text-gray-600 mb-2">
-                <span>{{ $t('tournaments.detail.registrationProgress') }}</span>
+                <span>Progreso de inscripciones</span>
                 <span>{{ Math.round(registrationProgress) }}%</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
@@ -158,19 +158,19 @@
 
           <!-- Contact Info -->
           <div class="card p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('tournaments.detail.contact') }}</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Contacto</h3>
             <div class="space-y-3">
               <div class="flex items-center">
                 <UserIcon class="w-5 h-5 text-gray-400 mr-3" />
                 <div>
                   <div class="font-medium text-gray-900">{{ tournament.creator?.name }}</div>
-                  <div class="text-sm text-gray-600">{{ $t('tournaments.detail.tournamentOrganizer') }}</div>
+                  <div class="text-sm text-gray-600">Organizador del torneo</div>
                 </div>
               </div>
               <div class="flex items-center">
                 <EnvelopeIcon class="w-5 h-5 text-gray-400 mr-3" />
                 <div class="text-sm text-gray-600">
-                  {{ tournament.creator?.email || $t('tournaments.detail.notAvailable') }}
+                  {{ tournament.creator?.email || 'No disponible' }}
                 </div>
               </div>
             </div>
@@ -192,7 +192,7 @@
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
             ]"
           >
-            {{ $t(`tournaments.detail.tabs.${tab.id}`) }}
+            {{ getTabName(tab.id) }}
             <span
               v-if="tab.count !== undefined"
               class="ml-2 px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600"
@@ -227,11 +227,11 @@
               </div>
               <div class="space-y-2 text-sm text-gray-600">
                 <div class="flex justify-between">
-                  <span>{{ $t('tournaments.detail.players') }}:</span>
+                  <span>Jugadores:</span>
                   <span class="font-medium">{{ team.players_count || 0 }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span>{{ $t('tournaments.detail.registered') }}:</span>
+                  <span>Registrado:</span>
                   <span class="font-medium">{{ formatDate(team.pivot?.registration_date) }}</span>
                 </div>
               </div>
@@ -240,7 +240,7 @@
                   :to="`/teams/${team.id}`"
                   class="btn-secondary text-xs px-3 py-1 w-full text-center block"
                 >
-                  {{ $t('tournaments.detail.viewTeam') }}
+                  Ver equipo
                 </RouterLink>
               </div>
             </div>
@@ -248,8 +248,8 @@
 
           <div v-else class="text-center py-12">
             <UserGroupIcon class="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('tournaments.detail.noTeamsRegistered') }}</h3>
-            <p class="text-gray-600">{{ $t('tournaments.detail.beFirstToRegister') }}</p>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No hay equipos registrados</h3>
+            <p class="text-gray-600">Sé el primero en registrarte</p>
           </div>
         </div>
 
@@ -268,7 +268,7 @@
                   <div class="flex items-center space-x-4">
                     <div class="text-right">
                       <div class="font-medium text-gray-900">{{ match.home_team?.name }}</div>
-                      <div class="text-xs text-gray-500">{{ $t('common.home') }}</div>
+                      <div class="text-xs text-gray-500">Local</div>
                     </div>
                     <div class="text-center">
                       <div
@@ -281,18 +281,18 @@
                     </div>
                     <div class="text-left">
                       <div class="font-medium text-gray-900">{{ match.away_team?.name }}</div>
-                      <div class="text-xs text-gray-500">{{ $t('common.away') }}</div>
+                      <div class="text-xs text-gray-500">Visitante</div>
                     </div>
                   </div>
                 </div>
                 <div class="text-right">
                   <div v-if="match.venue" class="text-sm text-gray-600">{{ match.venue }}</div>
-                  <div class="text-xs text-gray-500">{{ match.round || $t('tournaments.detail.roundTBD') }}</div>
+                  <div class="text-xs text-gray-500">{{ match.round || 'Ronda por determinar' }}</div>
                   <RouterLink
                     :to="`/matches/${match.id}`"
                     class="text-primary-600 hover:text-primary-700 text-sm font-medium mt-2 inline-block"
                   >
-                    {{ $t('tournaments.viewDetails') }}
+                    Ver detalles
                   </RouterLink>
                 </div>
               </div>
@@ -301,8 +301,8 @@
 
           <div v-else class="text-center py-12">
             <PlayIcon class="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('tournaments.detail.noMatchesScheduled') }}</h3>
-            <p class="text-gray-600">{{ $t('tournaments.detail.matchesWillAppear') }}</p>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No hay partidos programados</h3>
+            <p class="text-gray-600">Los partidos aparecerán cuando se programen</p>
           </div>
         </div>
 
@@ -316,52 +316,52 @@
                     <th
                       class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      {{ $t('tournaments.detail.standings.position') }}
+                      Posición
                     </th>
                     <th
                       class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      {{ $t('tournaments.detail.standings.team') }}
+                      Equipo
                     </th>
                     <th
                       class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      {{ $t('tournaments.detail.standings.played') }}
+                      Jugados
                     </th>
                     <th
                       class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      {{ $t('tournaments.detail.standings.won') }}
+                      Ganados
                     </th>
                     <th
                       class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      {{ $t('tournaments.detail.standings.drawn') }}
+                      Empatados
                     </th>
                     <th
                       class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      {{ $t('tournaments.detail.standings.lost') }}
+                      Perdidos
                     </th>
                     <th
                       class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      {{ $t('tournaments.detail.standings.goalsFor') }}
+                      GF
                     </th>
                     <th
                       class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      {{ $t('tournaments.detail.standings.goalsAgainst') }}
+                      GC
                     </th>
                     <th
                       class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      {{ $t('tournaments.detail.standings.goalDifference') }}
+                      DG
                     </th>
                     <th
                       class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      {{ $t('tournaments.detail.standings.points') }}
+                      Puntos
                     </th>
                   </tr>
                 </thead>
@@ -415,8 +415,8 @@
 
           <div v-else class="text-center py-12">
             <ChartBarIcon class="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('tournaments.detail.noStandingsAvailable') }}</h3>
-            <p class="text-gray-600">{{ $t('tournaments.detail.standingsWillAppear') }}</p>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No hay tabla de posiciones disponible</h3>
+            <p class="text-gray-600">La tabla aparecerá cuando comiencen los partidos</p>
           </div>
         </div>
       </div>
@@ -425,9 +425,9 @@
     <!-- Error State -->
     <div v-else-if="error" class="text-center py-12">
       <ExclamationTriangleIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
-      <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('tournaments.detail.tournamentNotFound') }}</h3>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">Torneo no encontrado</h3>
       <p class="text-gray-600 mb-6">{{ error }}</p>
-      <RouterLink to="/tournaments" class="btn-primary"> {{ $t('tournaments.detail.backToTournaments') }} </RouterLink>
+      <RouterLink to="/tournaments" class="btn-primary">Volver a torneos</RouterLink>
     </div>
 
     <!-- Team Registration Modal -->
@@ -437,8 +437,6 @@
       @close="showRegistrationModal = false"
       @success="handleRegistrationSuccess"
     />
-
-   
   </MainLayout>
 </template>
 
@@ -450,7 +448,6 @@
 
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 import {
   ArrowLeftIcon,
   PlusIcon,
@@ -487,7 +484,6 @@ export default {
   setup() {
     const route = useRoute()
     const authStore = useAuthStore()
-    const { t } = useI18n()
 
     // Data
     const tournament = ref(null)
@@ -549,12 +545,24 @@ export default {
     }
 
     /**
+     * Get tab name in Spanish
+     */
+    const getTabName = (tabId) => {
+      const tabNames = {
+        teams: 'Equipos',
+        matches: 'Partidos',
+        standings: 'Tabla'
+      }
+      return tabNames[tabId] || tabId
+    }
+
+    /**
      * Handle successful team registration
      */
     const handleRegistrationSuccess = () => {
       showRegistrationModal.value = false
       fetchTournament() // Refresh data
-      window.$notify?.success('Team registered successfully!')
+      window.$notify?.success('Equipo registrado exitosamente!')
     }
 
     /**
@@ -563,7 +571,7 @@ export default {
     const handleTournamentUpdated = (updatedTournament) => {
       tournament.value = updatedTournament
       showEditModal.value = false
-      window.$notify?.success('Tournament updated successfully!')
+      window.$notify?.success('Torneo actualizado exitosamente!')
     }
 
     /**
@@ -571,11 +579,11 @@ export default {
      */
     const formatStatus = (status) => {
       const statusMap = {
-        draft: t('tournaments.status.draft'),
-        registration_open: t('tournaments.status.registrationOpen'),
-        in_progress: t('tournaments.status.inProgress'),
-        completed: t('tournaments.status.completed'),
-        cancelled: t('tournaments.status.cancelled'),
+        draft: 'Borrador',
+        registration_open: 'Inscripciones Abiertas',
+        in_progress: 'En Progreso',
+        completed: 'Completado',
+        cancelled: 'Cancelado',
       }
       return statusMap[status] || status
     }
@@ -599,9 +607,9 @@ export default {
      */
     const formatTournamentType = (type) => {
       const typeMap = {
-        league: t('tournaments.formats.league'),
-        knockout: t('tournaments.formats.knockout'),
-        group_knockout: t('tournaments.formats.groupKnockout'),
+        league: 'Liga',
+        knockout: 'Eliminación directa',
+        group_knockout: 'Grupos + Eliminación',
       }
       return typeMap[type] || type
     }
@@ -611,9 +619,9 @@ export default {
      */
     const formatTeamStatus = (status) => {
       const statusMap = {
-        pending: t('tournaments.detail.teamStatus.pending'),
-        approved: t('tournaments.detail.teamStatus.approved'),
-        rejected: t('tournaments.detail.teamStatus.rejected'),
+        pending: 'Pendiente',
+        approved: 'Aprobado',
+        rejected: 'Rechazado',
       }
       return statusMap[status] || status
     }
@@ -634,8 +642,8 @@ export default {
      * Format date for display
      */
     const formatDate = (dateString) => {
-      if (!dateString) return t('common.tbd')
-      return new Date(dateString).toLocaleDateString('en-US', {
+      if (!dateString) return 'Por determinar'
+      return new Date(dateString).toLocaleDateString('es-ES', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
@@ -688,6 +696,7 @@ export default {
       registrationProgress,
       tabs,
       canEditTournament,
+      getTabName,
       handleRegistrationSuccess,
       handleTournamentUpdated,
       formatStatus,

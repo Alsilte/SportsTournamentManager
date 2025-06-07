@@ -5,7 +5,7 @@
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 class="text-3xl font-bold text-gray-900">
-            {{ $t('dashboard.welcome', { name: authStore.userName }) }}
+            Bienvenido, {{ authStore.userName }}
           </h1>
           <p class="text-gray-600 mt-1">{{ getWelcomeMessage() }}</p>
         </div>
@@ -18,12 +18,12 @@
             class="btn-secondary flex items-center"
           >
             <ArrowPathIcon :class="['w-4 h-4 mr-2', isRefreshing ? 'animate-spin' : '']" />
-            <span class="hidden sm:inline">{{ $t('common.refresh') }}</span>
+            <span class="hidden sm:inline">Actualizar</span>
           </button>
 
           <RouterLink v-if="authStore.isAdmin" to="/tournaments/create" class="btn-primary">
             <PlusIcon class="w-4 h-4 mr-2" />
-            <span class="hidden sm:inline">{{ $t('tournaments.create') }}</span>
+            <span class="hidden sm:inline">Crear Torneo</span>
           </RouterLink>
         </div>
       </div>
@@ -53,11 +53,11 @@
               </div>
               <div>
                 <h2 class="text-2xl font-bold text-white mb-1">
-                  {{ $t('dashboard.goodMorning') }}, {{ authStore.userName }}!
+                  ¡Buenos días, {{ authStore.userName }}!
                 </h2>
                 <p class="text-primary-100 text-lg">{{ getRoleMessage() }}</p>
                 <p class="text-primary-200 text-sm mt-2">
-                  {{ $t('dashboard.lastLogin') }}: {{ formatDate(new Date()) }}
+                  Último acceso: {{ formatDate(new Date()) }}
                 </p>
               </div>
             </div>
@@ -127,7 +127,6 @@ export default {
     PlusIcon,
   },
   setup() {
-    const { t } = useI18n()
     const authStore = useAuthStore()
     const isRefreshing = ref(false)
 
@@ -137,60 +136,60 @@ export default {
         case 'admin':
           return {
             primary: '45',
-            primaryLabel: t('dashboard.stats.totalTournaments'),
+            primaryLabel: 'Torneos totales',
             secondary: '180',
-            secondaryLabel: t('dashboard.stats.registeredTeams'),
+            secondaryLabel: 'Equipos registrados',
             tertiary: '850',
-            tertiaryLabel: t('dashboard.stats.activeUsers'),
+            tertiaryLabel: 'Usuarios activos',
           }
         case 'team_manager':
           return {
             primary: '3',
-            primaryLabel: t('dashboard.stats.myTeams'),
+            primaryLabel: 'Mis equipos',
             secondary: '42',
-            secondaryLabel: t('dashboard.stats.totalPlayers'),
+            secondaryLabel: 'Total jugadores',
             tertiary: '12',
-            tertiaryLabel: t('dashboard.stats.upcomingMatches'),
+            tertiaryLabel: 'Próximos partidos',
           }
         case 'referee':
           return {
             primary: '24',
-            primaryLabel: t('dashboard.stats.matchesOfficiated'),
+            primaryLabel: 'Partidos arbitrados',
             secondary: '8',
-            secondaryLabel: t('dashboard.stats.upcomingMatches'),
+            secondaryLabel: 'Próximos partidos',
             tertiary: '4.3',
-            tertiaryLabel: t('dashboard.stats.averageRating'),
+            tertiaryLabel: 'Puntuación promedio',
           }
         default: // player
           return {
             primary: '15',
-            primaryLabel: t('dashboard.stats.matchesPlayed'),
+            primaryLabel: 'Partidos jugados',
             secondary: '8',
-            secondaryLabel: t('dashboard.stats.goalsScored'),
+            secondaryLabel: 'Goles anotados',
             tertiary: '2',
-            tertiaryLabel: t('dashboard.stats.activeTeams'),
+            tertiaryLabel: 'Equipos activos',
           }
       }
     })
 
     const getWelcomeMessage = () => {
       const messages = {
-        admin: t('dashboard.adminWelcome'),
-        team_manager: t('dashboard.managerWelcome'),
-        referee: t('dashboard.refereeWelcome'),
-        player: t('dashboard.playerWelcome'),
+        admin: 'Panel de administración del sistema',
+        team_manager: 'Gestiona tus equipos y jugadores',
+        referee: 'Revisa tus asignaciones de arbitraje',
+        player: 'Consulta tus estadísticas y partidos',
       }
-      return messages[authStore.userRole] || t('dashboard.defaultWelcome')
+      return messages[authStore.userRole] || 'Bienvenido al sistema'
     }
 
     const getRoleMessage = () => {
       const roleMessages = {
-        admin: t('dashboard.adminRole'),
-        team_manager: t('dashboard.managerRole'),
-        referee: t('dashboard.refereeRole'),
-        player: t('dashboard.playerRole'),
+        admin: 'Administrador del Sistema',
+        team_manager: 'Gestor de Equipos',
+        referee: 'Árbitro',
+        player: 'Jugador',
       }
-      return roleMessages[authStore.userRole] || t('dashboard.userRole')
+      return roleMessages[authStore.userRole] || 'Usuario'
     }
 
     const getRoleIcon = () => {
@@ -208,16 +207,16 @@ export default {
       try {
         // Simulate data refresh
         await new Promise((resolve) => setTimeout(resolve, 1000))
-        window.$notify?.success(t('notifications.dataRefreshed'))
+        window.$notify?.success('Datos actualizados')
       } catch (error) {
-        window.$notify?.error(t('notifications.refreshError'))
+        window.$notify?.error('Error al actualizar los datos')
       } finally {
         isRefreshing.value = false
       }
     }
 
     const formatDate = (date) => {
-      return new Intl.DateTimeFormat(authStore.locale || 'en', {
+      return new Intl.DateTimeFormat('es-ES', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',

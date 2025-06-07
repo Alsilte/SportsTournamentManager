@@ -8,15 +8,15 @@
         </div>
       </div>
       <h2 class="mt-6 text-center text-3xl font-bold text-gray-900">
-        {{ $t('auth.createYourAccount') }}
+        Crear tu cuenta
       </h2>
       <p class="mt-2 text-center text-sm text-gray-600">
-        {{ $t('auth.or') }}
+        O
         <RouterLink 
           to="/login" 
           class="font-medium text-primary-600 hover:text-primary-500 transition-colors"
         >
-          {{ $t('auth.signInToExisting') }}
+          iniciar sesión en cuenta existente
         </RouterLink>
       </p>
     </div>
@@ -28,7 +28,7 @@
           <!-- Name Field -->
           <div>
             <label for="name" class="form-label">
-              {{ $t('auth.fullName') }}
+              Nombre completo
             </label>
             <div class="relative">
               <input
@@ -41,7 +41,7 @@
                   'form-input',
                   errors.name ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500' : ''
                 ]"
-                :placeholder="$t('auth.enterFullName')"
+                placeholder="Ingresa tu nombre completo"
                 :disabled="isLoading"
                 @input="clearFieldError('name')"
               />
@@ -55,7 +55,7 @@
           <!-- Email Field -->
           <div>
             <label for="email" class="form-label">
-              {{ $t('auth.emailAddress') }}
+              Dirección de correo electrónico
             </label>
             <div class="relative">
               <input
@@ -68,7 +68,7 @@
                   'form-input',
                   errors.email ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500' : ''
                 ]"
-                :placeholder="$t('auth.enterEmail')"
+                placeholder="Ingresa tu correo electrónico"
                 :disabled="isLoading"
                 @input="clearFieldError('email')"
               />
@@ -82,7 +82,7 @@
           <!-- Role Field -->
           <div>
             <label for="role" class="form-label">
-              {{ $t('auth.accountType') }}
+              Tipo de cuenta
             </label>
             <select
               id="role"
@@ -95,10 +95,10 @@
               :disabled="isLoading"
               @change="clearFieldError('role')"
             >
-              <option value="">{{ $t('auth.selectRole') }}</option>
-              <option value="player">{{ $t('auth.player') }}</option>
-              <option value="team_manager">{{ $t('auth.teamManager') }}</option>
-              <option value="referee">{{ $t('auth.referee') }}</option>
+              <option value="">Seleccionar rol</option>
+              <option value="player">Jugador</option>
+              <option value="team_manager">Gestor de Equipo</option>
+              <option value="referee">Árbitro</option>
             </select>
             <p v-if="errors.role" class="form-error">
               {{ errors.role }}
@@ -108,7 +108,7 @@
           <!-- Phone Field -->
           <div>
             <label for="phone" class="form-label">
-              {{ $t('auth.phoneOptional') }}
+              Teléfono (opcional)
             </label>
             <div class="relative">
               <input
@@ -120,7 +120,7 @@
                   'form-input',
                   errors.phone ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500' : ''
                 ]"
-                :placeholder="$t('auth.enterPhone')"
+                placeholder="Ingresa tu teléfono"
                 :disabled="isLoading"
                 @input="clearFieldError('phone')"
               />
@@ -134,7 +134,7 @@
           <!-- Password Field -->
           <div>
             <label for="password" class="form-label">
-              {{ $t('auth.password') }}
+              Contraseña
             </label>
             <div class="relative">
               <input
@@ -147,7 +147,7 @@
                   'form-input pr-10',
                   errors.password ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500' : ''
                 ]"
-                :placeholder="$t('auth.enterPassword')"
+                placeholder="Ingresa tu contraseña"
                 :disabled="isLoading"
                 @input="clearFieldError('password')"
               />
@@ -169,7 +169,7 @@
           <!-- Password Confirmation Field -->
           <div>
             <label for="password_confirmation" class="form-label">
-              {{ $t('auth.confirmPassword') }}
+              Confirmar contraseña
             </label>
             <div class="relative">
               <input
@@ -182,7 +182,7 @@
                   'form-input pr-10',
                   errors.password_confirmation ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500' : ''
                 ]"
-                :placeholder="$t('auth.confirmYourPassword')"
+                placeholder="Confirma tu contraseña"
                 :disabled="isLoading"
                 @input="clearFieldError('password_confirmation')"
               />
@@ -212,10 +212,10 @@
               @change="clearFieldError('terms')"
             />
             <label for="terms" class="ml-2 block text-sm text-gray-700">
-              {{ $t('auth.agreeToTerms') }} 
-              <a href="#" class="text-primary-600 hover:text-primary-500">{{ $t('auth.termsOfService') }}</a>
-              {{ $t('auth.and') }} 
-              <a href="#" class="text-primary-600 hover:text-primary-500">{{ $t('auth.privacyPolicy') }}</a>
+              Acepto los 
+              <a href="#" class="text-primary-600 hover:text-primary-500">Términos del Servicio</a>
+              y la 
+              <a href="#" class="text-primary-600 hover:text-primary-500">Política de Privacidad</a>
             </label>
           </div>
           <p v-if="errors.terms" class="form-error">
@@ -239,20 +239,20 @@
             >
               <div v-if="isLoading" class="flex items-center justify-center">
                 <div class="spinner w-5 h-5 mr-2"></div>
-                {{ $t('auth.creatingAccount') }}
+                Creando cuenta...
               </div>
-              <span v-else>{{ $t('auth.createAccount') }}</span>
+              <span v-else>Crear cuenta</span>
             </button>
           </div>
         </form>
 
         <!-- Demo Accounts Info -->
         <div class="mt-6 p-4 bg-gray-50 rounded-lg">
-          <h3 class="text-sm font-medium text-gray-900 mb-2">{{ $t('auth.demoRolesAvailable') }}</h3>
+          <h3 class="text-sm font-medium text-gray-900 mb-2">Roles disponibles para demostración</h3>
           <div class="text-xs text-gray-600 space-y-1">
-            <div><strong>{{ $t('auth.playerRole') }}:</strong> {{ $t('auth.playerDescription') }}</div>
-            <div><strong>{{ $t('auth.teamManagerRole') }}:</strong> {{ $t('auth.teamManagerDescription') }}</div>
-            <div><strong>{{ $t('auth.refereeRole') }}:</strong> {{ $t('auth.refereeDescription') }}</div>
+            <div><strong>Jugador:</strong> Únete a equipos y participa en torneos</div>
+            <div><strong>Gestor de Equipo:</strong> Crea y gestiona equipos, registra equipos en torneos</div>
+            <div><strong>Árbitro:</strong> Arbitra partidos y gestiona eventos del partido</div>
           </div>
         </div>
       </div>
@@ -277,7 +277,6 @@ import {
   ExclamationTriangleIcon
 } from '@heroicons/vue/24/outline'
 import { useAuthStore } from '@/stores/auth'
-import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'Register',
@@ -292,7 +291,6 @@ export default {
   },
   setup() {
     const authStore = useAuthStore()
-    const { t } = useI18n()
     
     // Form state
     const form = ref({
@@ -343,43 +341,43 @@ export default {
 
       // Name validation
       if (!form.value.name) {
-        errors.value.name = t('auth.fullNameRequired')
+        errors.value.name = 'El nombre completo es requerido'
       } else if (form.value.name.length < 2) {
-        errors.value.name = t('auth.nameMinLength')
+        errors.value.name = 'El nombre debe tener al menos 2 caracteres'
       }
 
       // Email validation
       if (!form.value.email) {
-        errors.value.email = t('auth.emailRequired')
+        errors.value.email = 'El correo electrónico es requerido'
       } else {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(form.value.email)) {
-          errors.value.email = t('auth.emailInvalid')
+          errors.value.email = 'Formato de correo electrónico inválido'
         }
       }
 
       // Role validation
       if (!form.value.role) {
-        errors.value.role = t('auth.selectAccountType')
+        errors.value.role = 'Debes seleccionar un tipo de cuenta'
       }
 
       // Password validation
       if (!form.value.password) {
-        errors.value.password = t('auth.passwordRequired')
+        errors.value.password = 'La contraseña es requerida'
       } else if (form.value.password.length < 8) {
-        errors.value.password = t('auth.passwordTooShort')
+        errors.value.password = 'La contraseña debe tener al menos 8 caracteres'
       }
 
       // Password confirmation validation
       if (!form.value.password_confirmation) {
-        errors.value.password_confirmation = t('auth.passwordConfirmationRequired')
+        errors.value.password_confirmation = 'La confirmación de contraseña es requerida'
       } else if (form.value.password !== form.value.password_confirmation) {
-        errors.value.password_confirmation = t('auth.passwordsNotMatch')
+        errors.value.password_confirmation = 'Las contraseñas no coinciden'
       }
 
       // Terms validation
       if (!form.value.terms) {
-        errors.value.terms = t('auth.agreeToTermsRequired')
+        errors.value.terms = 'Debes aceptar los términos y condiciones'
       }
 
       return Object.keys(errors.value).length === 0
@@ -412,14 +410,14 @@ export default {
         if (result && result.success === true) {
           console.log('Registration successful:', result.data)
         } else {
-          generalError.value = result?.message || t('auth.registrationFailed')
+          generalError.value = result?.message || 'Error en el registro'
         }
       } catch (error) {
         console.error('Registration error:', error)
         if (error.response?.data) {
-          generalError.value = error.response.data.message || t('auth.registrationUnexpectedError')
+          generalError.value = error.response.data.message || 'Error inesperado durante el registro'
         } else {
-          generalError.value = t('auth.registrationUnexpectedError')
+          generalError.value = 'Error inesperado durante el registro'
         }
       } finally {
         isLoading.value = false

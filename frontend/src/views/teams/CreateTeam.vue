@@ -6,8 +6,8 @@
           <ArrowLeftIcon class="w-5 h-5" />
         </button>
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">{{ $t('teams.create.title') }}</h1>
-          <p class="text-gray-600 mt-1">{{ $t('teams.create.subtitle') }}</p>
+          <h1 class="text-3xl font-bold text-gray-900">Crear Equipo</h1>
+          <p class="text-gray-600 mt-1">Crea un nuevo equipo para participar en torneos</p>
         </div>
       </div>
     </template>
@@ -16,12 +16,12 @@
       <form @submit.prevent="handleSubmit" class="space-y-8">
         <!-- Basic Information -->
         <div class="card p-6">
-          <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('teams.create.basicInformation') }}</h2>
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Información Básica</h2>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Team Name -->
             <div class="md:col-span-2">
-              <label for="name" class="form-label">{{ $t('teams.create.teamName') }}</label>
+              <label for="name" class="form-label">Nombre del Equipo</label>
               <input
                 id="name"
                 v-model="form.name"
@@ -30,14 +30,14 @@
                 :disabled="isLoading"
                 class="form-input"
                 :class="{ 'border-danger-300': errors.name }"
-                :placeholder="$t('teams.create.teamNamePlaceholder')"
+                placeholder="Ej: FC Barcelona"
               />
               <p v-if="errors.name" class="form-error">{{ errors.name }}</p>
             </div>
 
             <!-- Short Name -->
             <div>
-              <label for="short_name" class="form-label">{{ $t('teams.create.shortName') }}</label>
+              <label for="short_name" class="form-label">Nombre Corto</label>
               <input
                 id="short_name"
                 v-model="form.short_name"
@@ -46,15 +46,15 @@
                 :disabled="isLoading"
                 class="form-input"
                 :class="{ 'border-danger-300': errors.short_name }"
-                :placeholder="$t('teams.create.shortNamePlaceholder')"
+                placeholder="Ej: FCB"
               />
               <p v-if="errors.short_name" class="form-error">{{ errors.short_name }}</p>
-              <p class="text-xs text-gray-500 mt-1">{{ $t('teams.create.shortNameHint') }}</p>
+              <p class="text-xs text-gray-500 mt-1">Máximo 10 caracteres, se usa para mostrar en espacios pequeños</p>
             </div>
 
             <!-- Founded Year -->
             <div>
-              <label for="founded_year" class="form-label">{{ $t('teams.create.foundedYear') }}</label>
+              <label for="founded_year" class="form-label">Año de Fundación</label>
               <input
                 id="founded_year"
                 v-model="form.founded_year"
@@ -64,14 +64,14 @@
                 :disabled="isLoading"
                 class="form-input"
                 :class="{ 'border-danger-300': errors.founded_year }"
-                :placeholder="$t('teams.create.foundedYearPlaceholder')"
+                placeholder="Ej: 1899"
               />
               <p v-if="errors.founded_year" class="form-error">{{ errors.founded_year }}</p>
             </div>
 
             <!-- Description -->
             <div class="md:col-span-2">
-              <label for="description" class="form-label">{{ $t('teams.create.description') }}</label>
+              <label for="description" class="form-label">Descripción</label>
               <textarea
                 id="description"
                 v-model="form.description"
@@ -79,7 +79,7 @@
                 :disabled="isLoading"
                 class="form-input"
                 :class="{ 'border-danger-300': errors.description }"
-                :placeholder="$t('teams.create.descriptionPlaceholder')"
+                placeholder="Describe tu equipo, su historia, objetivos, etc."
               ></textarea>
               <p v-if="errors.description" class="form-error">{{ errors.description }}</p>
             </div>
@@ -88,12 +88,12 @@
 
         <!-- Contact Information -->
         <div class="card p-6">
-          <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('teams.create.contactInformation') }}</h2>
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Información de Contacto</h2>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Contact Email -->
             <div>
-              <label for="contact_email" class="form-label">{{ $t('teams.create.contactEmail') }}</label>
+              <label for="contact_email" class="form-label">Correo de Contacto</label>
               <input
                 id="contact_email"
                 v-model="form.contact_email"
@@ -102,14 +102,14 @@
                 :disabled="isLoading"
                 class="form-input"
                 :class="{ 'border-danger-300': errors.contact_email }"
-                :placeholder="$t('teams.create.contactEmailPlaceholder')"
+                placeholder="equipo@example.com"
               />
               <p v-if="errors.contact_email" class="form-error">{{ errors.contact_email }}</p>
             </div>
 
             <!-- Contact Phone -->
             <div>
-              <label for="contact_phone" class="form-label">{{ $t('teams.create.contactPhone') }}</label>
+              <label for="contact_phone" class="form-label">Teléfono de Contacto</label>
               <input
                 id="contact_phone"
                 v-model="form.contact_phone"
@@ -117,14 +117,14 @@
                 :disabled="isLoading"
                 class="form-input"
                 :class="{ 'border-danger-300': errors.contact_phone }"
-                :placeholder="$t('teams.create.contactPhonePlaceholder')"
+                placeholder="+34 123 456 789"
               />
               <p v-if="errors.contact_phone" class="form-error">{{ errors.contact_phone }}</p>
             </div>
 
             <!-- Home Venue -->
             <div class="md:col-span-2">
-              <label for="home_venue" class="form-label">{{ $t('teams.create.homeVenue') }}</label>
+              <label for="home_venue" class="form-label">Sede Local</label>
               <input
                 id="home_venue"
                 v-model="form.home_venue"
@@ -132,7 +132,7 @@
                 :disabled="isLoading"
                 class="form-input"
                 :class="{ 'border-danger-300': errors.home_venue }"
-                :placeholder="$t('teams.create.homeVenuePlaceholder')"
+                placeholder="Ej: Camp Nou, Barcelona"
               />
               <p v-if="errors.home_venue" class="form-error">{{ errors.home_venue }}</p>
             </div>
@@ -141,7 +141,7 @@
 
         <!-- Team Settings -->
         <div class="card p-6">
-          <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('teams.create.teamSettings') }}</h2>
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Configuración del Equipo</h2>
 
           <div class="space-y-6">
             <!-- Active Status -->
@@ -156,26 +156,26 @@
                 />
               </div>
               <div class="text-sm">
-                <label for="is_active" class="font-medium text-gray-700">{{ $t('teams.create.activeTeam') }}</label>
+                <label for="is_active" class="font-medium text-gray-700">Equipo Activo</label>
                 <p class="text-gray-500">
-                  {{ $t('teams.create.activeTeamDescription') }}
+                  Los equipos activos pueden participar en torneos y ser encontrados en búsquedas
                 </p>
               </div>
             </div>
 
             <!-- Team Logo Upload -->
             <div>
-              <label class="form-label">{{ $t('teams.create.teamLogo') }}</label>
+              <label class="form-label">Logo del Equipo</label>
               <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md bg-gray-50">
                 <div class="space-y-1 text-center">
                   <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                     <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                   <div class="text-sm text-gray-600">
-                    <span class="font-medium text-gray-400">{{ $t('teams.create.logoUploadFeature') }}</span>
-                    <p class="text-gray-400">{{ $t('teams.create.willBeAvailableSoon') }}</p>
+                    <span class="font-medium text-gray-400">Función de subida de logo</span>
+                    <p class="text-gray-400">Estará disponible pronto</p>
                   </div>
-                  <p class="text-xs text-gray-400">{{ $t('teams.create.comingInFutureUpdate') }}</p>
+                  <p class="text-xs text-gray-400">Próximamente en una actualización futura</p>
                 </div>
               </div>
             </div>
@@ -184,7 +184,7 @@
 
         <!-- Preview -->
         <div v-if="form.name" class="card p-6 bg-gray-50">
-          <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('teams.create.preview') }}</h2>
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Vista Previa</h2>
           <div class="bg-white rounded-lg p-6 border-2 border-dashed border-gray-200">
             <!-- Team Header Preview -->
             <div
@@ -195,7 +195,7 @@
                 <span
                   class="px-2 py-1 rounded-full text-xs font-medium bg-success-100 text-success-800"
                 >
-                  {{ $t('teams.create.active') }}
+                  Activo
                 </span>
               </div>
               <div class="absolute bottom-4 left-4 right-4">
@@ -210,19 +210,19 @@
 
               <div class="grid grid-cols-2 gap-4 text-sm">
                 <div v-if="form.founded_year">
-                  <span class="text-gray-600">{{ $t('teams.create.founded') }}:</span>
+                  <span class="text-gray-600">Fundado:</span>
                   <span class="font-medium ml-2">{{ form.founded_year }}</span>
                 </div>
                 <div>
-                  <span class="text-gray-600">{{ $t('teams.create.manager') }}:</span>
+                  <span class="text-gray-600">Gestor:</span>
                   <span class="font-medium ml-2">{{ authStore.userName }}</span>
                 </div>
                 <div v-if="form.home_venue">
-                  <span class="text-gray-600">{{ $t('teams.create.homeVenue') }}:</span>
+                  <span class="text-gray-600">Sede Local:</span>
                   <span class="font-medium ml-2">{{ form.home_venue }}</span>
                 </div>
                 <div>
-                  <span class="text-gray-600">{{ $t('teams.create.contact') }}:</span>
+                  <span class="text-gray-600">Contacto:</span>
                   <span class="font-medium ml-2">{{ form.contact_email }}</span>
                 </div>
               </div>
@@ -241,14 +241,14 @@
         <!-- Actions -->
         <div class="flex justify-end space-x-4">
           <button type="button" @click="$router.go(-1)" :disabled="isLoading" class="btn-secondary">
-            {{ $t('teams.create.cancel') }}
+            Cancelar
           </button>
           <button type="submit" :disabled="isLoading || !isFormValid" class="btn-primary">
             <div v-if="isLoading" class="flex items-center">
               <div class="spinner w-4 h-4 mr-2"></div>
-              {{ $t('teams.create.creatingTeam') }}
+              Creando equipo...
             </div>
-            <span v-else>{{ $t('teams.create.createTeam') }}</span>
+            <span v-else>Crear Equipo</span>
           </button>
         </div>
       </form>
@@ -268,7 +268,6 @@ import { ArrowLeftIcon, ExclamationTriangleIcon, PhotoIcon } from '@heroicons/vu
 import { useAuthStore } from '@/stores/auth'
 import { teamAPI, apiHelpers } from '@/services/api'
 import MainLayout from '@/components/layout/MainLayout.vue'
-import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'CreateTeam',
@@ -281,7 +280,6 @@ export default {
   setup() {
     const router = useRouter()
     const authStore = useAuthStore()
-    const { t } = useI18n()
 
     // Form data
     const form = ref({
@@ -337,10 +335,10 @@ export default {
 
         if (apiHelpers.isSuccess(response)) {
           const team = apiHelpers.getData(response)
-          window.$notify?.success(t('teams.create.success'))
+          window.$notify?.success('Equipo creado exitosamente')
           router.push(`/teams/${team.id}`)
         } else {
-          generalError.value = response.data?.message || t('teams.create.error')
+          generalError.value = response.data?.message || 'Error al crear el equipo'
         }
       } catch (error) {
         console.error('Team creation failed:', error)
@@ -358,43 +356,43 @@ export default {
 
       // Basic validation
       if (!form.value.name?.trim()) {
-        newErrors.name = t('teams.create.validation.nameRequired')
+        newErrors.name = 'El nombre del equipo es requerido'
       } else if (form.value.name.length < 2) {
-        newErrors.name = t('teams.create.validation.nameMinLength')
+        newErrors.name = 'El nombre debe tener al menos 2 caracteres'
       } else if (form.value.name.length > 255) {
-        newErrors.name = t('teams.create.validation.nameMaxLength')
+        newErrors.name = 'El nombre no puede exceder 255 caracteres'
       }
 
       if (form.value.short_name && form.value.short_name.length > 10) {
-        newErrors.short_name = t('teams.create.validation.shortNameMaxLength')
+        newErrors.short_name = 'El nombre corto no puede exceder 10 caracteres'
       }
 
       if (!form.value.contact_email?.trim()) {
-        newErrors.contact_email = t('teams.create.validation.emailRequired')
+        newErrors.contact_email = 'El correo de contacto es requerido'
       } else {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(form.value.contact_email)) {
-          newErrors.contact_email = t('teams.create.validation.emailInvalid')
+          newErrors.contact_email = 'Formato de correo electrónico inválido'
         }
       }
 
       if (form.value.contact_phone && !/^[\+]?[\d\s\-\(\)]{10,}$/.test(form.value.contact_phone)) {
-        newErrors.contact_phone = t('teams.create.validation.phoneInvalid')
+        newErrors.contact_phone = 'Formato de teléfono inválido'
       }
 
       if (form.value.founded_year) {
         const year = parseInt(form.value.founded_year)
         if (year < 1800 || year > currentYear.value) {
-          newErrors.founded_year = t('teams.create.validation.yearRange', { currentYear: currentYear.value })
+          newErrors.founded_year = `El año debe estar entre 1800 y ${currentYear.value}`
         }
       }
 
       if (form.value.description && form.value.description.length > 1000) {
-        newErrors.description = t('teams.create.validation.descriptionMaxLength')
+        newErrors.description = 'La descripción no puede exceder 1000 caracteres'
       }
 
       if (form.value.home_venue && form.value.home_venue.length > 255) {
-        newErrors.home_venue = t('teams.create.validation.venueMaxLength')
+        newErrors.home_venue = 'La sede local no puede exceder 255 caracteres'
       }
 
       errors.value = newErrors

@@ -6,8 +6,8 @@
           <ArrowLeftIcon class="w-5 h-5" />
         </button>
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">{{ $t('tournaments.create.title') }}</h1>
-          <p class="text-gray-600 mt-1">{{ $t('tournaments.create.subtitle') }}</p>
+          <h1 class="text-3xl font-bold text-gray-900">Crear Torneo</h1>
+          <p class="text-gray-600 mt-1">Configura un nuevo torneo deportivo</p>
         </div>
       </div>
     </template>
@@ -16,12 +16,12 @@
       <form @submit.prevent="handleSubmit" class="space-y-8">
         <!-- Basic Information -->
         <div class="card p-6">
-          <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('tournaments.create.basicInformation') }}</h2>
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Información Básica</h2>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Tournament Name -->
             <div class="md:col-span-2">
-              <label for="name" class="form-label">{{ $t('tournaments.create.tournamentName') }}</label>
+              <label for="name" class="form-label">Nombre del Torneo</label>
               <input
                 id="name"
                 v-model="form.name"
@@ -30,14 +30,14 @@
                 :disabled="isLoading"
                 class="form-input"
                 :class="{ 'border-danger-300': errors.name }"
-                :placeholder="$t('tournaments.create.tournamentNamePlaceholder')"
+                placeholder="Ej: Copa de Fútbol 2024"
               />
               <p v-if="errors.name" class="form-error">{{ errors.name }}</p>
             </div>
 
             <!-- Sport Type -->
             <div>
-              <label for="sport_type" class="form-label">{{ $t('tournaments.create.sportType') }}</label>
+              <label for="sport_type" class="form-label">Tipo de Deporte</label>
               <select
                 id="sport_type"
                 v-model="form.sport_type"
@@ -46,19 +46,19 @@
                 class="form-input"
                 :class="{ 'border-danger-300': errors.sport_type }"
               >
-                <option value="">{{ $t('tournaments.create.selectSportType') }}</option>
-                <option value="Football">{{ $t('tournaments.sports.football') }}</option>
-                <option value="Basketball">{{ $t('tournaments.sports.basketball') }}</option>
-                <option value="Tennis">{{ $t('tournaments.sports.tennis') }}</option>
-                <option value="Volleyball">{{ $t('tournaments.sports.volleyball') }}</option>
-                <option value="Other">{{ $t('tournaments.sports.other') }}</option>
+                <option value="">Seleccionar tipo de deporte</option>
+                <option value="Football">Fútbol</option>
+                <option value="Basketball">Baloncesto</option>
+                <option value="Tennis">Tenis</option>
+                <option value="Volleyball">Voleibol</option>
+                <option value="Other">Otro</option>
               </select>
               <p v-if="errors.sport_type" class="form-error">{{ errors.sport_type }}</p>
             </div>
 
             <!-- Tournament Type -->
             <div>
-              <label for="tournament_type" class="form-label">{{ $t('tournaments.create.tournamentFormat') }}</label>
+              <label for="tournament_type" class="form-label">Formato del Torneo</label>
               <select
                 id="tournament_type"
                 v-model="form.tournament_type"
@@ -67,17 +67,17 @@
                 class="form-input"
                 :class="{ 'border-danger-300': errors.tournament_type }"
               >
-                <option value="">{{ $t('tournaments.create.selectFormat') }}</option>
-                <option value="league">{{ $t('tournaments.create.formatLeague') }}</option>
-                <option value="knockout">{{ $t('tournaments.create.formatKnockout') }}</option>
-                <option value="group_knockout">{{ $t('tournaments.create.formatGroupKnockout') }}</option>
+                <option value="">Seleccionar formato</option>
+                <option value="league">Liga (todos contra todos)</option>
+                <option value="knockout">Eliminación directa</option>
+                <option value="group_knockout">Grupos + Eliminación directa</option>
               </select>
               <p v-if="errors.tournament_type" class="form-error">{{ errors.tournament_type }}</p>
             </div>
 
             <!-- Max Teams -->
             <div>
-              <label for="max_teams" class="form-label">{{ $t('tournaments.create.maximumTeams') }}</label>
+              <label for="max_teams" class="form-label">Máximo de Equipos</label>
               <input
                 id="max_teams"
                 v-model="form.max_teams"
@@ -88,14 +88,14 @@
                 :disabled="isLoading"
                 class="form-input"
                 :class="{ 'border-danger-300': errors.max_teams }"
-                :placeholder="$t('tournaments.create.maximumTeamsPlaceholder')"
+                placeholder="16"
               />
               <p v-if="errors.max_teams" class="form-error">{{ errors.max_teams }}</p>
             </div>
 
             <!-- Location -->
             <div>
-              <label for="location" class="form-label">{{ $t('tournaments.create.location') }}</label>
+              <label for="location" class="form-label">Ubicación</label>
               <input
                 id="location"
                 v-model="form.location"
@@ -103,14 +103,14 @@
                 :disabled="isLoading"
                 class="form-input"
                 :class="{ 'border-danger-300': errors.location }"
-                :placeholder="$t('tournaments.create.locationPlaceholder')"
+                placeholder="Ej: Madrid, España"
               />
               <p v-if="errors.location" class="form-error">{{ errors.location }}</p>
             </div>
 
             <!-- Description -->
             <div class="md:col-span-2">
-              <label for="description" class="form-label">{{ $t('tournaments.create.description') }}</label>
+              <label for="description" class="form-label">Descripción</label>
               <textarea
                 id="description"
                 v-model="form.description"
@@ -118,7 +118,7 @@
                 :disabled="isLoading"
                 class="form-input"
                 :class="{ 'border-danger-300': errors.description }"
-                :placeholder="$t('tournaments.create.descriptionPlaceholder')"
+                placeholder="Describe el torneo, sus objetivos, reglas especiales, etc."
               ></textarea>
               <p v-if="errors.description" class="form-error">{{ errors.description }}</p>
             </div>
@@ -127,12 +127,12 @@
 
         <!-- Schedule -->
         <div class="card p-6">
-          <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('tournaments.create.schedule') }}</h2>
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Cronograma</h2>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Registration Start -->
             <div>
-              <label for="registration_start" class="form-label">{{ $t('tournaments.create.registrationStart') }}</label>
+              <label for="registration_start" class="form-label">Inicio de Inscripciones</label>
               <input
                 id="registration_start"
                 v-model="form.registration_start"
@@ -150,7 +150,7 @@
 
             <!-- Registration End -->
             <div>
-              <label for="registration_end" class="form-label">{{ $t('tournaments.create.registrationEnd') }}</label>
+              <label for="registration_end" class="form-label">Fin de Inscripciones</label>
               <input
                 id="registration_end"
                 v-model="form.registration_end"
@@ -166,7 +166,7 @@
 
             <!-- Tournament Start -->
             <div>
-              <label for="start_date" class="form-label">{{ $t('tournaments.create.tournamentStart') }}</label>
+              <label for="start_date" class="form-label">Inicio del Torneo</label>
               <input
                 id="start_date"
                 v-model="form.start_date"
@@ -182,7 +182,7 @@
 
             <!-- Tournament End -->
             <div>
-              <label for="end_date" class="form-label">{{ $t('tournaments.create.tournamentEnd') }}</label>
+              <label for="end_date" class="form-label">Fin del Torneo</label>
               <input
                 id="end_date"
                 v-model="form.end_date"
@@ -199,12 +199,12 @@
 
         <!-- Additional Settings -->
         <div class="card p-6">
-          <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('tournaments.create.additionalSettings') }}</h2>
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Configuración Adicional</h2>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Prize Pool -->
             <div>
-              <label for="prize_pool" class="form-label">{{ $t('tournaments.create.prizePool') }}</label>
+              <label for="prize_pool" class="form-label">Premio en Metálico</label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <span class="text-gray-500 text-sm">$</span>
@@ -218,7 +218,7 @@
                   :disabled="isLoading"
                   class="form-input pl-7"
                   :class="{ 'border-danger-300': errors.prize_pool }"
-                  :placeholder="$t('tournaments.create.prizePoolPlaceholder')"
+                  placeholder="0.00"
                 />
               </div>
               <p v-if="errors.prize_pool" class="form-error">{{ errors.prize_pool }}</p>
@@ -226,7 +226,7 @@
 
             <!-- Status -->
             <div>
-              <label for="status" class="form-label">{{ $t('tournaments.create.initialStatus') }}</label>
+              <label for="status" class="form-label">Estado Inicial</label>
               <select
                 id="status"
                 v-model="form.status"
@@ -234,19 +234,19 @@
                 class="form-input"
                 :class="{ 'border-danger-300': errors.status }"
               >
-                <option value="draft">{{ $t('tournaments.create.statusDraft') }}</option>
-                <option value="registration_open">{{ $t('tournaments.create.statusRegistrationOpen') }}</option>
+                <option value="draft">Borrador</option>
+                <option value="registration_open">Inscripciones Abiertas</option>
               </select>
               <p v-if="errors.status" class="form-error">{{ errors.status }}</p>
               <p class="text-xs text-gray-500 mt-1">
-                {{ $t('tournaments.create.statusChangeNote') }}
+                Puedes cambiar el estado después de crear el torneo
               </p>
             </div>
           </div>
 
           <!-- Rules -->
           <div class="mt-6">
-            <label for="rules" class="form-label">{{ $t('tournaments.create.rulesAndRegulations') }}</label>
+            <label for="rules" class="form-label">Reglas y Regulaciones</label>
             <textarea
               id="rules"
               v-model="form.rules"
@@ -254,18 +254,18 @@
               :disabled="isLoading"
               class="form-input"
               :class="{ 'border-danger-300': errors.rules }"
-              :placeholder="$t('tournaments.create.rulesPlaceholder')"
+              placeholder="Define las reglas específicas del torneo, requisitos de participación, formato de partidos, etc."
             ></textarea>
             <p v-if="errors.rules" class="form-error">{{ errors.rules }}</p>
             <p class="text-xs text-gray-500 mt-1">
-              {{ $t('tournaments.create.rulesNote') }}
+              Las reglas serán visibles para todos los participantes
             </p>
           </div>
         </div>
 
         <!-- Preview -->
         <div v-if="form.name" class="card p-6 bg-gray-50">
-          <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('tournaments.create.preview') }}</h2>
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Vista Previa</h2>
           <div class="bg-white rounded-lg p-6 border-2 border-dashed border-gray-200">
             <div class="flex justify-between items-start mb-4">
               <div>
@@ -281,7 +281,7 @@
               </div>
               <div class="text-right text-sm text-gray-600">
                 <div>{{ formatTournamentType(form.tournament_type) }}</div>
-                <div>{{ $t('tournaments.create.maxTeams', { count: form.max_teams }) }}</div>
+                <div>Máx. {{ form.max_teams }} equipos</div>
               </div>
             </div>
 
@@ -289,14 +289,14 @@
 
             <div class="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <span class="text-gray-600">{{ $t('tournaments.create.registration') }}</span>
+                <span class="text-gray-600">Inscripciones</span>
                 <div class="font-medium">
                   {{ formatPreviewDate(form.registration_start) }} -
                   {{ formatPreviewDate(form.registration_end) }}
                 </div>
               </div>
               <div>
-                <span class="text-gray-600">{{ $t('tournaments.create.tournament') }}</span>
+                <span class="text-gray-600">Torneo</span>
                 <div class="font-medium">
                   {{ formatPreviewDate(form.start_date)
                   }}{{ form.end_date ? ' - ' + formatPreviewDate(form.end_date) : '' }}
@@ -326,14 +326,14 @@
         <!-- Actions -->
         <div class="flex justify-end space-x-4">
           <button type="button" @click="$router.go(-1)" :disabled="isLoading" class="btn-secondary">
-            {{ $t('tournaments.create.cancel') }}
+            Cancelar
           </button>
           <button type="submit" :disabled="isLoading || !isFormValid" class="btn-primary">
             <div v-if="isLoading" class="flex items-center">
               <div class="spinner w-4 h-4 mr-2"></div>
-              {{ $t('tournaments.create.creatingTournament') }}
+              Creando torneo...
             </div>
-            <span v-else>{{ $t('tournaments.create.createTournament') }}</span>
+            <span v-else>Crear Torneo</span>
           </button>
         </div>
       </form>
@@ -349,7 +349,6 @@
 
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 import { ArrowLeftIcon, ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 import { useAuthStore } from '@/stores/auth'
 import { tournamentAPI, apiHelpers } from '@/services/api'
@@ -365,7 +364,6 @@ export default {
   setup() {
     const router = useRouter()
     const authStore = useAuthStore()
-    const { t } = useI18n()
 
     // Form data
     const form = ref({
@@ -440,10 +438,10 @@ export default {
 
         if (apiHelpers.isSuccess(response)) {
           const tournament = apiHelpers.getData(response)
-          window.$notify?.success(t('tournaments.create.success'))
+          window.$notify?.success('Torneo creado exitosamente')
           router.push(`/tournaments/${tournament.id}`)
         } else {
-          generalError.value = response.data?.message || t('tournaments.create.error')
+          generalError.value = response.data?.message || 'Error al crear el torneo'
         }
       } catch (error) {
         console.error('Tournament creation failed:', error)
@@ -461,21 +459,21 @@ export default {
 
       // Basic validation
       if (!form.value.name?.trim()) {
-        newErrors.name = t('tournaments.create.validation.nameRequired')
+        newErrors.name = 'El nombre del torneo es requerido'
       }
 
       if (!form.value.sport_type) {
-        newErrors.sport_type = t('tournaments.create.validation.sportTypeRequired')
+        newErrors.sport_type = 'El tipo de deporte es requerido'
       }
 
       if (!form.value.tournament_type) {
-        newErrors.tournament_type = t('tournaments.create.validation.formatRequired')
+        newErrors.tournament_type = 'El formato del torneo es requerido'
       }
 
       if (!form.value.max_teams || form.value.max_teams < 2) {
-        newErrors.max_teams = t('tournaments.create.validation.minTeams')
+        newErrors.max_teams = 'Mínimo 2 equipos requeridos'
       } else if (form.value.max_teams > 64) {
-        newErrors.max_teams = t('tournaments.create.validation.maxTeamsLimit')
+        newErrors.max_teams = 'Máximo 64 equipos permitidos'
       }
 
       // Date validation
@@ -486,24 +484,24 @@ export default {
       const tournEnd = form.value.end_date ? new Date(form.value.end_date) : null
 
       if (regStart <= now) {
-        newErrors.registration_start = t('tournaments.create.validation.registrationStartFuture')
+        newErrors.registration_start = 'El inicio de inscripciones debe ser en el futuro'
       }
 
       if (regEnd <= regStart) {
-        newErrors.registration_end = t('tournaments.create.validation.registrationEndAfterStart')
+        newErrors.registration_end = 'El fin de inscripciones debe ser después del inicio'
       }
 
       if (tournStart <= regEnd) {
-        newErrors.start_date = t('tournaments.create.validation.tournamentStartAfterRegistration')
+        newErrors.start_date = 'El inicio del torneo debe ser después del fin de inscripciones'
       }
 
       if (tournEnd && tournEnd <= tournStart) {
-        newErrors.end_date = t('tournaments.create.validation.tournamentEndAfterStart')
+        newErrors.end_date = 'El fin del torneo debe ser después del inicio'
       }
 
       // Prize pool validation
       if (form.value.prize_pool && form.value.prize_pool < 0) {
-        newErrors.prize_pool = t('tournaments.create.validation.prizePoolNonNegative')
+        newErrors.prize_pool = 'El premio no puede ser negativo'
       }
 
       errors.value = newErrors
@@ -515,8 +513,8 @@ export default {
      */
     const formatStatus = (status) => {
       const statusMap = {
-        draft: t('tournaments.status.draft'),
-        registration_open: t('tournaments.status.registrationOpen'),
+        draft: 'Borrador',
+        registration_open: 'Inscripciones Abiertas',
       }
       return statusMap[status] || status
     }
@@ -526,9 +524,9 @@ export default {
      */
     const formatTournamentType = (type) => {
       const typeMap = {
-        league: t('tournaments.formats.league'),
-        knockout: t('tournaments.formats.knockout'),
-        group_knockout: t('tournaments.formats.groupKnockout'),
+        league: 'Liga',
+        knockout: 'Eliminación directa',
+        group_knockout: 'Grupos + Eliminación',
       }
       return typeMap[type] || type
     }

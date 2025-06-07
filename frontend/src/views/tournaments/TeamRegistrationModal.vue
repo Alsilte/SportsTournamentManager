@@ -16,7 +16,7 @@
               <!-- Header -->
               <div class="flex items-center justify-between mb-6">
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-900">Register Team</h3>
+                  <h3 class="text-lg font-semibold text-gray-900">Registrar Equipo</h3>
                   <p class="text-sm text-gray-600">{{ tournament?.name }}</p>
                 </div>
                 <button
@@ -31,19 +31,19 @@
               <div class="bg-gray-50 rounded-lg p-4 mb-6">
                 <div class="space-y-2 text-sm">
                   <div class="flex justify-between">
-                    <span class="text-gray-600">Sport:</span>
+                    <span class="text-gray-600">Deporte:</span>
                     <span class="font-medium">{{ tournament?.sport_type }}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-600">Start Date:</span>
+                    <span class="text-gray-600">Fecha de inicio:</span>
                     <span class="font-medium">{{ formatDate(tournament?.start_date) }}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-600">Teams:</span>
+                    <span class="text-gray-600">Equipos:</span>
                     <span class="font-medium">{{ tournament?.registered_teams_count || 0 }}/{{ tournament?.max_teams }}</span>
                   </div>
                   <div v-if="tournament?.location" class="flex justify-between">
-                    <span class="text-gray-600">Location:</span>
+                    <span class="text-gray-600">Ubicación:</span>
                     <span class="font-medium">{{ tournament.location }}</span>
                   </div>
                 </div>
@@ -54,7 +54,7 @@
                 <!-- Team Selection -->
                 <div>
                   <label for="team" class="form-label">
-                    Select Team
+                    Seleccionar Equipo
                   </label>
                   <select
                     id="team"
@@ -63,13 +63,13 @@
                     :disabled="isLoading"
                     class="form-input"
                   >
-                    <option value="">Choose a team to register</option>
+                    <option value="">Elige un equipo para registrar</option>
                     <option 
                       v-for="team in availableTeams" 
                       :key="team.id"
                       :value="team.id"
                     >
-                      {{ team.name }} ({{ team.players_count || 0 }} players)
+                      {{ team.name }} ({{ team.players_count || 0 }} jugadores)
                     </option>
                   </select>
                   <p v-if="error" class="form-error">{{ error }}</p>
@@ -79,9 +79,9 @@
                 <div v-if="selectedTeam" class="bg-primary-50 rounded-lg p-4">
                   <h4 class="font-medium text-primary-900 mb-2">{{ selectedTeam.name }}</h4>
                   <div class="space-y-1 text-sm text-primary-700">
-                    <p>Players: {{ selectedTeam.players_count || 0 }}</p>
-                    <p v-if="selectedTeam.contact_email">Contact: {{ selectedTeam.contact_email }}</p>
-                    <p v-if="selectedTeam.home_venue">Home Venue: {{ selectedTeam.home_venue }}</p>
+                    <p>Jugadores: {{ selectedTeam.players_count || 0 }}</p>
+                    <p v-if="selectedTeam.contact_email">Contacto: {{ selectedTeam.contact_email }}</p>
+                    <p v-if="selectedTeam.home_venue">Sede local: {{ selectedTeam.home_venue }}</p>
                   </div>
                 </div>
 
@@ -90,12 +90,12 @@
                   <div class="flex">
                     <ExclamationTriangleIcon class="w-5 h-5 text-warning-600 mr-2 flex-shrink-0 mt-0.5" />
                     <div class="text-sm">
-                      <h4 class="font-medium text-warning-800 mb-1">Registration Requirements</h4>
+                      <h4 class="font-medium text-warning-800 mb-1">Requisitos de Registro</h4>
                       <ul class="text-warning-700 space-y-1">
-                        <li>• Team must have at least 8 registered players</li>
-                        <li>• All players must be verified and active</li>
-                        <li>• Registration is subject to tournament approval</li>
-                        <li>• Registration deadline: {{ formatDate(tournament?.registration_end) }}</li>
+                        <li>• El equipo debe tener al menos 8 jugadores registrados</li>
+                        <li>• Todos los jugadores deben estar verificados y activos</li>
+                        <li>• El registro está sujeto a la aprobación del torneo</li>
+                        <li>• Fecha límite de registro: {{ formatDate(tournament?.registration_end) }}</li>
                       </ul>
                     </div>
                   </div>
@@ -109,7 +109,7 @@
                     :disabled="isLoading"
                     class="flex-1 btn-secondary"
                   >
-                    Cancel
+                    Cancelar
                   </button>
                   <button
                     type="submit"
@@ -118,9 +118,9 @@
                   >
                     <div v-if="isLoading" class="flex items-center justify-center">
                       <div class="spinner w-4 h-4 mr-2"></div>
-                      Registering...
+                      Registrando...
                     </div>
-                    <span v-else>Register Team</span>
+                    <span v-else>Registrar Equipo</span>
                   </button>
                 </div>
               </form>
@@ -216,19 +216,19 @@ export default {
       error.value = ''
       
       if (!selectedTeamId.value) {
-        error.value = 'Please select a team'
+        error.value = 'Por favor selecciona un equipo'
         return
       }
 
       const team = selectedTeam.value
       if (!team) {
-        error.value = 'Selected team not found'
+        error.value = 'Equipo seleccionado no encontrado'
         return
       }
 
       // Validate team requirements
       if ((team.players_count || 0) < 8) {
-        error.value = 'Team must have at least 8 players to register'
+        error.value = 'El equipo debe tener al menos 8 jugadores para registrarse'
         return
       }
 
@@ -242,7 +242,7 @@ export default {
         if (apiHelpers.isSuccess(response)) {
           emit('success')
         } else {
-          error.value = response.data?.message || 'Registration failed'
+          error.value = response.data?.message || 'Falló el registro'
         }
       } catch (err) {
         console.error('Registration failed:', err)
@@ -256,8 +256,8 @@ export default {
      * Format date for display
      */
     const formatDate = (dateString) => {
-      if (!dateString) return 'TBD'
-      return new Date(dateString).toLocaleDateString('en-US', {
+      if (!dateString) return 'Por determinar'
+      return new Date(dateString).toLocaleDateString('es-ES', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
