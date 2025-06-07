@@ -57,15 +57,16 @@ class TeamPlayerSeeder extends Seeder
                         // Asignar números de camiseta específicos según la posición
                         $jerseyNumber = $this->getJerseyNumber($player->position, $index);
                         
-                        TeamPlayer::create([
-                            'team_id' => $team->id,
-                            'player_id' => $player->id,
-                            'jersey_number' => $jerseyNumber,
-                            'position' => $player->position,
-                            'is_captain' => $index === 0, // El primer jugador es capitán
-                            'is_active' => true,
-                            'joined_date' => Carbon::now()->subDays(rand(30, 730)), // Entre 1 mes y 2 años
-                        ]);
+                        TeamPlayer::updateOrCreate(
+                            ['team_id' => $team->id, 'jersey_number' => $jerseyNumber],
+                            [
+                                'player_id'   => $player->id,
+                                'position'    => $player->position,
+                                'is_captain'  => $index === 0, // El primer jugador es capitán
+                                'is_active'   => true,
+                                'joined_date' => Carbon::now()->subDays(rand(30, 730)), // Entre 1 mes y 2 años
+                            ]
+                        );
                     }
                 }
             }

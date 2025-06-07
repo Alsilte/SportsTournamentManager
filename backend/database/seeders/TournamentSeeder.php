@@ -77,7 +77,7 @@ class TournamentSeeder extends Seeder
                 'description' => 'Competición para equipos sub-21. Cantera de futuros campeones con reglas especiales para desarrollo.',
                 'sport_type' => 'Football',
                 'tournament_type' => 'group_stage',
-                'status' => 'registration_closed',
+                'status' => 'draft',
                 'max_teams' => 16,
                 'registration_start' => Carbon::now()->subDays(40),
                 'registration_end' => Carbon::now()->subDays(10),

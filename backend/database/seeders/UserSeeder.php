@@ -12,26 +12,29 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // Crear usuarios admin
-        User::create([
-            'name' => 'Carlos Administrador',
-            'email' => 'admin@torneos.com',
-            'password' => Hash::make('admin123'),
-            'role' => 'admin',
-            'phone' => '+34611234567',
-            'is_active' => true,
-        ]);
+        // Crear o actualizar admins
+        User::updateOrCreate(
+            ['email' => 'admin@torneos.com'],
+            [
+                'name'      => 'Carlos Administrador',
+                'password'  => Hash::make('admin123'),
+                'role'      => 'admin',
+                'phone'     => '+34611234567',
+                'is_active' => true,
+            ]
+        );
+        User::updateOrCreate(
+            ['email' => 'supervisor@torneos.com'],
+            [
+                'name'      => 'Ana Supervisora',
+                'password'  => Hash::make('super123'),
+                'role'      => 'admin',
+                'phone'     => '+34622345678',
+                'is_active' => true,
+            ]
+        );
 
-        User::create([
-            'name' => 'Ana Supervisora',
-            'email' => 'supervisor@torneos.com',
-            'password' => Hash::make('super123'),
-            'role' => 'admin',
-            'phone' => '+34622345678',
-            'is_active' => true,
-        ]);
-
-        // Crear entrenadores/managers más diversos
+        // Crear managers
         $managers = [
             ['name' => 'Pep Guardiola', 'email' => 'pep@cityfc.com', 'phone' => '+34933123456'],
             ['name' => 'Jürgen Klopp', 'email' => 'jurgen@liverpool.com', 'phone' => '+44201234567'],
@@ -44,14 +47,16 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($managers as $manager) {
-            User::create([
-                'name' => $manager['name'],
-                'email' => $manager['email'],
-                'password' => Hash::make('manager123'),
-                'role' => 'team_manager',
-                'phone' => $manager['phone'],
-                'is_active' => true,
-            ]);
+            User::updateOrCreate(
+                ['email' => $manager['email']],
+                [
+                    'name'      => $manager['name'],
+                    'password'  => Hash::make('manager123'),
+                    'role'      => 'team_manager',
+                    'phone'     => $manager['phone'],
+                    'is_active' => true,
+                ]
+            );
         }
 
         // Crear jugadores estrella más realistas
@@ -122,14 +127,16 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($starPlayers as $player) {
-            User::create([
-                'name' => $player['name'],
-                'email' => $player['email'],
-                'password' => Hash::make('player123'),
-                'role' => 'player',
-                'phone' => '+' . rand(34600000000, 34699999999),
-                'is_active' => true,
-            ]);
+            User::updateOrCreate(
+                ['email' => $player['email']],
+                [
+                    'name'      => $player['name'],
+                    'password'  => Hash::make('player123'),
+                    'role'      => 'player',
+                    'phone'     => '+' . rand(34600000000, 34699999999),
+                    'is_active' => true,
+                ]
+            );
         }
 
         // Crear árbitros profesionales
@@ -143,14 +150,16 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($referees as $referee) {
-            User::create([
-                'name' => $referee['name'],
-                'email' => $referee['email'],
-                'password' => Hash::make('referee123'),
-                'role' => 'referee',
-                'phone' => '+34' . rand(600000000, 699999999),
-                'is_active' => true,
-            ]);
+            User::updateOrCreate(
+                ['email' => $referee['email']],
+                [
+                    'name'      => $referee['name'],
+                    'password'  => Hash::make('referee123'),
+                    'role'      => 'referee',
+                    'phone'     => '+34' . rand(600000000, 699999999),
+                    'is_active' => true,
+                ]
+            );
         }
 
         // Crear usuarios regulares (aficionados)
@@ -163,14 +172,16 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($fans as $fan) {
-            User::create([
-                'name' => $fan['name'],
-                'email' => $fan['email'],
-                'password' => Hash::make('fan123'),
-                'role' => 'user',
-                'phone' => '+34' . rand(600000000, 699999999),
-                'is_active' => true,
-            ]);
+            User::updateOrCreate(
+                ['email' => $fan['email']],
+                [
+                    'name'      => $fan['name'],
+                    'password'  => Hash::make('fan123'),
+                    'role'      => 'player',
+                    'phone'     => '+34' . rand(600000000, 699999999),
+                    'is_active' => true,
+                ]
+            );
         }
     }
 }

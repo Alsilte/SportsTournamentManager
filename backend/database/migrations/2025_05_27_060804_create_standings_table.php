@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('goal_difference')->default(0);
             $table->integer('points')->default(0);
             $table->integer('position')->nullable();
-            $table->timestamp('updated_at');
+            $table->timestamps();
 
             $table->unique(['tournament_id', 'team_id'], 'tournament_team_standings');
             $table->index('tournament_id');

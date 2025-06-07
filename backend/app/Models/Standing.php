@@ -14,7 +14,7 @@ class Standing extends Model
     /**
      * Indicates if the model should be timestamped.
      */
-    public $timestamps = false;
+    public $timestamps = true;
 
     /**
      * The attributes that are mass assignable.

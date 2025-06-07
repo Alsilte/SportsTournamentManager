@@ -15,8 +15,8 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('sport_type', 100);
-            $table->enum('tournament_type', ['league', 'knockout', 'group_knockout']);
-            $table->enum('status', ['draft', 'registration_open', 'in_progress', 'completed', 'cancelled'])
+            $table->enum('tournament_type', ['league', 'knockout', 'group_knockout', 'group_stage']);
+            $table->enum('status', ['draft', 'registration_open', 'registration_closed', 'in_progress', 'completed', 'cancelled'])
                 ->default('draft');
             $table->integer('max_teams');
             $table->datetime('registration_start');
