@@ -433,8 +433,9 @@ export default {
         return
       }
 
-  if (!authStore.isAdmin && !authStore.canManageTeams) {
-        window.$notify?.warning('Solo los gestores de equipos pueden registrar equipos')
+      // Corregir la validación de permisos
+      if (!authStore.isAdmin && !authStore.isTeamManager) {
+        window.$notify?.warning('Solo los administradores y gestores de equipos pueden registrar equipos')
         return
       }
 

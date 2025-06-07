@@ -494,7 +494,6 @@ export default {
     const error = ref('')
     const activeTab = ref('teams')
     const showRegistrationModal = ref(false)
-    const showEditModal = ref(false)
 
     // Computed
     const registrationProgress = computed(() => {
@@ -692,7 +691,6 @@ export default {
       error,
       activeTab,
       showRegistrationModal,
-      showEditModal,
       registrationProgress,
       tabs,
       canEditTournament,

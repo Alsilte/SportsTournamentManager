@@ -400,8 +400,6 @@ export default {
         form.value.sport_type &&
         form.value.tournament_type &&
         form.value.max_teams &&
-        form.value.registration_start &&
-        form.value.registration_end &&
         form.value.start_date &&
         Object.keys(errors.value).length === 0
       )
@@ -476,27 +474,34 @@ export default {
         newErrors.max_teams = 'Máximo 64 equipos permitidos'
       }
 
-      // Date validation
-      const now = new Date()
-      const regStart = new Date(form.value.registration_start)
-      const regEnd = new Date(form.value.registration_end)
-      const tournStart = new Date(form.value.start_date)
-      const tournEnd = form.value.end_date ? new Date(form.value.end_date) : null
+      // Date validation - ahora opcional
+      if (form.value.registration_start && form.value.registration_end) {
+        const regStart = new Date(form.value.registration_start)
+        const regEnd = new Date(form.value.registration_end)
 
-      if (regStart <= now) {
-        newErrors.registration_start = 'El inicio de inscripciones debe ser en el futuro'
+        if (regEnd <= regStart) {
+          newErrors.registration_end = 'El fin de inscripciones debe ser después del inicio'
+        }
       }
 
-      if (regEnd <= regStart) {
-        newErrors.registration_end = 'El fin de inscripciones debe ser después del inicio'
+      if (form.value.start_date) {
+        const tournStart = new Date(form.value.start_date)
+        
+        if (form.value.registration_end) {
+          const regEnd = new Date(form.value.registration_end)
+          if (tournStart <= regEnd) {
+            newErrors.start_date = 'El inicio del torneo debe ser después del fin de inscripciones'
+          }
+        }
       }
 
-      if (tournStart <= regEnd) {
-        newErrors.start_date = 'El inicio del torneo debe ser después del fin de inscripciones'
-      }
-
-      if (tournEnd && tournEnd <= tournStart) {
-        newErrors.end_date = 'El fin del torneo debe ser después del inicio'
+      if (form.value.end_date && form.value.start_date) {
+        const tournEnd = new Date(form.value.end_date)
+        const tournStart = new Date(form.value.start_date)
+        
+        if (tournEnd <= tournStart) {
+          newErrors.end_date = 'El fin del torneo debe ser después del inicio'
+        }
       }
 
       // Prize pool validation
