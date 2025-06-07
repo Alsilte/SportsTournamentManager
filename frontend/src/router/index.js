@@ -1,4 +1,4 @@
-// router/index.js - Versión corregida con inicialización async
+// router/index.js - Con ruta de edición de torneo añadida
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
@@ -13,6 +13,7 @@ const Profile = () => import('@/views/Profile.vue')
 const Tournaments = () => import('@/views/tournaments/Tournaments.vue')
 const TournamentDetail = () => import('@/views/tournaments/TournamentDetail.vue')
 const CreateTournament = () => import('@/views/tournaments/CreateTournament.vue')
+const EditTournament = () => import('@/views/tournaments/EditTournament.vue') // ← NUEVA IMPORTACIÓN
 
 // Team views
 const Teams = () => import('@/views/teams/Teams.vue')
@@ -188,6 +189,17 @@ const routes = [
     component: CreateTournament,
     meta: { 
       title: 'Create Tournament',
+      requiresAuth: true,
+      roles: ['admin']
+    }
+  },
+  // ← NUEVA RUTA PARA EDITAR TORNEO
+  {
+    path: '/tournaments/:id/edit',
+    name: 'edit-tournament',
+    component: EditTournament,
+    meta: { 
+      title: 'Edit Tournament',
       requiresAuth: true,
       roles: ['admin']
     }

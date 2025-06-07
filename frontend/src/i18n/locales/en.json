@@ -108,7 +108,9 @@
     "unknown": "Unknown",
     "approve": "Approve",
     "reject": "Reject",
-    "review": "Review"
+    "review": "Review",
+    "viewHistory": "View History",
+    "retry": "Retry"
   },
   "navigation": {
     "tournaments": "Tournaments",
@@ -163,12 +165,22 @@
     "recentTournaments": "Recent Tournaments",
     "pendingActions": "Pending Actions",
     "systemHealth": "System Health",
-    "myTeams": "My Teams",
-    "upcomingMatches": "Upcoming Matches",
     "myProfile": "My Profile",
+    "myTeams": "My Teams",
+    "activeTeams": "Active Teams",
+    "noTeamsYet": "You’re not part of any team yet",
     "myStatistics": "My Statistics",
-    "achievements": "Achievements",
-    "recentMatches": "Recent Matches"
+    "yellowCards": "Yellow Cards",
+    "redCards": "Red Cards",
+    "performancePlaceholder": "Performance chart will be available once more data is collected",
+    "upcomingMatches": "My Upcoming Matches",
+    "away": "Away",
+    "myTeam": "My Team",
+    "noAchievementsYet": "No achievements yet. Keep playing to unlock them!",
+    "final": "Final",
+    "achievementGoalScorer": "Goal Scorer",
+    "achievementLeadershipRole": "Leadership role",
+    "achievementExperiencedPlayer": "Experienced Player"
   },
   "tournaments": {
     "title": "Tournaments",
@@ -206,7 +218,23 @@
     "registrationFull": "Registration Full",
     "registrationOpen": "Registration Open",
     "teamsRegistered": "{count} teams registered",
-    "maxTeamsReached": "{current}/{max} teams"
+    "maxTeamsReached": "{current}/{max} teams",
+    "edit": {
+      "title": "Edit Tournament",
+      "subtitle": "Modify tournament details"
+    },
+    "form": {
+      "name": "Tournament Name",
+      "namePlaceholder": "Enter tournament name",
+      "location": "Location",
+      "locationPlaceholder": "Enter location",
+      "prizePool": "Prize Pool",
+      "prizePoolPlaceholder": "Enter prize pool",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter description",
+      "updating": "Updating…",
+      "updateTournament": "Update Tournament"
+    }
   },
   "notifications": {
     "success": "Success!",
