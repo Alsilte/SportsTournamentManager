@@ -26,12 +26,22 @@
                 {{ team.name }} ({{ team.players_count || 0 }} jugadores)
               </option>
             </select>
+            
+            <!-- Loading teams -->
+            <p v-if="isLoadingTeams" class="text-sm text-gray-500 mt-1">
+              Cargando equipos...
+            </p>
+            
+            <!-- No teams available -->
+            <p v-else-if="availableTeams.length === 0" class="text-sm text-gray-500 mt-1">
+              {{ isAdmin ? 'No hay equipos en el sistema' : 'No tienes equipos asignados' }}
+            </p>
           </div>
 
           <!-- Admin Notice -->
           <div v-if="isAdmin" class="bg-blue-50 border border-blue-200 rounded p-3">
             <p class="text-sm text-blue-700">
-              ✓ Como administrador puedes registrar equipos sin restricciones
+              ✓ Como administrador puedes registrar cualquier equipo sin restricciones
             </p>
           </div>
 
@@ -59,7 +69,7 @@
             </button>
             <button
               type="submit"
-              :disabled="!selectedTeamId || isLoading"
+              :disabled="!selectedTeamId || isLoading || availableTeams.length === 0"
               class="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
             >
               {{ isLoading ? 'Registrando...' : 'Registrar' }}
@@ -92,6 +102,7 @@ export default {
     const availableTeams = ref([])
     const selectedTeamId = ref('')
     const isLoading = ref(false)
+    const isLoadingTeams = ref(false)
     const error = ref('')
 
     // Computed
@@ -103,16 +114,43 @@ export default {
 
     // Methods
     const fetchAvailableTeams = async () => {
+      isLoadingTeams.value = true
+      error.value = ''
+      
       try {
-        const response = isAdmin.value 
-          ? await teamAPI.getAll() 
-          : await teamAPI.getMyTeams()
+        let response;
+        
+        if (isAdmin.value) {
+          // Admins ven TODOS los equipos
+          console.log('Fetching all teams for admin')
+          response = await teamAPI.getAll()
+        } else {
+          // Managers solo ven SUS equipos
+          console.log('Fetching teams for manager:', authStore.user?.id)
+          response = await teamAPI.getAll({ 
+            manager_id: authStore.user?.id,
+            is_active: true 
+          })
+        }
+
+        console.log('Teams response:', response)
 
         if (apiHelpers.isSuccess(response)) {
-          availableTeams.value = apiHelpers.getData(response) || []
+          const data = apiHelpers.getData(response)
+          // Handle both paginated and non-paginated responses
+          availableTeams.value = data.data || data || []
+          console.log('Available teams loaded:', availableTeams.value)
+        } else {
+          console.error('Failed to fetch teams:', response)
+          availableTeams.value = []
+          error.value = 'Error al cargar equipos'
         }
       } catch (err) {
+        console.error('Error loading teams:', err)
         error.value = 'Error al cargar equipos'
+        availableTeams.value = []
+      } finally {
+        isLoadingTeams.value = false
       }
     }
 
@@ -136,9 +174,13 @@ export default {
       isLoading.value = true
 
       try {
+        console.log('Registering team:', selectedTeamId.value, 'in tournament:', props.tournament.id)
+        
         const response = await tournamentAPI.registerTeam(props.tournament.id, {
           team_id: selectedTeamId.value
         })
+
+        console.log('Registration response:', response)
 
         if (apiHelpers.isSuccess(response)) {
           emit('success')
@@ -146,6 +188,7 @@ export default {
           error.value = response.data?.message || 'Error en el registro'
         }
       } catch (err) {
+        console.error('Registration error:', err)
         error.value = 'Error al registrar equipo'
       } finally {
         isLoading.value = false
@@ -153,6 +196,8 @@ export default {
     }
 
     onMounted(() => {
+      console.log('Modal mounted, user:', authStore.user)
+      console.log('Is admin:', isAdmin.value)
       fetchAvailableTeams()
     })
 
@@ -161,6 +206,7 @@ export default {
       selectedTeamId,
       selectedTeam,
       isLoading,
+      isLoadingTeams,
       isAdmin,
       error,
       handleSubmit
