@@ -4,7 +4,7 @@
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <div class="flex justify-center">
         <div class="w-12 h-12 bg-primary-600 rounded-xl flex items-center justify-center">
-          <TrophyIcon class="w-8 h-8 text-white" />
+              <img src="../../../public/logo.png" alt="Logo">
         </div>
       </div>
       <h2 class="mt-6 text-center text-3xl font-bold text-gray-900">

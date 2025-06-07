@@ -6,7 +6,7 @@
           <div class="col-span-1 md:col-span-2">
             <div class="flex items-center space-x-2 mb-4">
               <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-                <TrophyIcon class="w-5 h-5 text-white" />
+              <img src="../../../public/logo.png" alt="Logo">
               </div>
               <span class="font-bold text-xl text-gray-900">
                 Tournament Manager
