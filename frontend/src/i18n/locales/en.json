@@ -1,9 +1,9 @@
 {
   "home": {
     "hero": {
-      "title": "Complete Tournament",
-      "subtitle": "Management",
-      "description": "Organize, manage, and track sports tournaments with our comprehensive and powerful platform designed for success"
+      "title": "Manage your sports tournaments",
+      "subtitle": "Simply and Efficiently",
+      "description": "The most comprehensive platform to organize and manage sports tournaments"
     },
     "cta": {
       "getStarted": "Get Started Free",
@@ -64,7 +64,8 @@
       "subtitle": "Check out the latest and most exciting tournaments on our platform",
       "viewAll": "View All Tournaments",
       "noTournamentsDescription": "Be the first to create an amazing tournament and bring sports communities together",
-      "registrationProgress": "Registration Progress"
+      "registrationProgress": "Registration Progress",
+      "create": "Create Tournament"
     }
   },
 

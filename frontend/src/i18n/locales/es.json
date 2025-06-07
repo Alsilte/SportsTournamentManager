@@ -48,7 +48,6 @@
           "description": "Rastrea logros, premios, trofeos y sistemas de reconocimiento por rendimiento excepcional y participación en torneos"
         }
       }
-      
     },
     "stats": {
       "title": "Estadísticas de la Plataforma",
@@ -126,6 +125,7 @@
     "userManagement": "Gestión de Usuarios",
     "manageTeams": "Gestionar Equipos"
   },
+
   "navigation": {
     "tournaments": "Torneos",
     "teams": "Equipos",
@@ -139,6 +139,7 @@
     "signOut": "Cerrar Sesión",
     "home": "Inicio"
   },
+
   "auth": {
     "signIn": "Iniciar Sesión",
     "signUp": "Registrarse",
@@ -209,164 +210,164 @@
     "registrationFailed": "Error en el registro. Por favor intenta de nuevo.",
     "registrationUnexpectedError": "Ocurrió un error inesperado. Por favor intenta de nuevo."
   },
-  
-    "dashboard": {
-      "welcome": "¡Bienvenido de nuevo, {name}!",
-      "goodMorning": "Buenos días",
-      "goodAfternoon": "Buenas tardes", 
-      "goodEvening": "Buenas noches",
-      "lastLogin": "Último inicio de sesión",
-      "refresh": "Actualizar",
-      "dataRefreshed": "Datos actualizados correctamente",
-      "refreshError": "Error al actualizar datos",
-      
-      "adminWelcome": "Gestiona torneos y supervisa todo el sistema",
-      "managerWelcome": "Gestiona tus equipos e inscríbelos en torneos",
-      "playerWelcome": "Consulta tus estadísticas, equipos y próximos partidos",
-      "refereeWelcome": "Revisa tus partidos asignados y gestiona eventos de juego",
-      "defaultWelcome": "Bienvenido a Tournament Manager",
-      
-      "adminRole": "Administrador del Sistema",
-      "managerRole": "Gestor de Equipo",
-      "refereeRole": "Árbitro",
-      "playerRole": "Jugador",
-      "userRole": "Usuario",
-      
-      "stats": {
-        "totalTournaments": "Torneos Totales",
-        "registeredTeams": "Equipos Registrados",
-        "activeUsers": "Usuarios Activos",
-        "activeSessions": "Sesiones Activas",
-        "myTeams": "Mis Equipos",
-        "createTeam": "Crear Equipo",
-        "players": "jugadores",
-        "tournaments": "torneos",
-        "wins": "victorias",
-        "roster": "Plantilla",
-        "createNewTeam": "Crear Nuevo Equipo",
-        "noTeamsYet": "Aún no hay equipos",
-        "createFirstTeamDescription": "Crea tu primer equipo para comenzar a gestionar jugadores y participar en torneos.",
-        "createYourFirstTeam": "Crea Tu Primer Equipo",
-        "upcomingMatches": "Próximos Partidos",
-        "noUpcomingMatches": "No hay próximos partidos",
-        "matchesWillAppear": "Los partidos aparecerán aquí una vez que tus equipos estén registrados en torneos.",
-        "playerManagement": "Gestión de Jugadores",
-        "findPlayers": "Encontrar Jugadores",
-        "recentAdditions": "Adiciones Recientes",
-        "noPosition": "Sin posición",
-        "noRecentPlayerAdditions": "No hay adiciones recientes de jugadores",
-        "playerStats": "Estadísticas de Jugadores",
-        "totalPlayers": "Jugadores Totales",
-        "activePlayers": "Jugadores Activos",
-        "topScorer": "Máximo Goleador",
-        "mostActive": "Más Activo",
-        "tournamentRegistrations": "Registros de Torneos",
-        "browseTournaments": "Explorar Torneos",
-        "team": "Equipo",
-        "registered": "Registrado",
-        "noTournamentRegistrations": "No hay registros de torneos",
-        "registerTeamsDescription": "Registra tus equipos en torneos para competir con otros equipos.",
-        "browseAvailableTournaments": "Explorar Torneos Disponibles",
-        "pending": "Pendiente",
-        "approved": "Aprobado",
-        "rejected": "Rechazado",
-        "active": "Activo",
-        "inactive": "Inactivo",
-        "refereeOverview": "Resumen de Árbitro",
-        "availableForAssignments": "Disponible para asignaciones",
-        "completedThisMonth": "Completados Este Mes",
-        "myAssignedMatches": "Mis Partidos Asignados",
-        "upcoming": "Próximos",
-        "completed": "Completados",
-        "matchManagementTools": "Herramientas de Gestión de Partidos",
-        "recordEvents": "Registrar Eventos",
-        "logGoalsCards": "Registrar goles, tarjetas, sustituciones",
-        "matchTimer": "Cronómetro del Partido",
-        "trackMatchTime": "Rastrear tiempo del partido y descuento",
-        "matchReports": "Informes de Partidos",
-        "viewSubmitReports": "Ver y enviar informes",
-        "rulesReference": "Referencia de Reglas",
-        "quickAccessRules": "Acceso rápido a las reglas del juego",
-        "emergencyContact": "Contacto de Emergencia",
-        "tournamentHotline": "Línea directa de oficiales del torneo",
-        "mySchedule": "Mi Horario",
-        "viewFullSchedule": "Ver horario completo de árbitro",
-        "recentActivity": "Actividad Reciente",
-        "matchStatistics": "Estadísticas de Partidos",
-        "averageCardsPerMatch": "Promedio de Tarjetas por Partido",
-        "averageGoalsPerMatch": "Promedio de Goles por Partido",
-        "onTimeMatchStarts": "Inicios de Partido Puntuales",
-        "matchesThisSeason": "Partidos Esta Temporada",
-        "feedbackSummary": "Resumen de Comentarios",
-        "overallRating": "Calificación General",
-        "positiveFeedback": "Comentarios Positivos",
-        "consistencyScore": "Puntuación de Consistencia",
-        "punctualityScore": "Puntuación de Puntualidad",
-        "performanceTracking": "Seguimiento de Rendimiento",
-        "performanceTrackingDescription": "Las métricas de rendimiento se calcularán automáticamente mientras arbitres más partidos. Los comentarios y calificaciones se recopilarán de equipos y organizadores de torneos.",
-        "noUpcomingAssigned": "No hay próximos partidos asignados",
-        "noCompletedAssigned": "No hay partidos completados asignados",
-        "newAssignmentsWillAppear": "Las nuevas asignaciones de partidos aparecerán aquí cuando estén disponibles.",
-        "completedMatchesWillAppear": "Los partidos completados aparecerán aquí después de que los arbitres.",
-        "activityWillAppear": "La actividad aparecerá aquí mientras arbitres partidos e interactúes con el sistema.",
-        "startMatch": "Iniciar Partido",
-        "manage": "Gestionar"
-      },
-      "systemOverview": "Visión General del Sistema",
-      "recentTournaments": "Torneos Recientes",
-      "pendingActions": "Acciones Pendientes",
-      "systemHealth": "Salud del Sistema",
-      "myProfile": "Mi Perfil",
-      "myStatistics": "Mis Estadísticas",
-      "achievements": "Logros",
-      "recentMatches": "Partidos Recientes",
-      "quickActions": "Acciones Rápidas",
-      "performanceMetrics": "Métricas de Rendimiento",
-      "teamManagement": "Gestión de Equipos",
-      "playerManagement": "Gestión de Jugadores",
-      
-      "viewAll": "Ver Todo",
-      "viewDetails": "Ver Detalles",
-      "manage": "Gestionar",
-      "edit": "Editar",
-      "approve": "Aprobar",
-      "reject": "Rechazar",
-      "review": "Revisar",
-      "noPendingActions": "No hay acciones pendientes",
-      "noRecentActivity": "No hay actividad reciente",
+
+  "dashboard": {
+    "welcome": "¡Bienvenido de nuevo, {name}!",
+    "goodMorning": "Buenos días",
+    "goodAfternoon": "Buenas tardes", 
+    "goodEvening": "Buenas noches",
+    "lastLogin": "Último inicio de sesión",
+    "refresh": "Actualizar",
+    "dataRefreshed": "Datos actualizados correctamente",
+    "refreshError": "Error al actualizar datos",
+    
+    "adminWelcome": "Gestiona torneos y supervisa todo el sistema",
+    "managerWelcome": "Gestiona tus equipos e inscríbelos en torneos",
+    "playerWelcome": "Consulta tus estadísticas, equipos y próximos partidos",
+    "refereeWelcome": "Revisa tus partidos asignados y gestiona eventos de juego",
+    "defaultWelcome": "Bienvenido a Tournament Manager",
+    
+    "adminRole": "Administrador del Sistema",
+    "managerRole": "Gestor de Equipo",
+    "refereeRole": "Árbitro",
+    "playerRole": "Jugador",
+    "userRole": "Usuario",
+    
+    "stats": {
+      "totalTournaments": "Torneos Totales",
+      "registeredTeams": "Equipos Registrados",
+      "activeUsers": "Usuarios Activos",
+      "activeSessions": "Sesiones Activas",
+      "myTeams": "Mis Equipos",
+      "createTeam": "Crear Equipo",
+      "players": "jugadores",
+      "tournaments": "torneos",
+      "wins": "victorias",
+      "roster": "Plantilla",
+      "createNewTeam": "Crear Nuevo Equipo",
+      "noTeamsYet": "Aún no hay equipos",
+      "createFirstTeamDescription": "Crea tu primer equipo para comenzar a gestionar jugadores y participar en torneos.",
+      "createYourFirstTeam": "Crea Tu Primer Equipo",
+      "upcomingMatches": "Próximos Partidos",
       "noUpcomingMatches": "No hay próximos partidos",
-      "noRecentMatches": "No hay partidos recientes",
-      
-      "operational": "Operativo",
-      "online": "usuarios en línea",
-      "lastBackup": "Última copia de seguridad",
-      "databaseStatus": "Estado de la Base de Datos",
-      "apiStatus": "Estado de la API",
-      
-      "today": "Hoy",
-      "yesterday": "Ayer",
-      "thisWeek": "Esta semana",
-      "thisMonth": "Este mes",
-      "hoursAgo": "horas atrás",
-      "minutesAgo": "minutos atrás",
-      "justNow": "Justo ahora",
-      
-      "yellowCards": "Tarjetas Amarillas",
-      "redCards": "Tarjetas Rojas",
-      "performancePlaceholder": "El gráfico de rendimiento estará disponible una vez que se recopilen más datos",
-      "away": "Visitante",
-      "myTeam": "Mi Equipo",
-      "noAchievementsYet": "Aún no hay logros. ¡Sigue jugando para desbloquearlos!",
-      "final": "Final",
-      "achievementGoalScorer": "Goleador",
-      "achievementLeadershipRole": "Rol de Liderazgo",
-      "achievementExperiencedPlayer": "Jugador Experimentado",
-      "noTeamsYet": "Aún no eres parte de ningún equipo",
-      "totalGoals": "Goles Totales",
-      "yearsOld": "años"
-    }
-  
-  ,
+      "matchesWillAppear": "Los partidos aparecerán aquí una vez que tus equipos estén registrados en torneos.",
+      "playerManagement": "Gestión de Jugadores",
+      "findPlayers": "Encontrar Jugadores",
+      "recentAdditions": "Adiciones Recientes",
+      "noPosition": "Sin posición",
+      "noRecentPlayerAdditions": "No hay adiciones recientes de jugadores",
+      "playerStats": "Estadísticas de Jugadores",
+      "totalPlayers": "Jugadores Totales",
+      "activePlayers": "Jugadores Activos",
+      "topScorer": "Máximo Goleador",
+      "mostActive": "Más Activo",
+      "tournamentRegistrations": "Registros de Torneos",
+      "browseTournaments": "Explorar Torneos",
+      "team": "Equipo",
+      "registered": "Registrado",
+      "noTournamentRegistrations": "No hay registros de torneos",
+      "registerTeamsDescription": "Registra tus equipos en torneos para competir con otros equipos.",
+      "browseAvailableTournaments": "Explorar Torneos Disponibles",
+      "pending": "Pendiente",
+      "approved": "Aprobado",
+      "rejected": "Rechazado",
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "refereeOverview": "Resumen de Árbitro",
+      "availableForAssignments": "Disponible para asignaciones",
+      "completedThisMonth": "Completados Este Mes",
+      "myAssignedMatches": "Mis Partidos Asignados",
+      "upcoming": "Próximos",
+      "completed": "Completados",
+      "matchManagementTools": "Herramientas de Gestión de Partidos",
+      "recordEvents": "Registrar Eventos",
+      "logGoalsCards": "Registrar goles, tarjetas, sustituciones",
+      "matchTimer": "Cronómetro del Partido",
+      "trackMatchTime": "Rastrear tiempo del partido y descuento",
+      "matchReports": "Informes de Partidos",
+      "viewSubmitReports": "Ver y enviar informes",
+      "rulesReference": "Referencia de Reglas",
+      "quickAccessRules": "Acceso rápido a las reglas del juego",
+      "emergencyContact": "Contacto de Emergencia",
+      "tournamentHotline": "Línea directa de oficiales del torneo",
+      "mySchedule": "Mi Horario",
+      "viewFullSchedule": "Ver horario completo de árbitro",
+      "recentActivity": "Actividad Reciente",
+      "matchStatistics": "Estadísticas de Partidos",
+      "averageCardsPerMatch": "Promedio de Tarjetas por Partido",
+      "averageGoalsPerMatch": "Promedio de Goles por Partido",
+      "onTimeMatchStarts": "Inicios de Partido Puntuales",
+      "matchesThisSeason": "Partidos Esta Temporada",
+      "feedbackSummary": "Resumen de Comentarios",
+      "overallRating": "Calificación General",
+      "positiveFeedback": "Comentarios Positivos",
+      "consistencyScore": "Puntuación de Consistencia",
+      "punctualityScore": "Puntuación de Puntualidad",
+      "performanceTracking": "Seguimiento de Rendimiento",
+      "performanceTrackingDescription": "Las métricas de rendimiento se calcularán automáticamente mientras arbitres más partidos. Los comentarios y calificaciones se recopilarán de equipos y organizadores de torneos.",
+      "noUpcomingAssigned": "No hay próximos partidos asignados",
+      "noCompletedAssigned": "No hay partidos completados asignados",
+      "newAssignmentsWillAppear": "Las nuevas asignaciones de partidos aparecerán aquí cuando estén disponibles.",
+      "completedMatchesWillAppear": "Los partidos completados aparecerán aquí después de que los arbitres.",
+      "activityWillAppear": "La actividad aparecerá aquí mientras arbitres partidos e interactúes con el sistema.",
+      "startMatch": "Iniciar Partido",
+      "manage": "Gestionar"
+    },
+
+    "systemOverview": "Visión General del Sistema",
+    "recentTournaments": "Torneos Recientes",
+    "pendingActions": "Acciones Pendientes",
+    "systemHealth": "Salud del Sistema",
+    "myProfile": "Mi Perfil",
+    "myStatistics": "Mis Estadísticas",
+    "achievements": "Logros",
+    "recentMatches": "Partidos Recientes",
+    "quickActions": "Acciones Rápidas",
+    "performanceMetrics": "Métricas de Rendimiento",
+    "teamManagement": "Gestión de Equipos",
+    "playerManagement": "Gestión de Jugadores",
+    
+    "viewAll": "Ver Todo",
+    "viewDetails": "Ver Detalles",
+    "manage": "Gestionar",
+    "edit": "Editar",
+    "approve": "Aprobar",
+    "reject": "Rechazar",
+    "review": "Revisar",
+    "noPendingActions": "No hay acciones pendientes",
+    "noRecentActivity": "No hay actividad reciente",
+    "noUpcomingMatches": "No hay próximos partidos",
+    "noRecentMatches": "No hay partidos recientes",
+    
+    "operational": "Operativo",
+    "online": "usuarios en línea",
+    "lastBackup": "Última copia de seguridad",
+    "databaseStatus": "Estado de la Base de Datos",
+    "apiStatus": "Estado de la API",
+    
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "thisWeek": "Esta semana",
+    "thisMonth": "Este mes",
+    "hoursAgo": "horas atrás",
+    "minutesAgo": "minutos atrás",
+    "justNow": "Justo ahora",
+    
+    "yellowCards": "Tarjetas Amarillas",
+    "redCards": "Tarjetas Rojas",
+    "performancePlaceholder": "El gráfico de rendimiento estará disponible una vez que se recopilen más datos",
+    "away": "Visitante",
+    "myTeam": "Mi Equipo",
+    "noAchievementsYet": "Aún no hay logros. ¡Sigue jugando para desbloquearlos!",
+    "final": "Final",
+    "achievementGoalScorer": "Goleador",
+    "achievementLeadershipRole": "Rol de Liderazgo",
+    "achievementExperiencedPlayer": "Jugador Experimentado",
+    "noTeamsYet": "Aún no eres parte de ningún equipo",
+    "totalGoals": "Goles Totales",
+    "yearsOld": "años"
+  },
+
   "tournaments": {
     "title": "Torneos",
     "subtitle": "Descubre y únete a torneos deportivos",
@@ -525,11 +526,11 @@
     "status": {
       "draft": "Borrador",
       "registrationOpen": "Inscripciones Abiertas",
+      "registration_open": "Inscripciones Abiertas",
       "inProgress": "En Progreso",
-      "completed": "Completado",
-      "cancelled": "Cancelado",
       "in_progress": "En Progreso",
-      "registration_open": "Inscripciones Abierta"
+      "completed": "Completado",
+      "cancelled": "Cancelado"
     },
     "registration": {
       "registerTeam": "Registrar Equipo",
@@ -594,6 +595,7 @@
     "registerTeam": "Registrar Equipo",
     "viewAll": "Ver Todos los Torneos"
   },
+
   "notifications": {
     "success": "¡Éxito!",
     "error": "¡Error!",
@@ -611,10 +613,11 @@
     "networkError": "Error de red",
     "languageChanged": "Idioma cambiado exitosamente"
   },
+
   "teams": {
     "title": "Equipos",
     "subtitle": "Explora y gestiona equipos deportivos",
-    "createTeam": "Crear Equipo",
+    "create": "Crear Equipo",
     "create": {
       "title": "Crear Equipo",
       "subtitle": "Crea un nuevo equipo y comienza a construir tu plantilla",
@@ -894,9 +897,22 @@
       }
     }
   },
+
+  "players": {
+    "title": "Jugadores",
+    "subtitle": "Explora perfiles y estadísticas de jugadores",
+    "about": "Acerca de",
+    "currentTeams": "Equipos Actuales",
+    "matchesPlayed": "Partidos Jugados",
+    "goalsScored": "Goles Anotados",
+    "yellowCards": "Tarjetas Amarillas",
+    "redCards": "Tarjetas Rojas"
+  },
+
   "errors": {
     "teamNotFound": "Equipo no encontrado"
   },
+
   "notFound": {
     "title": "Página No Encontrada",
     "message": "La página que buscas no existe o ha sido movida.",
@@ -904,6 +920,7 @@
     "goHome": "Ir al Inicio",
     "helpfulLinks": "Podrías estar buscando:"
   },
+
   "profile": {
     "title": "Perfil",
     "subtitle": "Gestiona la configuración de tu cuenta",
@@ -921,6 +938,7 @@
       "reset": "Restablecer"
     }
   },
+
   "footer": {
     "description": "Sistema completo de gestión de torneos deportivos. Gestiona torneos, equipos, jugadores y partidos con facilidad.",
     "quickLinks": "Enlaces Rápidos",
@@ -931,6 +949,7 @@
     "privacyPolicy": "Política de Privacidad",
     "allRightsReserved": "Todos los derechos reservados"
   },
+
   "admin": {
     "panel": {
       "title": "Panel de Administración",
@@ -943,6 +962,7 @@
       "underDevelopment": "Esta característica está en desarrollo"
     }
   },
+
   "matches": {
     "title": "Partidos",
     "create": "Crear Partido",
