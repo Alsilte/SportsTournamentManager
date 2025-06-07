@@ -3,10 +3,10 @@
     <!-- Referee Overview -->
     <div class="card p-6">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">Referee Overview</h2>
+        <h2 class="text-xl font-semibold text-gray-900">{{ $t('dashboard.refereeOverview') }}</h2>
         <div class="flex items-center space-x-2">
           <div class="w-3 h-3 bg-success-500 rounded-full"></div>
-          <span class="text-sm text-gray-600">Available for assignments</span>
+          <span class="text-sm text-gray-600">{{ $t('dashboard.availableForAssignments') }}</span>
         </div>
       </div>
 
@@ -14,22 +14,22 @@
         <div class="text-center p-4 bg-primary-50 rounded-lg">
           <PlayIcon class="w-8 h-8 text-primary-600 mx-auto mb-2" />
           <div class="text-2xl font-bold text-primary-600">{{ refereeStats.totalMatches }}</div>
-          <div class="text-sm text-gray-600">Matches Officiated</div>
+          <div class="text-sm text-gray-600">{{ $t('dashboard.matchesOfficiated') }}</div>
         </div>
         <div class="text-center p-4 bg-warning-50 rounded-lg">
           <ClockIcon class="w-8 h-8 text-warning-600 mx-auto mb-2" />
           <div class="text-2xl font-bold text-warning-600">{{ refereeStats.upcomingMatches }}</div>
-          <div class="text-sm text-gray-600">Upcoming Matches</div>
+          <div class="text-sm text-gray-600">{{ $t('dashboard.upcomingMatches') }}</div>
         </div>
         <div class="text-center p-4 bg-success-50 rounded-lg">
           <CheckCircleIcon class="w-8 h-8 text-success-600 mx-auto mb-2" />
           <div class="text-2xl font-bold text-success-600">{{ refereeStats.completedMatches }}</div>
-          <div class="text-sm text-gray-600">Completed This Month</div>
+          <div class="text-sm text-gray-600">{{ $t('dashboard.completedThisMonth') }}</div>
         </div>
         <div class="text-center p-4 bg-secondary-50 rounded-lg">
           <StarIcon class="w-8 h-8 text-secondary-600 mx-auto mb-2" />
           <div class="text-2xl font-bold text-secondary-600">{{ refereeStats.averageRating }}</div>
-          <div class="text-sm text-gray-600">Average Rating</div>
+          <div class="text-sm text-gray-600">{{ $t('dashboard.averageRating') }}</div>
         </div>
       </div>
     </div>
@@ -37,7 +37,7 @@
     <!-- My Assigned Matches -->
     <div class="card p-6">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">My Assigned Matches</h2>
+        <h2 class="text-xl font-semibold text-gray-900">{{ $t('dashboard.myAssignedMatches') }}</h2>
         <div class="flex space-x-2">
           <button
             @click="filterMatches('upcoming')"
@@ -48,7 +48,7 @@
                 : 'text-gray-600 hover:bg-gray-100',
             ]"
           >
-            Upcoming
+            {{ $t('dashboard.upcoming') }}
           </button>
           <button
             @click="filterMatches('completed')"
@@ -59,7 +59,7 @@
                 : 'text-gray-600 hover:bg-gray-100',
             ]"
           >
-            Completed
+            {{ $t('dashboard.completed') }}
           </button>
         </div>
       </div>
@@ -81,7 +81,7 @@
               <div class="flex items-center space-x-4">
                 <div class="text-right">
                   <div class="font-medium text-gray-900">{{ match.home_team?.name }}</div>
-                  <div class="text-xs text-gray-500">Home</div>
+                  <div class="text-xs text-gray-500">{{ $t('common.home') }}</div>
                 </div>
                 <div class="text-center">
                   <div v-if="match.status === 'completed'" class="text-xl font-bold text-gray-900">
@@ -91,7 +91,7 @@
                 </div>
                 <div class="text-left">
                   <div class="font-medium text-gray-900">{{ match.away_team?.name }}</div>
-                  <div class="text-xs text-gray-500">Away</div>
+                  <div class="text-xs text-gray-500">{{ $t('common.away') }}</div>
                 </div>
               </div>
             </div>
@@ -100,14 +100,14 @@
               <div class="text-xs text-gray-500 mb-2">{{ match.tournament?.name }}</div>
               <div class="flex space-x-2">
                 <RouterLink :to="`/matches/${match.id}`" class="btn-secondary text-xs px-3 py-1">
-                  View Details
+                  {{ $t('dashboard.viewDetails') }}
                 </RouterLink>
                 <button
                   v-if="match.status === 'in_progress' || match.status === 'scheduled'"
                   @click="manageMatch(match)"
                   class="btn-primary text-xs px-3 py-1"
                 >
-                  {{ match.status === 'in_progress' ? 'Manage' : 'Start Match' }}
+                  {{ match.status === 'in_progress' ? $t('dashboard.manage') : $t('dashboard.startMatch') }}
                 </button>
               </div>
             </div>
@@ -117,12 +117,12 @@
 
       <div v-else class="text-center py-8 text-gray-500">
         <CalendarIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-        <p>No {{ matchFilter }} matches assigned</p>
+        <p>{{ matchFilter === 'upcoming' ? $t('dashboard.noUpcomingAssigned') : $t('dashboard.noCompletedAssigned') }}</p>
         <p class="text-sm mt-2">
           {{
             matchFilter === 'upcoming'
-              ? 'New match assignments will appear here when available.'
-              : 'Completed matches will appear here after you officiate them.'
+              ? $t('dashboard.newAssignmentsWillAppear')
+              : $t('dashboard.completedMatchesWillAppear')
           }}
         </p>
       </div>
@@ -130,7 +130,7 @@
 
     <!-- Match Management Tools -->
     <div class="card p-6">
-      <h2 class="text-xl font-semibold text-gray-900 mb-6">Match Management Tools</h2>
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('dashboard.matchManagementTools') }}</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <button
@@ -141,8 +141,8 @@
             <DocumentPlusIcon class="w-6 h-6 text-primary-600" />
           </div>
           <div class="text-left">
-            <div class="font-medium text-gray-900">Record Events</div>
-            <div class="text-sm text-gray-600">Log goals, cards, substitutions</div>
+            <div class="font-medium text-gray-900">{{ $t('dashboard.recordEvents') }}</div>
+            <div class="text-sm text-gray-600">{{ $t('dashboard.logGoalsCards') }}</div>
           </div>
         </button>
 
@@ -154,8 +154,8 @@
             <ClockIcon class="w-6 h-6 text-success-600" />
           </div>
           <div class="text-left">
-            <div class="font-medium text-gray-900">Match Timer</div>
-            <div class="text-sm text-gray-600">Track match time and stoppage</div>
+            <div class="font-medium text-gray-900">{{ $t('dashboard.matchTimer') }}</div>
+            <div class="text-sm text-gray-600">{{ $t('dashboard.trackMatchTime') }}</div>
           </div>
         </button>
 
@@ -167,8 +167,8 @@
             <DocumentTextIcon class="w-6 h-6 text-warning-600" />
           </div>
           <div class="text-left">
-            <div class="font-medium text-gray-900">Match Reports</div>
-            <div class="text-sm text-gray-600">View and submit reports</div>
+            <div class="font-medium text-gray-900">{{ $t('dashboard.matchReports') }}</div>
+            <div class="text-sm text-gray-600">{{ $t('dashboard.viewSubmitReports') }}</div>
           </div>
         </button>
 
@@ -180,8 +180,8 @@
             <BookOpenIcon class="w-6 h-6 text-secondary-600" />
           </div>
           <div class="text-left">
-            <div class="font-medium text-gray-900">Rules Reference</div>
-            <div class="text-sm text-gray-600">Quick access to game rules</div>
+            <div class="font-medium text-gray-900">{{ $t('dashboard.rulesReference') }}</div>
+            <div class="text-sm text-gray-600">{{ $t('dashboard.quickAccessRules') }}</div>
           </div>
         </button>
 
@@ -193,8 +193,8 @@
             <PhoneIcon class="w-6 h-6 text-danger-600" />
           </div>
           <div class="text-left">
-            <div class="font-medium text-gray-900">Emergency Contact</div>
-            <div class="text-sm text-gray-600">Tournament officials hotline</div>
+            <div class="font-medium text-gray-900">{{ $t('dashboard.emergencyContact') }}</div>
+            <div class="text-sm text-gray-600">{{ $t('dashboard.tournamentHotline') }}</div>
           </div>
         </button>
 
@@ -206,8 +206,8 @@
             <CalendarDaysIcon class="w-6 h-6 text-primary-600" />
           </div>
           <div class="text-left">
-            <div class="font-medium text-gray-900">My Schedule</div>
-            <div class="text-sm text-gray-600">View full referee schedule</div>
+            <div class="font-medium text-gray-900">{{ $t('dashboard.mySchedule') }}</div>
+            <div class="text-sm text-gray-600">{{ $t('dashboard.viewFullSchedule') }}</div>
           </div>
         </button>
       </div>
@@ -215,7 +215,7 @@
 
     <!-- Recent Activity -->
     <div class="card p-6">
-      <h2 class="text-xl font-semibold text-gray-900 mb-6">Recent Activity</h2>
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('dashboard.recentActivity') }}</h2>
 
       <div v-if="recentActivity.length > 0" class="space-y-4">
         <div
@@ -249,41 +249,41 @@
 
       <div v-else class="text-center py-8 text-gray-500">
         <ClockIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-        <p>No recent activity</p>
+        <p>{{ $t('dashboard.noRecentActivity') }}</p>
         <p class="text-sm mt-2">
-          Activity will appear here as you officiate matches and interact with the system.
+          {{ $t('dashboard.activityWillAppear') }}
         </p>
       </div>
     </div>
 
     <!-- Performance Metrics -->
     <div class="card p-6">
-      <h2 class="text-xl font-semibold text-gray-900 mb-6">Performance Metrics</h2>
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('dashboard.performanceMetrics') }}</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <h3 class="text-sm font-medium text-gray-700 mb-3">Match Statistics</h3>
+          <h3 class="text-sm font-medium text-gray-700 mb-3">{{ $t('dashboard.matchStatistics') }}</h3>
           <div class="space-y-3">
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">Average Cards per Match</span>
+              <span class="text-sm text-gray-600">{{ $t('dashboard.averageCardsPerMatch') }}</span>
               <span class="text-sm font-medium text-gray-900">{{
                 performanceMetrics.avgCards
               }}</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">Average Goals per Match</span>
+              <span class="text-sm text-gray-600">{{ $t('dashboard.averageGoalsPerMatch') }}</span>
               <span class="text-sm font-medium text-gray-900">{{
                 performanceMetrics.avgGoals
               }}</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">On-time Match Starts</span>
+              <span class="text-sm text-gray-600">{{ $t('dashboard.onTimeMatchStarts') }}</span>
               <span class="text-sm font-medium text-gray-900"
                 >{{ performanceMetrics.onTimeRate }}%</span
               >
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">Matches This Season</span>
+              <span class="text-sm text-gray-600">{{ $t('dashboard.matchesThisSeason') }}</span>
               <span class="text-sm font-medium text-gray-900">{{
                 performanceMetrics.seasonMatches
               }}</span>
@@ -292,10 +292,10 @@
         </div>
 
         <div>
-          <h3 class="text-sm font-medium text-gray-700 mb-3">Feedback Summary</h3>
+          <h3 class="text-sm font-medium text-gray-700 mb-3">{{ $t('dashboard.feedbackSummary') }}</h3>
           <div class="space-y-3">
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">Overall Rating</span>
+              <span class="text-sm text-gray-600">{{ $t('dashboard.overallRating') }}</span>
               <div class="flex items-center">
                 <span class="text-sm font-medium text-gray-900 mr-1">{{
                   performanceMetrics.rating
@@ -315,19 +315,19 @@
               </div>
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">Positive Feedback</span>
+              <span class="text-sm text-gray-600">{{ $t('dashboard.positiveFeedback') }}</span>
               <span class="text-sm font-medium text-gray-900"
                 >{{ performanceMetrics.positiveFeedback }}%</span
               >
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">Consistency Score</span>
+              <span class="text-sm text-gray-600">{{ $t('dashboard.consistencyScore') }}</span>
               <span class="text-sm font-medium text-gray-900"
                 >{{ performanceMetrics.consistency }}%</span
               >
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">Punctuality Score</span>
+              <span class="text-sm text-gray-600">{{ $t('dashboard.punctualityScore') }}</span>
               <span class="text-sm font-medium text-gray-900"
                 >{{ performanceMetrics.punctuality }}%</span
               >
@@ -343,10 +343,9 @@
             <StarIcon class="w-5 h-5 text-blue-600" />
           </div>
           <div class="ml-3">
-            <h4 class="text-sm font-medium text-blue-800">Performance Tracking</h4>
+            <h4 class="text-sm font-medium text-blue-800">{{ $t('dashboard.performanceTracking') }}</h4>
             <p class="mt-1 text-sm text-blue-700">
-              Performance metrics will be calculated automatically as you officiate more matches.
-              Feedback and ratings will be collected from teams and tournament organizers.
+              {{ $t('dashboard.performanceTrackingDescription') }}
             </p>
           </div>
         </div>

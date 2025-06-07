@@ -18,14 +18,14 @@
           <h3 class="text-xl font-semibold text-gray-900">{{ playerProfile.name }}</h3>
           <p class="text-gray-600">{{ playerProfile.position || $t('common.unknown') }}</p>
           <div class="flex items-center space-x-4 mt-2 text-sm text-gray-500">
-            <span v-if="playerProfile.age">{{ playerProfile.age }} years old</span>
+            <span v-if="playerProfile.age">{{ playerProfile.age }} {{ $t('dashboard.yearsOld') }}</span>
             <span v-if="playerProfile.nationality">{{ playerProfile.nationality }}</span>
             <span v-if="playerProfile.height">{{ playerProfile.height }}cm</span>
           </div>
         </div>
         <div class="text-right">
           <div class="text-2xl font-bold text-primary-600">{{ playerStats.totalGoals }}</div>
-          <div class="text-sm text-gray-500">Total Goals</div>
+          <div class="text-sm text-gray-500">{{ $t('dashboard.totalGoals') }}</div>
         </div>
       </div>
     </div>
@@ -49,7 +49,7 @@
               v-if="team.pivot?.is_captain"
               class="bg-warning-100 text-warning-800 px-2 py-1 text-xs font-medium rounded-full"
             >
-              Captain
+              {{ $t('teams.roster.captain') }}
             </span>
           </div>
 
@@ -60,7 +60,7 @@
             </div>
             <div class="flex justify-between">
               <span>{{ $t('teams.roster.jerseyNumber') }}:</span>
-              <span class="font-medium">{{ team.pivot?.jersey_number || 'N/A' }}</span>
+              <span class="font-medium">{{ team.pivot?.jersey_number || $t('common.na') }}</span>
             </div>
             <div class="flex justify-between">
               <span>{{ $t('teams.roster.joinedDate') }}:</span>
@@ -487,26 +487,6 @@ export default {
         Draw: 'bg-secondary-100 text-secondary-800',
       }
       return classMap[result] || ''
-    }
-
-    /**
-     * Format match date
-     */
-    const formatMatchDate = (dateString) => {
-      return new Date(dateString).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-      })
-    }
-
-    /**
-     * Format match time
-     */
-    const formatMatchTime = (dateString) => {
-      return new Date(dateString).toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-      })
     }
 
     /**
