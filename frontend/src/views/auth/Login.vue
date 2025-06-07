@@ -150,43 +150,16 @@
           </div>
         </div>
       </div>
-  
-      <!-- Demo Accounts -->
+
+      <!-- Home Button -->
       <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div class="card p-6">
-          <h3 class="text-sm font-medium text-gray-900 mb-4">Cuentas de demostración</h3>
-          <div class="space-y-3 text-sm">
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Administrador:</span>
-              <button 
-                @click="fillDemoCredentials('admin')"
-                class="text-primary-600 hover:text-primary-700 font-medium"
-                :disabled="isLoading"
-              >
-                admin@example.com
-              </button>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Gestor de Equipo:</span>
-              <button 
-                @click="fillDemoCredentials('manager')"
-                class="text-primary-600 hover:text-primary-700 font-medium"
-                :disabled="isLoading"
-              >
-                manager@example.com
-              </button>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Jugador:</span>
-              <button 
-                @click="fillDemoCredentials('player')"
-                class="text-primary-600 hover:text-primary-700 font-medium"
-                :disabled="isLoading"
-              >
-                player@example.com
-              </button>
-            </div>
-          </div>
+        <div class="text-center">
+          <RouterLink 
+            to="/" 
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-primary-600 bg-primary-50 hover:bg-primary-100 transition-colors"
+          >
+            Ir al Inicio
+          </RouterLink>
         </div>
       </div>
     </div>
@@ -285,22 +258,6 @@
       }
   
       /**
-       * Fill form with demo credentials
-       */
-      const fillDemoCredentials = (type) => {
-        const credentials = {
-          admin: { email: 'admin@example.com', password: 'password123' },
-          manager: { email: 'manager@example.com', password: 'password123' },
-          player: { email: 'player@example.com', password: 'password123' }
-        }
-  
-        if (credentials[type]) {
-          form.value.email = credentials[type].email
-          form.value.password = credentials[type].password
-        }
-      }
-  
-      /**
        * Clear errors when user starts typing
        */
       const clearErrors = () => {
@@ -322,7 +279,6 @@
         generalError,
         isFormValid,
         handleLogin,
-        fillDemoCredentials,
         clearErrors
       }
     }
