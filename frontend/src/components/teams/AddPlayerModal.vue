@@ -73,7 +73,7 @@
             <option value="goalkeeper">Portero</option>
             <option value="defender">Defensor</option>
             <option value="midfielder">Centrocampista</option>
-            <option value="forward">Delantero</option>
+            <option value="delantero">Delantero</option>
           </select>
         </div>
 
@@ -183,10 +183,10 @@ export default {
   data() {
     return {
       loading: false,
-      loadingPlayers: false, // ✅ Variable separada para carga de jugadores
+      loadingPlayers: false,
       error: '',
       availablePlayers: [],
-      debugMode: false, // ✅ Modo debug para diagnosticar
+      debugMode: false,
       form: {
         player_id: '',
         jersey_number: '',
@@ -224,86 +224,40 @@ export default {
         goalkeeper: 'Portero',
         defender: 'Defensor',
         midfielder: 'Centrocampista',
-        forward: 'Delantero'
+        delantero: 'Delantero'
       }
       return positions[position] || position
     },
 
-    // ✅ Helper para obtener nombre del jugador
     getPlayerName(player) {
       return player.user?.name || player.name || `Jugador #${player.id}`
     },
 
     async fetchAvailablePlayers() {
-      this.loadingPlayers = true // ✅ Variable correcta
+      this.loadingPlayers = true
       this.error = ''
       
       try {
         console.log('🔍 Fetching available players for team:', this.teamId)
         
-        // ✅ MÚLTIPLES ESTRATEGIAS DE FALLBACK
-        let response
-        let players = []
+        const response = await teamAPI.getAvailablePlayers(this.teamId)
+        console.log('📡 API response:', response)
         
-        // Estrategia 1: API de equipo específico
-        try {
-          response = await teamAPI.getAvailablePlayers(this.teamId)
-          console.log('📡 Team API response:', response)
+        if (apiHelpers.isSuccess(response)) {
+          this.availablePlayers = apiHelpers.getData(response) || []
+          console.log('✅ Available players loaded:', this.availablePlayers)
           
-          if (apiHelpers.isSuccess(response)) {
-            players = apiHelpers.getData(response) || []
-          } else {
-            throw new Error('Team API failed')
+          if (this.availablePlayers.length === 0) {
+            this.error = 'No hay jugadores disponibles para agregar al equipo'
           }
-        } catch (teamAPIError) {
-          console.warn('⚠️ Team API failed, trying alternative:', teamAPIError)
-          
-          // Estrategia 2: API general de jugadores disponibles
-          try {
-            response = await fetch('/api/players/available')
-            const data = await response.json()
-            
-            if (data.success) {
-              players = data.data?.available_players || data.data || []
-            } else {
-              throw new Error('Players API failed')
-            }
-          } catch (playersAPIError) {
-            console.warn('⚠️ Players API also failed:', playersAPIError)
-            
-            // Estrategia 3: Datos de prueba para debugging
-            players = [
-              {
-                id: 1,
-                user: { name: 'Juan Pérez' },
-                position: 'forward'
-              },
-              {
-                id: 2,
-                user: { name: 'Carlos López' },
-                position: 'midfielder'
-              }
-            ]
-            console.log('🧪 Using test data for debugging')
-          }
-        }
-        
-        this.availablePlayers = players
-        console.log('✅ Available players loaded:', this.availablePlayers)
-        
-        if (players.length === 0) {
-          this.error = 'No hay jugadores disponibles para agregar al equipo'
+        } else {
+          this.error = apiHelpers.getMessage(response) || 'Error al cargar jugadores'
         }
         
       } catch (err) {
         console.error('❌ Error loading players:', err)
-        this.error = err.message || 'Error al cargar jugadores'
+        this.error = apiHelpers.handleError(err) || 'Error al cargar jugadores'
         this.availablePlayers = []
-        
-        // Mostrar notificación de error
-        if (this.$notify) {
-          this.$notify.error('Error al cargar jugadores disponibles')
-        }
       } finally {
         this.loadingPlayers = false
       }
@@ -316,7 +270,6 @@ export default {
       try {
         console.log('📤 Submitting player data:', this.form)
         
-        // ✅ USAR LA API REAL - teamAPI.addPlayer
         const response = await teamAPI.addPlayer(this.teamId, this.form)
         console.log('📥 Add player response:', response)
         
@@ -324,12 +277,11 @@ export default {
           this.$emit('success')
           this.$emit('close')
           
-          // Mostrar notificación
           if (this.$notify) {
             this.$notify.success('Jugador agregado exitosamente')
           }
         } else {
-          this.error = response.data?.message || 'Error al agregar jugador'
+          this.error = apiHelpers.getMessage(response) || 'Error al agregar jugador'
         }
       } catch (err) {
         console.error('❌ Error adding player:', err)
