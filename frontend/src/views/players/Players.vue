@@ -551,7 +551,6 @@ export default {
       clearFilter,
       clearAllFilters,
       goToPage,
-      handlePlayerClick,
       getPositionTranslation,
     }
   },
