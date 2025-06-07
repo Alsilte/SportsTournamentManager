@@ -38,25 +38,16 @@
               </p>
             </div>
 
-            <!-- Admin Notice -->
+            <!-- Simplified notices -->
             <div v-if="isAdmin" class="bg-blue-50 border border-blue-200 rounded p-3">
               <p class="text-sm text-blue-700">
-                ✓ Como administrador puedes registrar cualquier equipo sin restricciones
+                ✓ Puedes registrar cualquier equipo
               </p>
             </div>
 
-            <!-- Manager Notice -->
-            <div v-else-if="canManageTeams" class="bg-yellow-50 border border-yellow-200 rounded p-3">
+            <div v-else class="bg-yellow-50 border border-yellow-200 rounded p-3">
               <p class="text-sm text-yellow-700">
-                • Solo puedes registrar equipos que gestiones<br>
-                • El equipo debe tener al menos 1 jugador activo
-              </p>
-            </div>
-
-            <!-- No permissions notice -->
-            <div v-else class="bg-red-50 border border-red-200 rounded p-3">
-              <p class="text-sm text-red-700">
-                No tienes permisos para registrar equipos
+                • Registra equipos que gestiones
               </p>
             </div>
 
@@ -77,7 +68,7 @@
               </button>
               <button
                 type="submit"
-                :disabled="!selectedTeamId || isLoading || availableTeams.length === 0 || (!isAdmin && !canManageTeams)"
+                :disabled="!selectedTeamId || isLoading || availableTeams.length === 0"
                 class="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
               >
                 {{ isLoading ? 'Registrando...' : 'Registrar' }}
@@ -195,29 +186,12 @@
           return
         }
 
-        // Validación adicional para managers
-        if (!isAdmin.value) {
-          const team = selectedTeam.value
-          if (!team) {
-            error.value = 'Equipo no válido'
-            return
-          }
-          
-          // Verificar que es el manager del equipo
-          if (team.manager_id !== authStore.user?.id) {
-            error.value = 'Solo puedes registrar equipos que gestiones'
-            return
-          }
-        }
-
         isLoading.value = true
 
         try {
           console.log('🚀 Registrando equipo:', {
             tournamentId: props.tournament.id,
-            teamId: selectedTeamId.value,
-            userRole: authStore.user?.role,
-            isAdmin: isAdmin.value
+            teamId: selectedTeamId.value
           })
           
           const response = await tournamentAPI.registerTeam(props.tournament.id, {
@@ -229,33 +203,11 @@
           if (apiHelpers.isSuccess(response)) {
             emit('success')
           } else {
-            console.error('❌ Registro fallido:', response)
-            error.value = response.data?.message || 'Error en el registro'
+            error.value = 'Error en el registro'
           }
         } catch (err) {
           console.error('💥 Error en registro:', err)
-          
-          // Manejo específico de errores del servidor
-          if (err.response?.data?.message) {
-            error.value = err.response.data.message
-          } else if (err.response?.status === 422) {
-            // Error de validación
-            const validationErrors = err.response?.data?.errors
-            if (validationErrors) {
-              const errorMessages = Object.values(validationErrors).flat()
-              error.value = errorMessages.join(', ')
-            } else {
-              error.value = 'Datos de registro inválidos'
-            }
-          } else if (err.response?.status === 403) {
-            error.value = 'No tienes permisos para registrar este equipo'
-          } else if (err.response?.status === 404) {
-            error.value = 'Torneo o equipo no encontrado'
-          } else if (err.response?.status === 500) {
-            error.value = 'Error interno del servidor. Revisa los logs del servidor.'
-          } else {
-            error.value = 'Error al registrar equipo. Intenta nuevamente.'
-          }
+          error.value = err.response?.data?.message || 'Error al registrar equipo'
         } finally {
           isLoading.value = false
         }
@@ -263,19 +215,7 @@
 
       // Verificar permisos al montar el componente
       onMounted(() => {
-        console.log('🔧 Modal montado:', {
-          user: authStore.user,
-          isAdmin: isAdmin.value,
-          canManageTeams: canManageTeams.value,
-          tournament: props.tournament
-        })
-        
-        // Verificar que el usuario puede registrar equipos
-        if (!isAdmin.value && !canManageTeams.value) {
-          error.value = 'No tienes permisos para registrar equipos'
-          return
-        }
-        
+        console.log('🔧 Modal montado')
         fetchAvailableTeams()
       })
 

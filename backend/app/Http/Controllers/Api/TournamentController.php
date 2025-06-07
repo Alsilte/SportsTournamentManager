@@ -313,13 +313,11 @@ $validatedData['status'] = $request->input('status', 'draft');
      * Register team for tournament
      */
    /**
- * Register a team for a tournament
+ * Register a team for a tournament (SIMPLIFIED)
  */
 public function registerTeam(Request $request, Tournament $tournament): JsonResponse
 {
     try {
-        $user = $request->user();
-        
         $validator = Validator::make($request->all(), [
             'team_id' => 'required|exists:teams,id'
         ]);
@@ -327,34 +325,12 @@ public function registerTeam(Request $request, Tournament $tournament): JsonResp
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Validation errors',
+                'message' => 'Team ID is required and must exist',
                 'errors' => $validator->errors(),
             ], 422);
         }
 
-        $team = Team::findOrFail($request->team_id);
-
-        // VERIFICACIONES DE PERMISOS:
-        // 1. El admin (puede registrar cualquier equipo)
-        // 2. El manager del equipo (solo puede registrar SUS equipos)
-        if (!$user->isAdmin() && $team->manager_id !== $user->id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized. You can only register teams you manage, or be an admin.'
-            ], 403);
-        }
-
-        // Check if registration is open
-        // NOTA: Los admins pueden saltarse esta restricción si es necesario
-        // REMOVIDO: Validación de registro abierto
-        // if (!$user->isAdmin() && !$tournament->isRegistrationOpen()) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'Tournament registration is not open'
-        //     ], 422);
-        // }
-
-        // Check if team is already registered
+        // Solo verificar si el equipo ya está registrado
         if ($tournament->teams()->where('team_id', $request->team_id)->exists()) {
             return response()->json([
                 'success' => false,
@@ -362,51 +338,18 @@ public function registerTeam(Request $request, Tournament $tournament): JsonResp
             ], 422);
         }
 
-        // Check if tournament is full
-        // NOTA: Los admins pueden saltarse esta restricción si es necesario
-        if (!$user->isAdmin()) {
-            $currentTeamsCount = $tournament->teams()->count();
-            if ($currentTeamsCount >= $tournament->max_teams) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Tournament is full'
-                ], 422);
-            }
-        }
-
-        // *** VALIDACIÓN CONDICIONAL DE JUGADORES ***
-        // Solo aplicar restricciones mínimas a managers, admins sin restricciones
-        if (!$user->isAdmin()) {
-            $activePlayersCount = $team->players()->wherePivot('is_active', true)->count();
-            
-            // Solo una restricción muy básica para managers
-            if ($activePlayersCount < 1) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'El equipo debe tener al menos 1 jugador activo'
-                ], 422);
-            }
-        }
-        // Los admins no tienen restricciones de jugadores
-
-        // Determinar el estado inicial del registro
-        $registrationStatus = $user->isAdmin() ? 'approved' : 'pending';
-
+        // Crear registro directamente - sin más validaciones
         $registration = TournamentTeam::create([
             'tournament_id' => $tournament->id,
             'team_id' => $request->team_id,
             'registration_date' => now(),
-            'status' => $registrationStatus
+            'status' => 'approved' // Siempre aprobado automáticamente
         ]);
-
-        $message = $user->isAdmin() 
-            ? 'Team registered and approved successfully' 
-            : 'Team registered successfully. Awaiting approval.';
 
         return response()->json([
             'success' => true,
-            'message' => $message,
-            'data' => $registration->load(['team', 'tournament'])
+            'message' => 'Team registered successfully',
+            'data' => $registration->load(['team:id,name', 'tournament:id,name'])
         ]);
 
     } catch (\Exception $e) {
