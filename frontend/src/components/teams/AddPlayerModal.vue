@@ -187,6 +187,9 @@ export default {
     },
 
     async fetchAvailablePlayers() {
+      this.isLoading = true
+      this.error = ''
+      
       try {
         console.log('Fetching available players for team:', this.teamId)
         
@@ -204,27 +207,13 @@ export default {
         console.error('Error loading players:', err)
         this.error = err.message || this.$t('teams.modal.errorLoadingPlayers')
         
-        // Fallback: Si la API falla, mostrar datos mock temporales
-        this.availablePlayers = [
-          {
-            id: 1,
-            user: { name: 'Carlos Rodriguez' },
-            position: 'forward',
-            current_team: null
-          },
-          {
-            id: 2,
-            user: { name: 'Marco Silva' },
-            position: 'midfielder',
-            current_team: null
-          },
-          {
-            id: 3,
-            user: { name: 'John Smith' },
-            position: 'defender',
-            current_team: null
-          }
-        ]
+        // NO FALLBACK - Mostrar mensaje de error en lugar de datos mock
+        this.availablePlayers = []
+        
+        // Mostrar notificación de error
+        this.$notify?.error(this.$t('teams.modal.noPlayersAvailable'))
+      } finally {
+        this.isLoading = false
       }
     },
 

@@ -446,9 +446,9 @@ export default {
       return matches > 0 ? (cards / matches).toFixed(2) : '0.00'
     })
 
+    // Sin datos mock - siempre 0 hasta que tengamos endpoint real
     const totalEvents = computed(() => {
-      // Sin endpoint de eventos, retornamos 0
-      return 0
+      return playerMatches.value.length
     })
 
     const tabs = [
@@ -470,9 +470,11 @@ export default {
           const data = apiHelpers.getData(response)
           player.value = data
           
-          // Fetch additional real data (solo estadísticas)
-          await fetchPlayerStats()
-          // No llamamos fetchPlayerMatches() porque no existe el endpoint
+          // Fetch additional real data
+          await Promise.all([
+            fetchPlayerStats(),
+            // fetchPlayerMatches() // Comentado hasta que esté disponible
+          ])
         } else {
           error.value = 'Player not found'
         }
@@ -505,12 +507,11 @@ export default {
     }
 
     /**
-     * Fetch player match events - NO DISPONIBLE EN API
-     * Mantenemos el array vacío hasta que se implemente el endpoint
+     * Fetch player match events - PLACEHOLDER hasta que tengamos endpoint
      */
     const fetchPlayerMatches = async () => {
-      // No hay endpoint específico para historial de partidos del jugador
-      // Solo mostramos mensaje de "no data available"
+      // TODO: Implementar cuando tengamos endpoint específico
+      // Por ahora mantener array vacío
       playerMatches.value = []
     }
 

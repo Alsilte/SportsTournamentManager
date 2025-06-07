@@ -548,6 +548,9 @@ export default {
         if (apiHelpers.isSuccess(response)) {
           const data = apiHelpers.getData(response)
           teamPlayers.value = data.players || []
+        } else {
+          // No hay datos - mostrar lista vacía
+          teamPlayers.value = []
         }
       } catch (err) {
         console.error('Failed to fetch roster:', err)
@@ -556,7 +559,7 @@ export default {
     }
 
     /**
-     * Fetch team statistics - ONLY REAL DATA
+     * Fetch team statistics - SOLO DATOS REALES
      */
     const fetchStatistics = async () => {
       try {

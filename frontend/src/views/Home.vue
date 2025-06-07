@@ -500,26 +500,20 @@ export default {
   setup() {
     const { t } = useI18n()
     const authStore = useAuthStore()
-    const recentTournaments = ref([])
     const isLoadingTournaments = ref(false)
+    const recentTournaments = ref([])
+    const platformStats = ref({
+      tournaments: 0,
+      teams: 0,
+      players: 0,
+      matches: 0
+    })
 
     // Platform features
     const features = [
       {
         key: 'tournament_management',
-        icon: CalendarIcon,
-        bgColor: 'bg-primary-100',
-        iconColor: 'text-primary-600',
-      },
-      {
-        key: 'team_organization',
-        icon: UserGroupIcon,
-        bgColor: 'bg-success-100',
-        iconColor: 'text-success-600',
-      },
-      {
-        key: 'match_scheduling',
-        icon: PlayIcon,
+        icon: TrophyIcon,
         bgColor: 'bg-warning-100',
         iconColor: 'text-warning-600',
       },
@@ -543,49 +537,66 @@ export default {
       },
     ]
 
-    // Platform statistics
-    const stats = [
-      { key: 'tournaments', value: '150+' },
-      { key: 'teams', value: '500+' },
-      { key: 'players', value: '2,000+' },
-      { key: 'matches', value: '1,200+' },
-    ]
-
     /**
      * Fetch recent tournaments - SOLO DATOS REALES
      */
     const fetchRecentTournaments = async () => {
       isLoadingTournaments.value = true
-
       try {
-        console.log('🔍 Fetching tournaments...')
-
         const response = await tournamentAPI.getAll({
           per_page: 6,
+          status: 'in_progress,registration_open'
         })
-
-        console.log('📡 API Response:', response)
-
+        
         if (apiHelpers.isSuccess(response)) {
           const data = apiHelpers.getData(response)
-          console.log('📊 Data received:', data)
-
-          const tournaments = data.data || data || []
-          console.log('🏆 Tournaments found:', tournaments.length)
-
-          recentTournaments.value = tournaments.slice(0, 6)
+          recentTournaments.value = data.data || []
         } else {
-          console.warn('Tournament API returned unsuccessful response')
           recentTournaments.value = []
         }
-      } catch (error) {
-        console.error('💥 Failed to fetch tournaments:', error)
+      } catch (err) {
+        console.error('Failed to fetch tournaments:', err)
         recentTournaments.value = []
-        window.$notify?.error('Failed to load tournaments')
       } finally {
         isLoadingTournaments.value = false
       }
     }
+
+    /**
+     * Fetch platform statistics - DATOS REALES DESDE BACKEND
+     */
+    const fetchPlatformStats = async () => {
+      try {
+        // TODO: Crear endpoint /api/platform/stats en el backend
+        // Por ahora usar conteos individuales
+        const [tournamentsRes, teamsRes] = await Promise.all([
+          tournamentAPI.getAll({ per_page: 1 }),
+          teamAPI.getAll({ per_page: 1 })
+        ])
+        
+        if (apiHelpers.isSuccess(tournamentsRes)) {
+          platformStats.value.tournaments = tournamentsRes.data.total || 0
+        }
+        
+        if (apiHelpers.isSuccess(teamsRes)) {
+          platformStats.value.teams = teamsRes.data.total || 0
+        }
+        
+        // TODO: Añadir players y matches cuando tengamos endpoints
+        
+      } catch (err) {
+        console.error('Failed to fetch platform stats:', err)
+        // Mantener en 0 si hay error
+      }
+    }
+
+    // Computed para mostrar stats con formato
+    const stats = computed(() => [
+      { key: 'tournaments', value: platformStats.value.tournaments || '0' },
+      { key: 'teams', value: platformStats.value.teams || '0' },
+      { key: 'players', value: platformStats.value.players || '0' },
+      { key: 'matches', value: platformStats.value.matches || '0' },
+    ])
 
     /**
      * Get registration progress percentage
@@ -638,14 +649,18 @@ export default {
 
     onMounted(() => {
       fetchRecentTournaments()
+      fetchPlatformStats()
     })
 
     return {
       authStore,
-      features,
-      stats,
-      recentTournaments,
       isLoadingTournaments,
+      recentTournaments,
+      platformStats,
+      stats,
+      features,
+      fetchRecentTournaments,
+      fetchPlatformStats,
       getRegistrationProgress,
       getStatusBadgeClass,
       formatTournamentType,

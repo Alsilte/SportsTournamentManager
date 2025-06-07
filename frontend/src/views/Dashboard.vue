@@ -114,6 +114,9 @@ import AdminDashboard from '@/components/dashboard/AdminDashboard.vue'
 import TeamManagerDashboard from '@/components/dashboard/TeamManagerDashboard.vue'
 import RefereeDashboard from '@/components/dashboard/RefereeDashboard.vue'
 import PlayerDashboard from '@/components/dashboard/PlayerDashboard.vue'
+import tournamentAPI from '@/api/tournament'
+import teamAPI from '@/api/team'
+import apiHelpers from '@/helpers/api'
 
 export default {
   name: 'Dashboard',
@@ -130,44 +133,87 @@ export default {
     const { t } = useI18n()
     const authStore = useAuthStore()
     const isRefreshing = ref(false)
+    const realStats = ref({
+      tournaments: 0,
+      teams: 0,
+      players: 0,
+      matches: 0,
+      myTeams: 0,
+      myTournaments: 0
+    })
 
-    // Quick stats based on role
+    // Cargar estadísticas reales desde API
+    const loadRealStats = async () => {
+      try {
+        const promises = []
+        
+        // Estadísticas según el rol
+        if (authStore.isAdmin) {
+          promises.push(
+            tournamentAPI.getAll({ per_page: 1 }).then(res => {
+              if (apiHelpers.isSuccess(res)) {
+                realStats.value.tournaments = res.data.total || 0
+              }
+            }),
+            teamAPI.getAll({ per_page: 1 }).then(res => {
+              if (apiHelpers.isSuccess(res)) {
+                realStats.value.teams = res.data.total || 0
+              }
+            })
+          )
+        } else if (authStore.isTeamManager) {
+          promises.push(
+            teamAPI.getAll({ manager_id: authStore.user.id }).then(res => {
+              if (apiHelpers.isSuccess(res)) {
+                realStats.value.myTeams = res.data.data?.length || 0
+              }
+            })
+          )
+        }
+        
+        await Promise.all(promises)
+      } catch (err) {
+        console.error('Error loading dashboard stats:', err)
+      }
+    }
+
+    // Quick stats basado en datos reales
     const quickStats = computed(() => {
       switch (authStore.userRole) {
         case 'admin':
           return {
-            primary: '45',
+            primary: realStats.value.tournaments.toString(),
             primaryLabel: t('dashboard.stats.totalTournaments'),
-            secondary: '180',
+            secondary: realStats.value.teams.toString(),
             secondaryLabel: t('dashboard.stats.registeredTeams'),
-            tertiary: '850',
+            tertiary: realStats.value.players.toString(),
             tertiaryLabel: t('dashboard.stats.activeUsers'),
           }
         case 'team_manager':
           return {
-            primary: '3',
+            primary: realStats.value.myTeams.toString(),
             primaryLabel: t('dashboard.stats.myTeams'),
-            secondary: '42',
+            secondary: '0', // TODO: Implementar conteo real de jugadores
             secondaryLabel: t('dashboard.stats.totalPlayers'),
-            tertiary: '12',
+            tertiary: '0', // TODO: Implementar conteo real de partidos
             tertiaryLabel: t('dashboard.stats.upcomingMatches'),
           }
         case 'referee':
           return {
-            primary: '24',
+            primary: '0', // TODO: Implementar estadísticas de árbitro
             primaryLabel: t('dashboard.stats.matchesOfficiated'),
-            secondary: '8',
+            secondary: '0',
             secondaryLabel: t('dashboard.stats.upcomingMatches'),
-            tertiary: '4.3',
+            tertiary: '0',
             tertiaryLabel: t('dashboard.stats.averageRating'),
           }
         default: // player
           return {
-            primary: '15',
+            primary: '0', // TODO: Implementar estadísticas de jugador
             primaryLabel: t('dashboard.stats.matchesPlayed'),
-            secondary: '8',
+            secondary: '0',
             secondaryLabel: t('dashboard.stats.goalsScored'),
-            tertiary: '2',
+            tertiary: '0',
             tertiaryLabel: t('dashboard.stats.activeTeams'),
           }
       }
@@ -206,8 +252,7 @@ export default {
     const refreshData = async () => {
       isRefreshing.value = true
       try {
-        // Simulate data refresh
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        await loadRealStats()
         window.$notify?.success(t('notifications.dataRefreshed'))
       } catch (error) {
         window.$notify?.error(t('notifications.refreshError'))
@@ -228,15 +273,7 @@ export default {
     }
 
     onMounted(() => {
-      // Auto-refresh data periodically
-      const interval = setInterval(() => {
-        if (!isRefreshing.value) {
-          refreshData()
-        }
-      }, 300000) // 5 minutes
-
-      // Cleanup on unmount
-      return () => clearInterval(interval)
+      loadRealStats()
     })
 
     return {

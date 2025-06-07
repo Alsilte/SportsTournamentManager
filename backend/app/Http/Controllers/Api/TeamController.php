@@ -620,4 +620,37 @@ private function getNextAvailableNumber(Team $team): int
             ], 500);
         }
     }
+
+    /**
+     * Get available players for a team - NUEVO ENDPOINT
+     */
+    public function getAvailablePlayers(int $id): JsonResponse
+    {
+        try {
+            $team = Team::findOrFail($id);
+            
+            // Obtener jugadores que NO están activos en ningún equipo
+            $availablePlayers = Player::with(['user:id,name,email'])
+                ->whereDoesntHave('teams', function ($query) {
+                    $query->where('is_active', true);
+                })
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $availablePlayers,
+                'total' => $availablePlayers->count(),
+                'message' => $availablePlayers->isEmpty() ? 
+                    'No available players found' : 
+                    'Available players retrieved successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch available players',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

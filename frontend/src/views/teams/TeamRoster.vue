@@ -396,204 +396,48 @@ export default {
     const { t } = useI18n()
     const route = useRoute()
     const authStore = useAuthStore()
-
-    // Data
+    
+    // Estado reactivo
     const team = ref(null)
     const players = ref([])
     const captain = ref(null)
     const isLoading = ref(false)
     const error = ref('')
-
-    // Filters
     const filters = ref({
-      search: '',
       position: '',
-      status: ''
+      search: ''
     })
 
-    // Computed properties
-    const canManageTeam = computed(() => {
-      return authStore.isAdmin || team.value?.manager_id === authStore.user?.id
-    })
-
-    const totalPlayers = computed(() => players.value.length)
-
-    const activePlayersCount = computed(() => 
-      players.value.filter(player => player.pivot?.is_active).length
-    )
-
-    const captainsCount = computed(() => 
-      players.value.filter(player => player.pivot?.is_captain).length
-    )
-
-    const uniquePositions = computed(() => {
-      const positions = players.value
-        .map(player => player.pivot?.position)
-        .filter(position => position && position.trim())
-      return [...new Set(positions)].sort()
-    })
-
-    const positionsCount = computed(() => uniquePositions.value.length)
-
-    const uniqueNationalities = computed(() => {
-      const nationalities = players.value
-        .map(player => player.nationality)
-        .filter(nationality => nationality && nationality.trim())
-      return [...new Set(nationalities)].sort()
-    })
-
-    const nationalitiesCount = computed(() => uniqueNationalities.value.length)
-
-    const hasActiveFilters = computed(() => 
-      filters.value.search || filters.value.position || filters.value.status
-    )
-
-    const filteredPlayers = computed(() => {
-      let filtered = [...players.value]
-
-      // Search filter
-      if (filters.value.search) {
-        const searchTerm = filters.value.search.toLowerCase()
-        filtered = filtered.filter(player => 
-          player.user?.name?.toLowerCase().includes(searchTerm) ||
-          player.user?.email?.toLowerCase().includes(searchTerm) ||
-          player.pivot?.position?.toLowerCase().includes(searchTerm)
-        )
-      }
-
-      // Position filter
-      if (filters.value.position) {
-        filtered = filtered.filter(player => 
-          player.pivot?.position === filters.value.position
-        )
-      }
-
-      // Status filter
-      if (filters.value.status) {
-        switch (filters.value.status) {
-          case 'active':
-            filtered = filtered.filter(player => player.pivot?.is_active)
-            break
-          case 'inactive':
-            filtered = filtered.filter(player => !player.pivot?.is_active)
-            break
-          case 'captain':
-            filtered = filtered.filter(player => player.pivot?.is_captain)
-            break
-        }
-      }
-
-      // Sort by jersey number
-      return filtered.sort((a, b) => {
-        const jerseyA = a.pivot?.jersey_number || 999
-        const jerseyB = b.pivot?.jersey_number || 999
-        return jerseyA - jerseyB
-      })
-    })
-
-    /**
-     * Fetch team and roster data
-     */
+    // Función para obtener el roster real desde la API
     const fetchTeamRoster = async () => {
       isLoading.value = true
       error.value = ''
-
+      
       try {
-        // Fetch team roster
         const response = await teamAPI.getRoster(route.params.id)
-
+        
         if (apiHelpers.isSuccess(response)) {
           const data = apiHelpers.getData(response)
           team.value = data.team
           players.value = data.players || []
-          captain.value = data.captain || null
+          captain.value = data.captain
         } else {
-          error.value = t('teams.roster.teamNotFound')
+          error.value = 'Failed to load team roster'
+          team.value = null
+          players.value = []
+          captain.value = null
         }
       } catch (err) {
-        console.error('Failed to fetch team roster:', err)
-        error.value = t('teams.roster.fetchRosterError')
+        console.error('Error fetching roster:', err)
+        error.value = apiHelpers.handleError(err)
+        team.value = null
+        players.value = []
+        captain.value = null
       } finally {
         isLoading.value = false
       }
     }
 
-    /**
-     * Apply filters (for future debounced search)
-     */
-    const applyFilters = () => {
-      // Filters are reactive, no need to do anything
-      console.log('Filters applied:', filters.value)
-    }
-
-    /**
-     * Clear all filters
-     */
-    const clearFilters = () => {
-      filters.value = {
-        search: '',
-        position: '',
-        status: ''
-      }
-    }
-
-    /**
-     * Edit player (placeholder)
-     */
-    const editPlayer = (player) => {
-      console.log('Edit player:', player)
-      window.$notify?.info(t('teams.roster.editPlayerSoon'))
-    }
-
-    /**
-     * Confirm remove player
-     */
-    const confirmRemovePlayer = (player) => {
-      if (confirm(t('teams.roster.removePlayerConfirm', { name: player.user?.name }))) {
-        removePlayer(player)
-      }
-    }
-
-    /**
-     * Remove player from team
-     */
-    const removePlayer = async (player) => {
-      try {
-        const response = await teamAPI.removePlayer(team.value.id, player.id)
-
-        if (apiHelpers.isSuccess(response)) {
-          // Remove player from local array
-          players.value = players.value.filter(p => p.id !== player.id)
-          window.$notify?.success(t('teams.roster.playerRemovedSuccess'))
-        } else {
-          window.$notify?.error(t('teams.roster.failedToRemovePlayer'))
-        }
-      } catch (err) {
-        console.error('Failed to remove player:', err)
-        window.$notify?.error(t('teams.roster.failedToRemovePlayer'))
-      }
-    }
-
-    /**
-     * Calculate age from date of birth
-     */
-    const calculateAge = (dateOfBirth) => {
-      if (!dateOfBirth) return t('common.na')
-      const today = new Date()
-      const birthDate = new Date(dateOfBirth)
-      let age = today.getFullYear() - birthDate.getFullYear()
-      const monthDiff = today.getMonth() - birthDate.getMonth()
-      
-      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-        age--
-      }
-      
-      return age
-    }
-
-    /**
-     * Format date for display
-     */
     const formatDate = (dateString) => {
       if (!dateString) return t('common.na')
       return new Date(dateString).toLocaleDateString('en-US', {
@@ -639,24 +483,11 @@ export default {
       error,
       showAddPlayerModal,
       filters,
-      canManageTeam,
-      totalPlayers,
-      activePlayersCount,
-      captainsCount,
-      positionsCount,
-      nationalitiesCount,
-      uniquePositions,
-      hasActiveFilters,
-      filteredPlayers,
-      applyFilters,
-      clearFilters,
-      editPlayer,
-      confirmRemovePlayer,
-      calculateAge,
+      fetchTeamRoster,
       formatDate,
+      openAddPlayerModal,
       handleCloseModal,
-      handlePlayerAdded,
-      openAddPlayerModal
+      handlePlayerAdded
     }
   }
 }
