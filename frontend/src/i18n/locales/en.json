@@ -115,7 +115,12 @@
     "loss": "Loss",
     "draw": "Draw",
     "na": "N/A",
-    "tbd": "TBD"
+    "tbd": "TBD",
+    "account": "Account",
+    "admin": "Admin",
+    "management": "Management",
+    "userManagement": "User Management",
+    "manageTeams": "Manage Teams"
   },
   "navigation": {
     "tournaments": "Tournaments",
@@ -155,7 +160,50 @@
     "admin": "Administrator",
     "teamManager": "Team Manager",
     "player": "Player",
-    "referee": "Referee"
+    "referee": "Referee",
+    "signInToAccount": "Sign in to your account",
+    "or": "Or",
+    "createNewAccount": "create a new account",
+    "emailAddress": "Email address",
+    "enterEmail": "Enter your email",
+    "password": "Password",
+    "enterPassword": "Enter your password",
+    "forgotPassword": "Forgot your password?",
+    "signingIn": "Signing in...",
+    "orContinueWith": "Or continue with",
+    "socialLoginSoon": "Social login coming soon",
+    "demoAccounts": "Demo Accounts",
+    "unexpectedError": "An unexpected error occurred",
+    "loginFailed": "Login failed",
+    "createYourAccount": "Create your account",
+    "signInToExisting": "sign in to your existing account",
+    "fullName": "Full Name",
+    "enterFullName": "Enter your full name",
+    "accountType": "Account Type",
+    "phoneOptional": "Phone Number (Optional)",
+    "enterPhone": "Enter your phone number",
+    "confirmPassword": "Confirm Password",
+    "confirmYourPassword": "Confirm your password",
+    "agreeToTerms": "I agree to the",
+    "termsOfService": "Terms of Service",
+    "and": "and",
+    "privacyPolicy": "Privacy Policy",
+    "creatingAccount": "Creating account...",
+    "createAccount": "Create Account",
+    "demoRolesAvailable": "Demo Roles Available:",
+    "playerRole": "Player",
+    "teamManagerRole": "Team Manager",
+    "refereeRole": "Referee",
+    "playerDescription": "Join teams, view matches and statistics",
+    "teamManagerDescription": "Create and manage teams, register for tournaments",
+    "refereeDescription": "Manage matches and record match events",
+    "fullNameRequired": "Full name is required",
+    "nameMinLength": "Name must be at least 2 characters",
+    "selectAccountType": "Please select an account type",
+    "passwordConfirmationRequired": "Password confirmation is required",
+    "agreeToTermsRequired": "You must agree to the terms and conditions",
+    "registrationFailed": "Registration failed. Please try again.",
+    "registrationUnexpectedError": "An unexpected error occurred. Please try again."
   },
   "dashboard": {
     "welcome": "Welcome back, {name}!",
@@ -342,6 +390,33 @@
       "knockout": "Knockout",
       "groupKnockout": "Group + Knockout"
     },
+    "registration": {
+      "registerTeam": "Register Team",
+      "selectTeam": "Select Team",
+      "sport": "Sport",
+      "startDate": "Start Date",
+      "teams": "Teams",
+      "location": "Location",
+      "loadingTeams": "Loading your teams...",
+      "noTeamsAvailable": "No teams available",
+      "chooseTeam": "Choose a team to register",
+      "players": "players",
+      "contact": "Contact",
+      "homeVenue": "Home Venue",
+      "registrationRequirements": "Registration Requirements",
+      "requirementMinPlayers": "Team must have at least 8 registered players",
+      "requirementVerified": "All players must be verified and active",
+      "requirementApproval": "Registration is subject to tournament approval",
+      "registrationDeadline": "Registration deadline",
+      "registering": "Registering...",
+      "registerButton": "Register Team",
+      "noTeamsMessage": "You don't have any teams that can be registered for this tournament",
+      "selectTeamError": "Please select a team",
+      "teamNotFoundError": "Selected team not found",
+      "minPlayersError": "Team must have at least 8 players to register",
+      "registrationFailed": "Registration failed",
+      "loadTeamsError": "Failed to load your teams"
+    },
     "registerTeam": "Register Team",
     "viewDetails": "View Details",
     "noTournaments": "No tournaments yet",
@@ -366,6 +441,9 @@
       "descriptionPlaceholder": "Enter description",
       "updating": "Updating…",
       "updateTournament": "Update Tournament"
+    },
+    "card": {
+      "createdBy": "Created by {name}"
     }
   },
   "notifications": {
@@ -419,8 +497,25 @@
       "nationality": "Nationality"
     },
     "addPlayerToTeam": "Add Player to Team",
-    "selectPlayer": "Select Player",
-    "choosePlayer": "Choose a player",
+    "modal": {
+      "addPlayerAdmin": "Add Player (Admin)",
+      "addPlayer": "Add Player",
+      "player": "Player",
+      "selectPlayer": "Select player",
+      "position": "Position",
+      "selectPosition": "Select position",
+      "joinDate": "Join Date",
+      "teamCaptain": "Team captain",
+      "forceAddition": "Force addition",
+      "forceAdditionDescription": "Allows adding players from other teams, forcing numbers, etc.",
+      "omitRestrictions": "(omit restrictions)",
+      "adding": "Adding...",
+      "inTeam": "(In: {teamName})",
+      "playerAddedSuccessfully": "Player added successfully",
+      "errorAddingPlayer": "Error adding player",
+      "errorLoadingPlayers": "Error loading available players"
+    },
+    "selectPlayer": "Choose a player",
     "jerseyNumber": "Jersey Number",
     "jerseyPlaceholder": "e.g., 10",
     "position": "Position",
@@ -436,5 +531,27 @@
     "addPlayer": "Add Player",
     "playerAddedSuccess": "Player added successfully!",
     "failedToAddPlayer": "Failed to add player"
+  },
+  "footer": {
+    "description": "Complete sports tournament management system. Manage tournaments, teams, players, and matches with ease.",
+    "quickLinks": "Quick Links",
+    "support": "Support",
+    "helpCenter": "Help Center",
+    "documentation": "Documentation",
+    "contactUs": "Contact Us",
+    "privacyPolicy": "Privacy Policy",
+    "allRightsReserved": "All rights reserved"
+  },
+  "admin": {
+    "panel": {
+      "title": "Admin Panel",
+      "subtitle": "System administration and management"
+    },
+    "users": {
+      "title": "User Management",
+      "subtitle": "Manage system users and permissions",
+      "addUser": "Add User",
+      "underDevelopment": "This feature is under development"
+    }
   }
 }

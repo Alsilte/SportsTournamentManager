@@ -47,7 +47,7 @@
         <!-- Teams -->
         <div class="flex items-center text-sm text-gray-600">
           <UserGroupIcon class="w-4 h-4 mr-2 text-gray-400" />
-          <span>{{ tournament.registered_teams_count || 0 }}/{{ tournament.max_teams }} teams</span>
+          <span>{{ tournament.registered_teams_count || 0 }}/{{ tournament.max_teams }} {{ $t('tournaments.registration.teams').toLowerCase() }}</span>
         </div>
 
         <!-- Prize Pool -->
@@ -60,7 +60,7 @@
       <!-- Progress Bar (for team registration) -->
       <div v-if="tournament.status === 'registration_open'" class="mb-4">
         <div class="flex justify-between text-xs text-gray-600 mb-1">
-          <span>Registration Progress</span>
+          <span>{{ $t('home.tournaments.registrationProgress') }}</span>
           <span>{{ Math.round(registrationProgress) }}%</span>
         </div>
         <div class="w-full bg-gray-200 rounded-full h-2">
@@ -76,7 +76,7 @@
         <div class="w-6 h-6 bg-primary-100 rounded-full flex items-center justify-center mr-2">
           <UserIcon class="w-4 h-4 text-primary-600" />
         </div>
-        <span>Created by {{ tournament.creator.name }}</span>
+        <span>{{ $t('tournaments.card.createdBy', { name: tournament.creator.name }) }}</span>
       </div>
 
       <!-- Actions -->
@@ -85,7 +85,7 @@
           :to="{ name: 'tournament-detail', params: { id: tournament.id } }"
           class="btn-primary flex-1 text-center"
         >
-          View Details
+          {{ $t('tournaments.viewDetails') }}
         </RouterLink>
 
         <button
@@ -109,11 +109,11 @@
     >
       <template v-if="isRegistrationFull">
         <ExclamationTriangleIcon class="w-4 h-4 inline mr-1" />
-        Registration Full
+        {{ $t('tournaments.registrationFull') }}
       </template>
       <template v-else>
         <CheckCircleIcon class="w-4 h-4 inline mr-1" />
-        Registration Open
+        {{ $t('tournaments.registrationOpen') }}
       </template>
     </div>
   </div>
@@ -137,6 +137,7 @@ import {
   ExclamationTriangleIcon,
 } from '@heroicons/vue/24/outline'
 import { useAuthStore } from '@/stores/auth'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'TournamentCard',
@@ -159,6 +160,7 @@ export default {
   emits: ['register'],
   setup(props) {
     const authStore = useAuthStore()
+    const { t } = useI18n()
 
     // Computed properties
     const registrationProgress = computed(() => {
@@ -192,20 +194,20 @@ export default {
     // Helper functions
     const formatStatus = (status) => {
       const statusMap = {
-        draft: 'Draft',
-        registration_open: 'Open',
-        in_progress: 'In Progress',
-        completed: 'Completed',
-        cancelled: 'Cancelled',
+        draft: t('tournaments.status.draft'),
+        registration_open: t('tournaments.status.registrationOpen'),
+        in_progress: t('tournaments.status.inProgress'),
+        completed: t('tournaments.status.completed'),
+        cancelled: t('tournaments.status.cancelled'),
       }
       return statusMap[status] || status
     }
 
     const formatTournamentType = (type) => {
       const typeMap = {
-        league: 'League',
-        knockout: 'Knockout',
-        group_knockout: 'Group + Knockout',
+        league: t('tournaments.formats.league'),
+        knockout: t('tournaments.formats.knockout'),
+        group_knockout: t('tournaments.formats.groupKnockout'),
       }
       return typeMap[type] || type
     }

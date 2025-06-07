@@ -13,7 +13,7 @@
               </span>
             </div>
             <p class="text-gray-600 mb-4 max-w-md">
-              Complete sports tournament management system. Manage tournaments, teams, players, and matches with ease.
+              {{ $t('footer.description') }}
             </p>
             <div class="flex space-x-4">
               <a href="#" class="text-gray-400 hover:text-gray-600 transition-colors">
@@ -40,27 +40,27 @@
           <!-- Quick Links -->
           <div>
             <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
-              Quick Links
+              {{ $t('footer.quickLinks') }}
             </h3>
             <ul class="space-y-3">
               <li>
                 <RouterLink to="/tournaments" class="text-gray-600 hover:text-gray-900 transition-colors">
-                  Tournaments
+                  {{ $t('navigation.tournaments') }}
                 </RouterLink>
               </li>
               <li>
                 <RouterLink to="/teams" class="text-gray-600 hover:text-gray-900 transition-colors">
-                  Teams
+                  {{ $t('navigation.teams') }}
                 </RouterLink>
               </li>
               <li>
                 <RouterLink to="/players" class="text-gray-600 hover:text-gray-900 transition-colors">
-                  Players
+                  {{ $t('navigation.players') }}
                 </RouterLink>
               </li>
               <li>
                 <RouterLink to="/matches" class="text-gray-600 hover:text-gray-900 transition-colors">
-                  Matches
+                  {{ $t('navigation.matches') }}
                 </RouterLink>
               </li>
             </ul>
@@ -69,27 +69,27 @@
           <!-- Support -->
           <div>
             <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
-              Support
+              {{ $t('footer.support') }}
             </h3>
             <ul class="space-y-3">
               <li>
                 <a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">
-                  Help Center
+                  {{ $t('footer.helpCenter') }}
                 </a>
               </li>
               <li>
                 <a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">
-                  Documentation
+                  {{ $t('footer.documentation') }}
                 </a>
               </li>
               <li>
                 <a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">
-                  Contact Us
+                  {{ $t('footer.contactUs') }}
                 </a>
               </li>
               <li>
                 <a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">
-                  Privacy Policy
+                  {{ $t('footer.privacyPolicy') }}
                 </a>
               </li>
             </ul>
@@ -99,7 +99,7 @@
         <!-- Bottom Section -->
         <div class="mt-8 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
           <p class="text-gray-500 text-sm">
-            © {{ currentYear }} Tournament Manager. All rights reserved.
+            © {{ currentYear }} Tournament Manager. {{ $t('footer.allRightsReserved') }}.
           </p>
           
         </div>

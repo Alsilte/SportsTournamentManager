@@ -3,12 +3,12 @@
     <template #header>
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">User Management</h1>
-          <p class="text-gray-600 mt-1">Manage system users and permissions</p>
+          <h1 class="text-3xl font-bold text-gray-900">{{ $t('admin.users.title') }}</h1>
+          <p class="text-gray-600 mt-1">{{ $t('admin.users.subtitle') }}</p>
         </div>
         <button class="btn-primary">
           <PlusIcon class="w-4 h-4 mr-2" />
-          Add User
+          {{ $t('admin.users.addUser') }}
         </button>
       </div>
     </template>
@@ -16,8 +16,8 @@
     <div class="card p-6">
       <div class="text-center py-12">
         <UsersIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
-        <h3 class="text-lg font-medium text-gray-900 mb-2">User Management</h3>
-        <p class="text-gray-600">This feature is under development</p>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('admin.users.title') }}</h3>
+        <p class="text-gray-600">{{ $t('admin.users.underDevelopment') }}</p>
       </div>
     </div>
   </MainLayout>

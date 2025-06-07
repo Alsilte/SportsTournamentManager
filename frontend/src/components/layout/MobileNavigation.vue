@@ -60,14 +60,14 @@
                         active-class="mobile-nav-link-active"
                       >
                         <component :is="item.icon" class="w-5 h-5 mr-3" />
-                        {{ item.name }}
+                        {{ $t(item.name) }}
                       </RouterLink>
                     </div>
   
                     <!-- Authenticated User Navigation -->
                     <div v-if="authStore.isAuthenticated" class="mt-6 pt-6 border-t border-gray-200">
                       <div class="px-4 pb-2">
-                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Account</h3>
+                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ $t('common.account') }}</h3>
                       </div>
                       <div class="space-y-1">
                         <RouterLink
@@ -79,7 +79,7 @@
                           active-class="mobile-nav-link-active"
                         >
                           <component :is="item.icon" class="w-5 h-5 mr-3" />
-                          {{ item.name }}
+                          {{ $t(item.name) }}
                         </RouterLink>
                       </div>
                     </div>
@@ -87,7 +87,7 @@
                     <!-- Admin Navigation -->
                     <div v-if="authStore.isAdmin" class="mt-6 pt-6 border-t border-gray-200">
                       <div class="px-4 pb-2">
-                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Admin</h3>
+                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ $t('common.admin') }}</h3>
                       </div>
                       <div class="space-y-1">
                         <RouterLink
@@ -99,7 +99,7 @@
                           active-class="mobile-nav-link-active"
                         >
                           <component :is="item.icon" class="w-5 h-5 mr-3" />
-                          {{ item.name }}
+                          {{ $t(item.name) }}
                         </RouterLink>
                       </div>
                     </div>
@@ -107,7 +107,7 @@
                     <!-- Team Manager Navigation -->
                     <div v-if="authStore.canManageTeams" class="mt-6 pt-6 border-t border-gray-200">
                       <div class="px-4 pb-2">
-                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Management</h3>
+                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ $t('common.management') }}</h3>
                       </div>
                       <div class="space-y-1">
                         <RouterLink
@@ -119,7 +119,7 @@
                           active-class="mobile-nav-link-active"
                         >
                           <component :is="item.icon" class="w-5 h-5 mr-3" />
-                          {{ item.name }}
+                          {{ $t(item.name) }}
                         </RouterLink>
                       </div>
                     </div>
@@ -134,14 +134,14 @@
                       @click="$emit('close')"
                       class="block w-full text-center btn-secondary"
                     >
-                      Sign In
+                      {{ $t('navigation.signIn') }}
                     </RouterLink>
                     <RouterLink
                       to="/register"
                       @click="$emit('close')"
                       class="block w-full text-center btn-primary"
                     >
-                      Sign Up
+                      {{ $t('navigation.signUp') }}
                     </RouterLink>
                   </div>
                   <div v-else>
@@ -150,7 +150,7 @@
                       class="flex items-center w-full text-left p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
                     >
                       <ArrowRightOnRectangleIcon class="w-5 h-5 mr-3 text-gray-400" />
-                      Sign Out
+                      {{ $t('navigation.signOut') }}
                     </button>
                   </div>
                 </div>
@@ -216,28 +216,28 @@
   
       // Navigation items
       const publicNavItems = [
-        { name: 'Home', to: '/', icon: HomeIcon },
-        { name: 'Tournaments', to: '/tournaments', icon: CalendarIcon },
-        { name: 'Teams', to: '/teams', icon: UserGroupIcon },
-        { name: 'Players', to: '/players', icon: UsersIcon },
-        { name: 'Matches', to: '/matches', icon: PlayIcon }
+        { name: 'navigation.home', to: '/', icon: HomeIcon },
+        { name: 'navigation.tournaments', to: '/tournaments', icon: CalendarIcon },
+        { name: 'navigation.teams', to: '/teams', icon: UserGroupIcon },
+        { name: 'navigation.players', to: '/players', icon: UsersIcon },
+        { name: 'navigation.matches', to: '/matches', icon: PlayIcon }
       ]
   
       const userNavItems = [
-        { name: 'Dashboard', to: '/dashboard', icon: ChartBarIcon },
-        { name: 'Profile', to: '/profile', icon: UserIcon },
-        { name: 'Settings', to: '/settings', icon: CogIcon }
+        { name: 'common.dashboard', to: '/dashboard', icon: ChartBarIcon },
+        { name: 'common.profile', to: '/profile', icon: UserIcon },
+        { name: 'common.settings', to: '/settings', icon: CogIcon }
       ]
   
       const adminNavItems = [
-        { name: 'Admin Panel', to: '/admin', icon: ShieldCheckIcon },
-        { name: 'User Management', to: '/admin/users', icon: UsersIcon },
-        { name: 'Create Tournament', to: '/tournaments/create', icon: PlusIcon }
+        { name: 'navigation.admin', to: '/admin', icon: ShieldCheckIcon },
+        { name: 'common.userManagement', to: '/admin/users', icon: UsersIcon },
+        { name: 'navigation.createTournament', to: '/tournaments/create', icon: PlusIcon }
       ]
   
       const managerNavItems = [
-        { name: 'Create Team', to: '/teams/create', icon: PlusIcon },
-        { name: 'Manage Teams', to: '/teams/manage', icon: AdjustmentsHorizontalIcon }
+        { name: 'navigation.createTeam', to: '/teams/create', icon: PlusIcon },
+        { name: 'common.manageTeams', to: '/teams/manage', icon: AdjustmentsHorizontalIcon }
       ]
   
       const handleLogout = async () => {

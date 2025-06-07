@@ -9,7 +9,7 @@
             class="flex items-center space-x-2 hover:opacity-80 transition-opacity"
           >
             <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-              <img src="../../../public/favicon.png" alt="Logo">
+              <img src="../../../public/logo.png" alt="Logo">
             </div>
             <span class="font-bold text-xl text-gray-900 hidden sm:block">
               {{ $t('common.appName', 'Tournament Manager') }}

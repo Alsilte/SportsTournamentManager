@@ -268,7 +268,7 @@
           class="flex items-center p-4 bg-gradient-to-r from-warning-50 to-warning-100 rounded-lg"
         >
           <div class="w-12 h-12 bg-warning-600 rounded-full flex items-center justify-center mr-4">
-           <img src="../../../public/favicon.png" alt="Team Captain Icon" class="w-6 h-6" />
+           <img src="../../../public/logo.png" alt="Team Captain Icon" class="w-6 h-6" />
           </div>
           <div>
             <div class="font-medium text-gray-900">{{ $t('teams.teamCaptain') }}</div>

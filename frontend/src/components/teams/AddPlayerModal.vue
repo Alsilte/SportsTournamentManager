@@ -3,7 +3,7 @@
     <div class="bg-white rounded-lg max-w-md w-full p-6">
       <div class="flex items-center justify-between mb-6">
         <h3 class="text-lg font-semibold text-gray-900">
-          {{ isAdmin ? 'Añadir Jugador (Admin)' : 'Añadir Jugador' }}
+          {{ isAdmin ? $t('teams.modal.addPlayerAdmin') : $t('teams.modal.addPlayer') }}
         </h3>
         <button @click="$emit('close')" class="text-gray-400 hover:text-gray-600">
           <XMarkIcon class="w-5 h-5" />
@@ -14,14 +14,14 @@
         <!-- Player Selection -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
-            Jugador *
+            {{ $t('teams.modal.player') }} *
           </label>
           <select v-model="form.player_id" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-            <option value="">Seleccionar jugador</option>
+            <option value="">{{ $t('teams.modal.selectPlayer') }}</option>
             <option v-for="player in availablePlayers" :key="player.id" :value="player.id">
               {{ player.user?.name || player.name }}
-              <span v-if="player.position"> - {{ player.position }}</span>
-              <span v-if="player.current_team" class="text-orange-600"> (En: {{ player.current_team.name }})</span>
+              <span v-if="player.position"> - {{ $t(`teams.positions.${player.position}`) }}</span>
+              <span v-if="player.current_team" class="text-orange-600"> {{ $t('teams.modal.inTeam', { teamName: player.current_team.name }) }}</span>
             </option>
           </select>
         </div>
@@ -29,7 +29,7 @@
         <!-- Jersey Number -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
-            Número de Camiseta *
+            {{ $t('teams.jerseyNumber') }} *
           </label>
           <input 
             v-model="form.jersey_number" 
@@ -38,28 +38,28 @@
             max="99" 
             required 
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            placeholder="ej: 10"
+            :placeholder="$t('teams.jerseyPlaceholder')"
           />
         </div>
 
         <!-- Position -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
-            Posición
+            {{ $t('teams.modal.position') }}
           </label>
           <select v-model="form.position" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-            <option value="">Seleccionar posición</option>
-            <option value="goalkeeper">Portero</option>
-            <option value="defender">Defensor</option>
-            <option value="midfielder">Mediocampista</option>
-            <option value="forward">Delantero</option>
+            <option value="">{{ $t('teams.modal.selectPosition') }}</option>
+            <option value="goalkeeper">{{ $t('teams.positions.goalkeeper') }}</option>
+            <option value="defender">{{ $t('teams.positions.defender') }}</option>
+            <option value="midfielder">{{ $t('teams.positions.midfielder') }}</option>
+            <option value="forward">{{ $t('teams.positions.forward') }}</option>
           </select>
         </div>
 
         <!-- Join Date -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
-            Fecha de Incorporación *
+            {{ $t('teams.modal.joinDate') }} *
           </label>
           <input
             v-model="form.joined_date"
@@ -78,7 +78,7 @@
             class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
           />
           <label for="is_captain" class="ml-2 text-sm text-gray-700">
-            Es capitán del equipo
+            {{ $t('teams.modal.teamCaptain') }}
           </label>
         </div>
 
@@ -91,11 +91,11 @@
               class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
             />
             <span class="ml-2 text-sm text-gray-700">
-              <strong>Forzar adición</strong> (omitir restricciones)
+              <strong>{{ $t('teams.modal.forceAddition') }}</strong> {{ $t('teams.modal.omitRestrictions') }}
             </span>
           </label>
           <p class="text-xs text-gray-600 mt-1">
-            Permite añadir jugadores de otros equipos, forzar números, etc.
+            {{ $t('teams.modal.forceAdditionDescription') }}
           </p>
         </div>
 
@@ -111,14 +111,14 @@
             @click="$emit('close')"
             class="flex-1 px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
           >
-            Cancelar
+            {{ $t('common.cancel') }}
           </button>
           <button
             type="submit"
             :disabled="loading"
             class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
           >
-            {{ loading ? 'Añadiendo...' : 'Añadir Jugador' }}
+            {{ loading ? $t('teams.modal.adding') : $t('teams.modal.addPlayer') }}
           </button>
         </div>
       </form>
@@ -198,11 +198,11 @@ export default {
           this.availablePlayers = apiHelpers.getData(response) || []
           console.log('Available players loaded:', this.availablePlayers)
         } else {
-          throw new Error(response.data?.message || 'Error al cargar jugadores')
+          throw new Error(response.data?.message || this.$t('teams.modal.errorLoadingPlayers'))
         }
       } catch (err) {
         console.error('Error loading players:', err)
-        this.error = err.message || 'Error al cargar jugadores disponibles'
+        this.error = err.message || this.$t('teams.modal.errorLoadingPlayers')
         
         // Fallback: Si la API falla, mostrar datos mock temporales
         this.availablePlayers = [
@@ -245,14 +245,14 @@ export default {
           
           // Mostrar notificación
           if (window.$notify) {
-            window.$notify.success('Jugador añadido correctamente')
+            window.$notify.success(this.$t('teams.modal.playerAddedSuccessfully'))
           }
         } else {
-          this.error = response.data?.message || 'Error al añadir jugador'
+          this.error = response.data?.message || this.$t('teams.modal.errorAddingPlayer')
         }
       } catch (err) {
         console.error('Error adding player:', err)
-        this.error = apiHelpers.handleError(err) || 'Error al añadir jugador'
+        this.error = apiHelpers.handleError(err) || this.$t('teams.modal.errorAddingPlayer')
       } finally {
         this.loading = false
       }

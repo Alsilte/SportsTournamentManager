@@ -141,15 +141,14 @@
           localeStore.setLocale(newLocale)
           
           // Mostrar notificación de éxito
-          const selectedLocale = localeStore.availableLocales.find(l => l.code === newLocale)
           window.$notify?.success(
-            `Language changed to ${selectedLocale?.name}`,
+            t('notifications.languageChanged'),
             { duration: 2000 }
           )
           
         } catch (error) {
           console.error('Error changing language:', error)
-          window.$notify?.error('An error occurred')
+          window.$notify?.error(t('notifications.errorOccurred'))
         } finally {
           isChanging.value = false
           changingTo.value = null

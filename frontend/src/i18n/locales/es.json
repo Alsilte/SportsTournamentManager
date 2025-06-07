@@ -118,7 +118,12 @@
     "na": "N/A",
     "home": "Local",
     "away": "Visitante",
-    "tbd": "Por definir"
+    "tbd": "Por definir",
+    "account": "Cuenta",
+    "admin": "Admin",
+    "management": "Gestión",
+    "userManagement": "Gestión de Usuarios",
+    "manageTeams": "Gestionar Equipos"
   },
   "navigation": {
     "tournaments": "Torneos",
@@ -158,7 +163,50 @@
     "admin": "Administrador",
     "teamManager": "Manager de Equipo",
     "player": "Jugador",
-    "referee": "Árbitro"
+    "referee": "Árbitro",
+    "signInToAccount": "Inicia sesión en tu cuenta",
+    "or": "O",
+    "createNewAccount": "crea una nueva cuenta",
+    "emailAddress": "Dirección de correo",
+    "enterEmail": "Ingresa tu correo",
+    "password": "Contraseña",
+    "enterPassword": "Ingresa tu contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "signingIn": "Iniciando sesión...",
+    "orContinueWith": "O continúa con",
+    "socialLoginSoon": "Inicio de sesión social próximamente",
+    "demoAccounts": "Cuentas de Demostración",
+    "unexpectedError": "Ocurrió un error inesperado",
+    "loginFailed": "Error al iniciar sesión",
+    "createYourAccount": "Crea tu cuenta",
+    "signInToExisting": "inicia sesión en tu cuenta existente",
+    "fullName": "Nombre Completo",
+    "enterFullName": "Ingresa tu nombre completo",
+    "accountType": "Tipo de Cuenta",
+    "phoneOptional": "Número de Teléfono (Opcional)",
+    "enterPhone": "Ingresa tu número de teléfono",
+    "confirmPassword": "Confirmar Contraseña",
+    "confirmYourPassword": "Confirma tu contraseña",
+    "agreeToTerms": "Acepto los",
+    "termsOfService": "Términos de Servicio",
+    "and": "y",
+    "privacyPolicy": "Política de Privacidad",
+    "creatingAccount": "Creando cuenta...",
+    "createAccount": "Crear Cuenta",
+    "demoRolesAvailable": "Roles de Demo Disponibles:",
+    "playerRole": "Jugador",
+    "teamManagerRole": "Manager de Equipo",
+    "refereeRole": "Árbitro",
+    "playerDescription": "Únete a equipos, ve partidos y estadísticas",
+    "teamManagerDescription": "Crea y gestiona equipos, registra en torneos",
+    "refereeDescription": "Gestiona partidos y registra eventos de juego",
+    "fullNameRequired": "El nombre completo es requerido",
+    "nameMinLength": "El nombre debe tener al menos 2 caracteres",
+    "selectAccountType": "Por favor selecciona un tipo de cuenta",
+    "passwordConfirmationRequired": "La confirmación de contraseña es requerida",
+    "agreeToTermsRequired": "Debes aceptar los términos y condiciones",
+    "registrationFailed": "Error en el registro. Por favor intenta de nuevo.",
+    "registrationUnexpectedError": "Ocurrió un error inesperado. Por favor intenta de nuevo."
   },
   
     "dashboard": {
@@ -279,7 +327,33 @@
       "knockout": "Eliminación",
       "groupKnockout": "Grupos + Eliminación"
     },
-    "registerTeam": "Registrar Equipo",
+    "registration": {
+      "registerTeam": "Registrar Equipo",
+      "selectTeam": "Seleccionar Equipo",
+      "sport": "Deporte",
+      "startDate": "Fecha de Inicio",
+      "teams": "Equipos",
+      "location": "Ubicación",
+      "loadingTeams": "Cargando tus equipos...",
+      "noTeamsAvailable": "No hay equipos disponibles",
+      "chooseTeam": "Elige un equipo para registrar",
+      "players": "jugadores",
+      "contact": "Contacto",
+      "homeVenue": "Estadio Local",
+      "registrationRequirements": "Requisitos de Registro",
+      "requirementMinPlayers": "El equipo debe tener al menos 8 jugadores registrados",
+      "requirementVerified": "Todos los jugadores deben estar verificados y activos",
+      "requirementApproval": "El registro está sujeto a aprobación del torneo",
+      "registrationDeadline": "Fecha límite de registro",
+      "registering": "Registrando...",
+      "registerButton": "Registrar Equipo",
+      "noTeamsMessage": "No tienes equipos que puedan ser registrados para este torneo",
+      "selectTeamError": "Por favor selecciona un equipo",
+      "teamNotFoundError": "Equipo seleccionado no encontrado",
+      "minPlayersError": "El equipo debe tener al menos 8 jugadores para registrarse",
+      "registrationFailed": "Falló el registro",
+      "loadTeamsError": "Error al cargar tus equipos"
+    },
     "viewAll": "Ver Todos los Torneos",
     "viewDetails": "Ver Detalles",
     "noTournaments": "Aún no hay torneos",
@@ -304,6 +378,9 @@
       "descriptionPlaceholder": "Ingresa la descripción",
       "updating": "Actualizando…",
       "updateTournament": "Actualizar Torneo"
+    },
+    "card": {
+      "createdBy": "Creado por {name}"
     }
   },
   "notifications": {
@@ -373,7 +450,25 @@
       "forward": "Delantero"
     },
     "teamCaptain": "Capitán del Equipo",
-    "adding": "Añadiendo"
+    "adding": "Añadiendo",
+    "modal": {
+      "addPlayerAdmin": "Añadir Jugador (Admin)",
+      "addPlayer": "Añadir Jugador",
+      "player": "Jugador",
+      "selectPlayer": "Seleccionar jugador",
+      "position": "Posición",
+      "selectPosition": "Seleccionar posición",
+      "joinDate": "Fecha de Incorporación",
+      "teamCaptain": "Es capitán del equipo",
+      "forceAddition": "Forzar adición",
+      "forceAdditionDescription": "Permite añadir jugadores de otros equipos, forzar números, etc.",
+      "omitRestrictions": "(omitir restricciones)",
+      "adding": "Añadiendo...",
+      "inTeam": "(En: {teamName})",
+      "playerAddedSuccessfully": "Jugador añadido correctamente",
+      "errorAddingPlayer": "Error al añadir jugador",
+      "errorLoadingPlayers": "Error al cargar jugadores disponibles"
+    }
   },
   "referee": {
     "dashboard": {
@@ -516,6 +611,28 @@
         "reportSubmitted": "Informe enviado exitosamente",
         "errorSubmittingReport": "Error al enviar el informe"
       }
+    }
+  },
+  "footer": {
+    "description": "Sistema completo de gestión de torneos deportivos. Gestiona torneos, equipos, jugadores y partidos con facilidad.",
+    "quickLinks": "Enlaces Rápidos",
+    "support": "Soporte",
+    "helpCenter": "Centro de Ayuda",
+    "documentation": "Documentación",
+    "contactUs": "Contáctanos",
+    "privacyPolicy": "Política de Privacidad",
+    "allRightsReserved": "Todos los derechos reservados"
+  },
+  "admin": {
+    "panel": {
+      "title": "Panel de Administración",
+      "subtitle": "Administración y gestión del sistema"
+    },
+    "users": {
+      "title": "Gestión de Usuarios",
+      "subtitle": "Gestionar usuarios del sistema y permisos",
+      "addUser": "Añadir Usuario",
+      "underDevelopment": "Esta función está en desarrollo"
     }
   }
 }

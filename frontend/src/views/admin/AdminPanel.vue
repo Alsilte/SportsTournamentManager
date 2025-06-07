@@ -2,8 +2,8 @@
   <MainLayout>
     <template #header>
       <div>
-        <h1 class="text-3xl font-bold text-gray-900">Admin Panel</h1>
-        <p class="text-gray-600 mt-1">System administration and management</p>
+        <h1 class="text-3xl font-bold text-gray-900">{{ $t('admin.panel.title') }}</h1>
+        <p class="text-gray-600 mt-1">{{ $t('admin.panel.subtitle') }}</p>
       </div>
     </template>
 

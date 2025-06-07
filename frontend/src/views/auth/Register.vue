@@ -8,15 +8,15 @@
         </div>
       </div>
       <h2 class="mt-6 text-center text-3xl font-bold text-gray-900">
-        Create your account
+        {{ $t('auth.createYourAccount') }}
       </h2>
       <p class="mt-2 text-center text-sm text-gray-600">
-        Or
+        {{ $t('auth.or') }}
         <RouterLink 
           to="/login" 
           class="font-medium text-primary-600 hover:text-primary-500 transition-colors"
         >
-          sign in to your existing account
+          {{ $t('auth.signInToExisting') }}
         </RouterLink>
       </p>
     </div>
@@ -28,7 +28,7 @@
           <!-- Name Field -->
           <div>
             <label for="name" class="form-label">
-              Full Name
+              {{ $t('auth.fullName') }}
             </label>
             <div class="relative">
               <input
@@ -41,7 +41,7 @@
                   'form-input',
                   errors.name ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500' : ''
                 ]"
-                placeholder="Enter your full name"
+                :placeholder="$t('auth.enterFullName')"
                 :disabled="isLoading"
                 @input="clearFieldError('name')"
               />
@@ -55,7 +55,7 @@
           <!-- Email Field -->
           <div>
             <label for="email" class="form-label">
-              Email address
+              {{ $t('auth.emailAddress') }}
             </label>
             <div class="relative">
               <input
@@ -68,7 +68,7 @@
                   'form-input',
                   errors.email ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500' : ''
                 ]"
-                placeholder="Enter your email"
+                :placeholder="$t('auth.enterEmail')"
                 :disabled="isLoading"
                 @input="clearFieldError('email')"
               />
@@ -82,7 +82,7 @@
           <!-- Role Field -->
           <div>
             <label for="role" class="form-label">
-              Account Type
+              {{ $t('auth.accountType') }}
             </label>
             <select
               id="role"
@@ -95,10 +95,10 @@
               :disabled="isLoading"
               @change="clearFieldError('role')"
             >
-              <option value="">Select your role</option>
-              <option value="player">Player</option>
-              <option value="team_manager">Team Manager</option>
-              <option value="referee">Referee</option>
+              <option value="">{{ $t('auth.selectRole') }}</option>
+              <option value="player">{{ $t('auth.player') }}</option>
+              <option value="team_manager">{{ $t('auth.teamManager') }}</option>
+              <option value="referee">{{ $t('auth.referee') }}</option>
             </select>
             <p v-if="errors.role" class="form-error">
               {{ errors.role }}
@@ -108,7 +108,7 @@
           <!-- Phone Field -->
           <div>
             <label for="phone" class="form-label">
-              Phone Number (Optional)
+              {{ $t('auth.phoneOptional') }}
             </label>
             <div class="relative">
               <input
@@ -120,7 +120,7 @@
                   'form-input',
                   errors.phone ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500' : ''
                 ]"
-                placeholder="Enter your phone number"
+                :placeholder="$t('auth.enterPhone')"
                 :disabled="isLoading"
                 @input="clearFieldError('phone')"
               />
@@ -134,7 +134,7 @@
           <!-- Password Field -->
           <div>
             <label for="password" class="form-label">
-              Password
+              {{ $t('auth.password') }}
             </label>
             <div class="relative">
               <input
@@ -147,7 +147,7 @@
                   'form-input pr-10',
                   errors.password ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500' : ''
                 ]"
-                placeholder="Enter your password"
+                :placeholder="$t('auth.enterPassword')"
                 :disabled="isLoading"
                 @input="clearFieldError('password')"
               />
@@ -169,7 +169,7 @@
           <!-- Password Confirmation Field -->
           <div>
             <label for="password_confirmation" class="form-label">
-              Confirm Password
+              {{ $t('auth.confirmPassword') }}
             </label>
             <div class="relative">
               <input
@@ -182,7 +182,7 @@
                   'form-input pr-10',
                   errors.password_confirmation ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500' : ''
                 ]"
-                placeholder="Confirm your password"
+                :placeholder="$t('auth.confirmYourPassword')"
                 :disabled="isLoading"
                 @input="clearFieldError('password_confirmation')"
               />
@@ -212,10 +212,10 @@
               @change="clearFieldError('terms')"
             />
             <label for="terms" class="ml-2 block text-sm text-gray-700">
-              I agree to the 
-              <a href="#" class="text-primary-600 hover:text-primary-500">Terms of Service</a>
-              and 
-              <a href="#" class="text-primary-600 hover:text-primary-500">Privacy Policy</a>
+              {{ $t('auth.agreeToTerms') }} 
+              <a href="#" class="text-primary-600 hover:text-primary-500">{{ $t('auth.termsOfService') }}</a>
+              {{ $t('auth.and') }} 
+              <a href="#" class="text-primary-600 hover:text-primary-500">{{ $t('auth.privacyPolicy') }}</a>
             </label>
           </div>
           <p v-if="errors.terms" class="form-error">
@@ -239,20 +239,20 @@
             >
               <div v-if="isLoading" class="flex items-center justify-center">
                 <div class="spinner w-5 h-5 mr-2"></div>
-                Creating account...
+                {{ $t('auth.creatingAccount') }}
               </div>
-              <span v-else>Create Account</span>
+              <span v-else>{{ $t('auth.createAccount') }}</span>
             </button>
           </div>
         </form>
 
         <!-- Demo Accounts Info -->
         <div class="mt-6 p-4 bg-gray-50 rounded-lg">
-          <h3 class="text-sm font-medium text-gray-900 mb-2">Demo Roles Available:</h3>
+          <h3 class="text-sm font-medium text-gray-900 mb-2">{{ $t('auth.demoRolesAvailable') }}</h3>
           <div class="text-xs text-gray-600 space-y-1">
-            <div><strong>Player:</strong> Join teams, view matches and statistics</div>
-            <div><strong>Team Manager:</strong> Create and manage teams, register for tournaments</div>
-            <div><strong>Referee:</strong> Manage matches and record match events</div>
+            <div><strong>{{ $t('auth.playerRole') }}:</strong> {{ $t('auth.playerDescription') }}</div>
+            <div><strong>{{ $t('auth.teamManagerRole') }}:</strong> {{ $t('auth.teamManagerDescription') }}</div>
+            <div><strong>{{ $t('auth.refereeRole') }}:</strong> {{ $t('auth.refereeDescription') }}</div>
           </div>
         </div>
       </div>
@@ -277,6 +277,7 @@ import {
   ExclamationTriangleIcon
 } from '@heroicons/vue/24/outline'
 import { useAuthStore } from '@/stores/auth'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'Register',
@@ -291,6 +292,7 @@ export default {
   },
   setup() {
     const authStore = useAuthStore()
+    const { t } = useI18n()
     
     // Form state
     const form = ref({
@@ -341,43 +343,43 @@ export default {
 
       // Name validation
       if (!form.value.name) {
-        errors.value.name = 'Full name is required'
+        errors.value.name = t('auth.fullNameRequired')
       } else if (form.value.name.length < 2) {
-        errors.value.name = 'Name must be at least 2 characters'
+        errors.value.name = t('auth.nameMinLength')
       }
 
       // Email validation
       if (!form.value.email) {
-        errors.value.email = 'Email is required'
+        errors.value.email = t('auth.emailRequired')
       } else {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(form.value.email)) {
-          errors.value.email = 'Please enter a valid email address'
+          errors.value.email = t('auth.emailInvalid')
         }
       }
 
       // Role validation
       if (!form.value.role) {
-        errors.value.role = 'Please select an account type'
+        errors.value.role = t('auth.selectAccountType')
       }
 
       // Password validation
       if (!form.value.password) {
-        errors.value.password = 'Password is required'
+        errors.value.password = t('auth.passwordRequired')
       } else if (form.value.password.length < 8) {
-        errors.value.password = 'Password must be at least 8 characters'
+        errors.value.password = t('auth.passwordTooShort')
       }
 
       // Password confirmation validation
       if (!form.value.password_confirmation) {
-        errors.value.password_confirmation = 'Password confirmation is required'
+        errors.value.password_confirmation = t('auth.passwordConfirmationRequired')
       } else if (form.value.password !== form.value.password_confirmation) {
-        errors.value.password_confirmation = 'Passwords do not match'
+        errors.value.password_confirmation = t('auth.passwordsNotMatch')
       }
 
       // Terms validation
       if (!form.value.terms) {
-        errors.value.terms = 'You must agree to the terms and conditions'
+        errors.value.terms = t('auth.agreeToTermsRequired')
       }
 
       return Object.keys(errors.value).length === 0
@@ -386,46 +388,44 @@ export default {
     /**
      * Handle form submission
      */
-   const handleRegister = async () => {
-  // Clear previous errors
-  generalError.value = ''
-  
-  // Validate form
-  if (!validateForm()) {
-    return
-  }
+    const handleRegister = async () => {
+      // Clear previous errors
+      generalError.value = ''
+      
+      // Validate form
+      if (!validateForm()) {
+        return
+      }
 
-  isLoading.value = true
+      isLoading.value = true
 
-  try {
-    const result = await authStore.register({
-      name: form.value.name,
-      email: form.value.email,
-      role: form.value.role,
-      phone: form.value.phone || null,
-      password: form.value.password,
-      password_confirmation: form.value.password_confirmation
-    })
+      try {
+        const result = await authStore.register({
+          name: form.value.name,
+          email: form.value.email,
+          role: form.value.role,
+          phone: form.value.phone || null,
+          password: form.value.password,
+          password_confirmation: form.value.password_confirmation
+        })
 
-    // Verificar si el registro fue exitoso basado en la estructura de respuesta de la API
-    if (result && result.success === true) {
-      console.log('Registration successful:', result.data)
-      // El registro fue exitoso, el authStore ya manejó el token y datos del usuario
-    } else {
-      // Mostrar error específico si existe
-      generalError.value = result?.message || 'Registration failed. Please try again.'
+        if (result && result.success === true) {
+          console.log('Registration successful:', result.data)
+        } else {
+          generalError.value = result?.message || t('auth.registrationFailed')
+        }
+      } catch (error) {
+        console.error('Registration error:', error)
+        if (error.response?.data) {
+          generalError.value = error.response.data.message || t('auth.registrationUnexpectedError')
+        } else {
+          generalError.value = t('auth.registrationUnexpectedError')
+        }
+      } finally {
+        isLoading.value = false
+      }
     }
-  } catch (error) {
-    console.error('Registration error:', error)
-    if (error.response?.data) {
-      generalError.value = error.response.data.message || 'An unexpected error occurred.'
-    } else {
-      generalError.value = 'An unexpected error occurred. Please try again.'
-    }
-  } finally {
-    isLoading.value = false
-  }
-}
+
     // Clear any previous auth errors
     onMounted(() => {
       authStore.clearError()

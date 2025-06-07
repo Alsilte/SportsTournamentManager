@@ -16,7 +16,7 @@
               <!-- Header -->
               <div class="flex items-center justify-between mb-6">
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-900">Register Team</h3>
+                  <h3 class="text-lg font-semibold text-gray-900">{{ $t('tournaments.registration.registerTeam') }}</h3>
                   <p class="text-sm text-gray-600">{{ tournament?.name }}</p>
                 </div>
                 <button
@@ -31,15 +31,15 @@
               <div class="bg-gray-50 rounded-lg p-4 mb-6">
                 <div class="space-y-2 text-sm">
                   <div class="flex justify-between">
-                    <span class="text-gray-600">Sport:</span>
+                    <span class="text-gray-600">{{ $t('tournaments.registration.sport') }}:</span>
                     <span class="font-medium">{{ tournament?.sport_type }}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-600">Start Date:</span>
+                    <span class="text-gray-600">{{ $t('tournaments.registration.startDate') }}:</span>
                     <span class="font-medium">{{ formatDate(tournament?.start_date) }}</span>
                   </div>
                   <div class="flex justify-between">
-                    <span class="text-gray-600">Teams:</span>
+                    <span class="text-gray-600">{{ $t('tournaments.registration.teams') }}:</span>
                     <span class="font-medium"
                       >{{ tournament?.registered_teams_count || 0 }}/{{
                         tournament?.max_teams
@@ -47,7 +47,7 @@
                     >
                   </div>
                   <div v-if="tournament?.location" class="flex justify-between">
-                    <span class="text-gray-600">Location:</span>
+                    <span class="text-gray-600">{{ $t('tournaments.registration.location') }}:</span>
                     <span class="font-medium">{{ tournament.location }}</span>
                   </div>
                 </div>
@@ -55,18 +55,18 @@
 
               <!-- Loading State for Teams -->
               <div v-if="isLoadingTeams" class="space-y-4 mb-6">
-                <label class="form-label">Select Team</label>
+                <label class="form-label">{{ $t('tournaments.registration.selectTeam') }}</label>
                 <div class="animate-pulse">
                   <div class="h-10 bg-gray-200 rounded"></div>
                 </div>
-                <p class="text-sm text-gray-500">Loading your teams...</p>
+                <p class="text-sm text-gray-500">{{ $t('tournaments.registration.loadingTeams') }}</p>
               </div>
 
               <!-- Team Selection Form -->
               <form v-else @submit.prevent="handleSubmit" class="space-y-4">
                 <!-- Team Selection -->
                 <div>
-                  <label for="team" class="form-label"> Select Team </label>
+                  <label for="team" class="form-label">{{ $t('tournaments.registration.selectTeam') }}</label>
                   <select
                     id="team"
                     v-model="selectedTeamId"
@@ -77,17 +77,17 @@
                     <option value="">
                       {{
                         availableTeams.length === 0
-                          ? 'No teams available'
-                          : 'Choose a team to register'
+                          ? $t('tournaments.registration.noTeamsAvailable')
+                          : $t('tournaments.registration.chooseTeam')
                       }}
                     </option>
                     <option v-for="team in availableTeams" :key="team.id" :value="team.id">
-                      {{ team.name }} ({{ team.players_count || 0 }} players)
+                      {{ team.name }} ({{ team.players_count || 0 }} {{ $t('tournaments.registration.players') }})
                     </option>
                   </select>
                   <p v-if="error" class="form-error">{{ error }}</p>
                   <p v-if="availableTeams.length === 0" class="text-xs text-gray-500 mt-1">
-                    You don't have any teams that can be registered for this tournament
+                    {{ $t('tournaments.registration.noTeamsMessage') }}
                   </p>
                 </div>
 
@@ -95,11 +95,11 @@
                 <div v-if="selectedTeam" class="bg-primary-50 rounded-lg p-4">
                   <h4 class="font-medium text-primary-900 mb-2">{{ selectedTeam.name }}</h4>
                   <div class="space-y-1 text-sm text-primary-700">
-                    <p>Players: {{ selectedTeam.players_count || 0 }}</p>
+                    <p>{{ $t('dashboard.players') }}: {{ selectedTeam.players_count || 0 }}</p>
                     <p v-if="selectedTeam.contact_email">
-                      Contact: {{ selectedTeam.contact_email }}
+                      {{ $t('tournaments.registration.contact') }}: {{ selectedTeam.contact_email }}
                     </p>
-                    <p v-if="selectedTeam.home_venue">Home Venue: {{ selectedTeam.home_venue }}</p>
+                    <p v-if="selectedTeam.home_venue">{{ $t('tournaments.registration.homeVenue') }}: {{ selectedTeam.home_venue }}</p>
                   </div>
                 </div>
 
@@ -110,13 +110,13 @@
                       class="w-5 h-5 text-warning-600 mr-2 flex-shrink-0 mt-0.5"
                     />
                     <div class="text-sm">
-                      <h4 class="font-medium text-warning-800 mb-1">Registration Requirements</h4>
+                      <h4 class="font-medium text-warning-800 mb-1">{{ $t('tournaments.registration.registrationRequirements') }}</h4>
                       <ul class="text-warning-700 space-y-1">
-                        <li>• Team must have at least 8 registered players</li>
-                        <li>• All players must be verified and active</li>
-                        <li>• Registration is subject to tournament approval</li>
+                        <li>• {{ $t('tournaments.registration.requirementMinPlayers') }}</li>
+                        <li>• {{ $t('tournaments.registration.requirementVerified') }}</li>
+                        <li>• {{ $t('tournaments.registration.requirementApproval') }}</li>
                         <li>
-                          • Registration deadline: {{ formatDate(tournament?.registration_end) }}
+                          • {{ $t('tournaments.registration.registrationDeadline') }}: {{ formatDate(tournament?.registration_end) }}
                         </li>
                       </ul>
                     </div>
@@ -142,7 +142,7 @@
                     :disabled="isLoading"
                     class="flex-1 btn-secondary"
                   >
-                    Cancel
+                    {{ $t('common.cancel') }}
                   </button>
                   <button
                     type="submit"
@@ -151,9 +151,9 @@
                   >
                     <div v-if="isLoading" class="flex items-center justify-center">
                       <div class="spinner w-4 h-4 mr-2"></div>
-                      Registering...
+                      {{ $t('tournaments.registration.registering') }}
                     </div>
-                    <span v-else>Register Team</span>
+                    <span v-else>{{ $t('tournaments.registration.registerButton') }}</span>
                   </button>
                 </div>
               </form>
@@ -206,6 +206,54 @@ export default {
     })
 
     /**
+     * Handle form submission
+     */
+    const handleSubmit = async () => {
+      error.value = ''
+      generalError.value = ''
+
+      if (!selectedTeamId.value) {
+        error.value = this.$t('tournaments.registration.selectTeamError')
+        return
+      }
+
+      const team = selectedTeam.value
+      if (!team) {
+        error.value = this.$t('tournaments.registration.teamNotFoundError')
+        return
+      }
+
+      // Validate team requirements
+      if ((team.players_count || 0) < 8) {
+        error.value = this.$t('tournaments.registration.minPlayersError')
+        return
+      }
+
+      isLoading.value = true
+
+      try {
+        const response = await tournamentAPI.registerTeam(props.tournament.id, {
+          team_id: selectedTeamId.value,
+        })
+
+        if (apiHelpers.isSuccess(response)) {
+          emit('success', {
+            team: team,
+            tournament: props.tournament,
+            registration: apiHelpers.getData(response),
+          })
+        } else {
+          generalError.value = response.data?.message || this.$t('tournaments.registration.registrationFailed')
+        }
+      } catch (err) {
+        console.error('Registration failed:', err)
+        generalError.value = apiHelpers.handleError(err)
+      } finally {
+        isLoading.value = false
+      }
+    }
+
+    /**
      * Fetch user's teams - ONLY REAL DATA
      */
     const fetchAvailableTeams = async () => {
@@ -228,57 +276,9 @@ export default {
       } catch (err) {
         console.error('Failed to fetch teams:', err)
         availableTeams.value = []
-        generalError.value = 'Failed to load your teams'
+        generalError.value = this.$t('tournaments.registration.loadTeamsError')
       } finally {
         isLoadingTeams.value = false
-      }
-    }
-
-    /**
-     * Handle form submission
-     */
-    const handleSubmit = async () => {
-      error.value = ''
-      generalError.value = ''
-
-      if (!selectedTeamId.value) {
-        error.value = 'Please select a team'
-        return
-      }
-
-      const team = selectedTeam.value
-      if (!team) {
-        error.value = 'Selected team not found'
-        return
-      }
-
-      // Validate team requirements
-      if ((team.players_count || 0) < 8) {
-        error.value = 'Team must have at least 8 players to register'
-        return
-      }
-
-      isLoading.value = true
-
-      try {
-        const response = await tournamentAPI.registerTeam(props.tournament.id, {
-          team_id: selectedTeamId.value,
-        })
-
-        if (apiHelpers.isSuccess(response)) {
-          emit('success', {
-            team: team,
-            tournament: props.tournament,
-            registration: apiHelpers.getData(response),
-          })
-        } else {
-          generalError.value = response.data?.message || 'Registration failed'
-        }
-      } catch (err) {
-        console.error('Registration failed:', err)
-        generalError.value = apiHelpers.handleError(err)
-      } finally {
-        isLoading.value = false
       }
     }
 
