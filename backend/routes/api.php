@@ -49,7 +49,6 @@ Route::prefix('')->group(function () {
     Route::get('/{id}', [TeamController::class, 'show']);
     Route::get('/{id}/roster', [TeamController::class, 'roster']);
     Route::get('/{id}/statistics', [TeamController::class, 'statistics']);
-    Route::get('/{id}/available-players', [TeamController::class, 'getAvailablePlayers']);
   });
 
   // Public player data
@@ -97,6 +96,7 @@ Route::put('/profile', [AuthController::class, 'updateProfile']);
     Route::delete('/{id}', [TeamController::class, 'destroy']);
     Route::post('/{id}/add-player', [TeamController::class, 'addPlayer']);
     Route::delete('/{teamId}/remove-player/{playerId}', [TeamController::class, 'removePlayer']);
+    Route::get('/{id}/available-players', [TeamController::class, 'getAvailablePlayers']);
   });
 
   // Player management

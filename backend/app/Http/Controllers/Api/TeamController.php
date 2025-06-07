@@ -625,48 +625,89 @@ private function getNextAvailableNumber(Team $team): int
     /**
      * Get available players for a team - VERSIÓN DEBUG
      */
-    public function getAvailablePlayers(int $id): JsonResponse
-    {
-        try {
-            // Verificar que el equipo existe
-            $team = Team::findOrFail($id);
+   public function getAvailablePlayers(int $id): JsonResponse
+{
+    try {
+        // Verificar que el equipo existe
+        $team = Team::findOrFail($id);
+        
+        // Obtener IDs de jugadores que ya están activos en equipos
+        $activePlayerIds = DB::table('team_players')
+            ->where('is_active', true)
+            ->pluck('player_id')
+            ->toArray();
+
+        // Obtener jugadores que NO están activos en ningún equipo
+        $availablePlayers = Player::with(['user:id,name,email'])
+            ->whereNotIn('id', $activePlayerIds)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Si es admin, también incluir jugadores que ya están en otros equipos
+        // pero marcarlos como tales
+        if (request()->user()?->isAdmin()) {
+            $allPlayers = Player::with(['user:id,name,email', 'currentTeam:id,name'])
+                ->get();
+                
+            // Marcar cuáles están disponibles y cuáles no
+            $allPlayers->each(function ($player) use ($activePlayerIds) {
+                $player->is_available = !in_array($player->id, $activePlayerIds);
+            });
             
-            // Obtener TODOS los jugadores sin filtros complejos
-            $allPlayers = Player::with('user:id,name,email')->get();
-            
-            // Log para debug
-            Log::info('Available players request', [
-                'team_id' => $id,
-                'total_players_in_db' => $allPlayers->count(),
-                'players' => $allPlayers->pluck('id', 'user.name')
-            ]);
-            
-            return response()->json([
-                'success' => true,
-                'data' => $allPlayers,
-                'total' => $allPlayers->count(),
-                'message' => 'Players retrieved successfully',
-                'debug' => [
-                    'team_id' => $id,
-                    'team_name' => $team->name,
-                    'timestamp' => now()
-                ]
-            ]);
-            
-        } catch (\Exception $e) {
-            Log::error('Error fetching available players', [
-                'team_id' => $id,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to fetch available players',
-                'error' => $e->getMessage()
-            ], 500);
+            $playersToReturn = $allPlayers;
+        } else {
+            $playersToReturn = $availablePlayers;
         }
+
+        // Log para debug
+        Log::info('Available players request', [
+            'team_id' => $id,
+            'user_id' => request()->user()?->id,
+            'is_admin' => request()->user()?->isAdmin(),
+            'total_players_in_db' => Player::count(),
+            'active_players_in_teams' => count($activePlayerIds),
+            'available_players' => $playersToReturn->count(),
+            'available_players_ids' => $playersToReturn->pluck('id')->toArray()
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'data' => $playersToReturn,
+            'meta' => [
+                'total' => $playersToReturn->count(),
+                'total_in_db' => Player::count(),
+                'active_in_teams' => count($activePlayerIds),
+                'team_id' => $id,
+                'team_name' => $team->name,
+                'is_admin_request' => request()->user()?->isAdmin(),
+                'timestamp' => now()->toISOString()
+            ],
+            'message' => $playersToReturn->isEmpty() 
+                ? 'No hay jugadores disponibles' 
+                : 'Jugadores disponibles obtenidos correctamente'
+        ]);
+        
+    } catch (\Exception $e) {
+        Log::error('Error fetching available players', [
+            'team_id' => $id,
+            'user_id' => request()->user()?->id,
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al obtener jugadores disponibles',
+            'error' => $e->getMessage(),
+            'debug' => [
+                'team_id' => $id,
+                'timestamp' => now()->toISOString()
+            ]
+        ], 500);
     }
+}
 
     /**
      * Get teams managed by the authenticated user

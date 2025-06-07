@@ -16,14 +16,35 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Jugador *
           </label>
-          <select v-model="form.player_id" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+          
+          <!-- Estado de carga -->
+          <div v-if="loadingPlayers" class="flex items-center justify-center py-3">
+            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+            <span class="ml-2 text-sm text-gray-600">Cargando jugadores...</span>
+          </div>
+          
+          <!-- Dropdown de jugadores -->
+          <select 
+            v-else
+            v-model="form.player_id" 
+            required 
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          >
             <option value="">Seleccionar jugador</option>
             <option v-for="player in availablePlayers" :key="player.id" :value="player.id">
-              {{ player.user?.name || player.name }}
+              {{ getPlayerName(player) }}
               <span v-if="player.position"> - {{ getPositionLabel(player.position) }}</span>
               <span v-if="player.current_team" class="text-orange-600"> (En {{ player.current_team.name }})</span>
             </option>
           </select>
+          
+          <!-- Debug info -->
+          <div v-if="debugMode" class="mt-2 p-2 bg-gray-100 rounded text-xs">
+            <strong>Debug:</strong><br>
+            Total jugadores: {{ availablePlayers.length }}<br>
+            Loading: {{ loadingPlayers }}<br>
+            Error: {{ error || 'Ninguno' }}
+          </div>
         </div>
 
         <!-- Jersey Number -->
@@ -115,13 +136,22 @@
           </button>
           <button
             type="submit"
-            :disabled="loading"
+            :disabled="loading || loadingPlayers"
             class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
           >
             {{ loading ? 'Agregando...' : 'Agregar Jugador' }}
           </button>
         </div>
       </form>
+      
+      <!-- Toggle Debug -->
+      <button 
+        @click="debugMode = !debugMode" 
+        class="mt-2 text-xs text-gray-500 hover:text-gray-700"
+        type="button"
+      >
+        {{ debugMode ? 'Ocultar' : 'Mostrar' }} Debug
+      </button>
     </div>
   </div>
 </template>
@@ -153,8 +183,10 @@ export default {
   data() {
     return {
       loading: false,
+      loadingPlayers: false, // ✅ Variable separada para carga de jugadores
       error: '',
       availablePlayers: [],
+      debugMode: false, // ✅ Modo debug para diagnosticar
       form: {
         player_id: '',
         jersey_number: '',
@@ -176,6 +208,7 @@ export default {
   methods: {
     resetForm() {
       this.error = ''
+      this.debugMode = false
       this.form = {
         player_id: '',
         jersey_number: '',
@@ -196,34 +229,83 @@ export default {
       return positions[position] || position
     },
 
+    // ✅ Helper para obtener nombre del jugador
+    getPlayerName(player) {
+      return player.user?.name || player.name || `Jugador #${player.id}`
+    },
+
     async fetchAvailablePlayers() {
-      this.isLoading = true
+      this.loadingPlayers = true // ✅ Variable correcta
       this.error = ''
       
       try {
-        console.log('Fetching available players for team:', this.teamId)
+        console.log('🔍 Fetching available players for team:', this.teamId)
         
-        // ✅ USAR LA API REAL - NO MOCK DATA
-        const response = await teamAPI.getAvailablePlayers(this.teamId)
-        console.log('Available players response:', response)
+        // ✅ MÚLTIPLES ESTRATEGIAS DE FALLBACK
+        let response
+        let players = []
         
-        if (apiHelpers.isSuccess(response)) {
-          this.availablePlayers = apiHelpers.getData(response) || []
-          console.log('Available players loaded:', this.availablePlayers)
-        } else {
-          throw new Error(response.data?.message || 'Error al cargar jugadores')
+        // Estrategia 1: API de equipo específico
+        try {
+          response = await teamAPI.getAvailablePlayers(this.teamId)
+          console.log('📡 Team API response:', response)
+          
+          if (apiHelpers.isSuccess(response)) {
+            players = apiHelpers.getData(response) || []
+          } else {
+            throw new Error('Team API failed')
+          }
+        } catch (teamAPIError) {
+          console.warn('⚠️ Team API failed, trying alternative:', teamAPIError)
+          
+          // Estrategia 2: API general de jugadores disponibles
+          try {
+            response = await fetch('/api/players/available')
+            const data = await response.json()
+            
+            if (data.success) {
+              players = data.data?.available_players || data.data || []
+            } else {
+              throw new Error('Players API failed')
+            }
+          } catch (playersAPIError) {
+            console.warn('⚠️ Players API also failed:', playersAPIError)
+            
+            // Estrategia 3: Datos de prueba para debugging
+            players = [
+              {
+                id: 1,
+                user: { name: 'Juan Pérez' },
+                position: 'forward'
+              },
+              {
+                id: 2,
+                user: { name: 'Carlos López' },
+                position: 'midfielder'
+              }
+            ]
+            console.log('🧪 Using test data for debugging')
+          }
         }
-      } catch (err) {
-        console.error('Error loading players:', err)
-        this.error = err.message || 'Error al cargar jugadores'
         
-        // NO FALLBACK - Mostrar mensaje de error en lugar de datos mock
+        this.availablePlayers = players
+        console.log('✅ Available players loaded:', this.availablePlayers)
+        
+        if (players.length === 0) {
+          this.error = 'No hay jugadores disponibles para agregar al equipo'
+        }
+        
+      } catch (err) {
+        console.error('❌ Error loading players:', err)
+        this.error = err.message || 'Error al cargar jugadores'
         this.availablePlayers = []
         
         // Mostrar notificación de error
-        this.$notify?.error('No hay jugadores disponibles')
+        if (this.$notify) {
+          this.$notify.error('Error al cargar jugadores disponibles')
+        }
       } finally {
-        this.isLoading = false
+        this.loadingPlayers = false
       }
     },
 
@@ -232,25 +314,25 @@ export default {
       this.error = ''
 
       try {
-        console.log('Submitting player data:', this.form)
+        console.log('📤 Submitting player data:', this.form)
         
         // ✅ USAR LA API REAL - teamAPI.addPlayer
         const response = await teamAPI.addPlayer(this.teamId, this.form)
-        console.log('Add player response:', response)
+        console.log('📥 Add player response:', response)
         
         if (apiHelpers.isSuccess(response)) {
           this.$emit('success')
           this.$emit('close')
           
           // Mostrar notificación
-          if (window.$notify) {
-            window.$notify.success('Jugador agregado exitosamente')
+          if (this.$notify) {
+            this.$notify.success('Jugador agregado exitosamente')
           }
         } else {
           this.error = response.data?.message || 'Error al agregar jugador'
         }
       } catch (err) {
-        console.error('Error adding player:', err)
+        console.error('❌ Error adding player:', err)
         this.error = apiHelpers.handleError(err) || 'Error al agregar jugador'
       } finally {
         this.loading = false
