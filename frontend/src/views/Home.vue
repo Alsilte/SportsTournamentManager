@@ -451,13 +451,9 @@
 </template>
 
 <script>
-/**
- * Enhanced Home Page Component with I18n
- * Beautiful landing page with animations, modern design, and full internationalization
- */
+
 
 import { ref, computed, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
 import {
   CalendarIcon,
   UserGroupIcon,
@@ -613,7 +609,12 @@ export default {
      * Format tournament type
      */
     const formatTournamentType = (type) => {
-      return t(`tournaments.formats.${type}`)
+      const typeMap = {
+        league: 'Liga',
+        knockout: 'Eliminación directa',
+        group_knockout: 'Grupos + Eliminación',
+      }
+      return typeMap[type] || type
     }
 
     /**

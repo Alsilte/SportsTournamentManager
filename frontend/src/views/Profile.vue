@@ -3,8 +3,8 @@
     <template #header>
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">{{ $t('profile.title') }}</h1>
-          <p class="text-gray-600 mt-1">{{ $t('profile.subtitle') }}</p>
+          <h1 class="text-3xl font-bold text-gray-900">Mi Perfil</h1>
+          <p class="text-gray-600 mt-1">Gestiona tu información personal</p>
         </div>
       </div>
     </template>
@@ -25,51 +25,51 @@
         <!-- Formulario editable -->
         <form @submit.prevent="updateProfile" class="space-y-4">
           <div>
-            <label class="form-label">{{ $t('profile.form.fullName') }}</label>
+            <label class="form-label">Nombre completo</label>
             <input 
               v-model="form.name"
               type="text" 
               class="form-input"
               :class="{ 'border-danger-300': errors.name }"
               :disabled="isLoading"
-              :placeholder="$t('profile.form.fullNamePlaceholder')"
+              placeholder="Ingresa tu nombre completo"
             />
             <p v-if="errors.name" class="form-error">{{ errors.name }}</p>
           </div>
 
           <div>
-            <label class="form-label">{{ $t('profile.form.email') }}</label>
+            <label class="form-label">Correo electrónico</label>
             <input
               type="email"
               :value="authStore.userEmail"
               disabled
               class="form-input bg-gray-50"
             />
-            <p class="text-xs text-gray-500 mt-1">{{ $t('profile.form.emailNotChangeable') }}</p>
+            <p class="text-xs text-gray-500 mt-1">El correo electrónico no se puede cambiar</p>
           </div>
 
           <div>
-            <label class="form-label">{{ $t('profile.form.phone') }}</label>
+            <label class="form-label">Teléfono</label>
             <input
               v-model="form.phone"
               type="tel"
               class="form-input"
               :class="{ 'border-danger-300': errors.phone }"
               :disabled="isLoading"
-              :placeholder="$t('profile.form.phonePlaceholder')"
+              placeholder="Ingresa tu número de teléfono"
             />
             <p v-if="errors.phone" class="form-error">{{ errors.phone }}</p>
           </div>
 
           <div>
-            <label class="form-label">{{ $t('profile.form.role') }}</label>
+            <label class="form-label">Rol</label>
             <input
               type="text"
               :value="authStore.userRole"
               disabled
               class="form-input bg-gray-50 capitalize"
             />
-            <p class="text-xs text-gray-500 mt-1">{{ $t('profile.form.roleNotChangeable') }}</p>
+            <p class="text-xs text-gray-500 mt-1">El rol no se puede cambiar</p>
           </div>
 
           <!-- Error general -->
@@ -89,9 +89,9 @@
             >
               <div v-if="isLoading" class="flex items-center">
                 <div class="spinner w-4 h-4 mr-2"></div>
-                {{ $t('profile.form.updating') }}
+                Actualizando...
               </div>
-              <span v-else>{{ $t('profile.form.updateProfile') }}</span>
+              <span v-else>Actualizar Perfil</span>
             </button>
             <button 
               type="button"
@@ -99,7 +99,7 @@
               class="btn-secondary"
               :disabled="isLoading"
             >
-              {{ $t('profile.form.reset') }}
+              Restablecer
             </button>
           </div>
         </form>
@@ -179,12 +179,12 @@ export default {
 
       // Basic validation
       if (!form.value.name?.trim()) {
-        errors.value.name = 'Name is required'
+        errors.value.name = 'El nombre es requerido'
         return
       }
 
       if (form.value.phone && !/^[\+]?[\d\s\-\(\)]{10,}$/.test(form.value.phone)) {
-        errors.value.phone = 'Please enter a valid phone number'
+        errors.value.phone = 'Por favor ingresa un número de teléfono válido'
         return
       }
 
@@ -204,9 +204,9 @@ export default {
           originalValues.value.name = form.value.name
           originalValues.value.phone = form.value.phone
           
-          window.$notify?.success('Profile updated successfully!')
+          window.$notify?.success('Perfil actualizado exitosamente!')
         } else {
-          generalError.value = response.data?.message || 'Failed to update profile'
+          generalError.value = response.data?.message || 'Error al actualizar el perfil'
         }
       } catch (error) {
         console.error('Update profile failed:', error)
