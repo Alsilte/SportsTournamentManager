@@ -121,10 +121,7 @@
 </template>
 
 <script>
-/**
- * Navigation Header Component
- * Main navigation bar with responsive design, user authentication, and i18n support
- */
+
 
 import { inject } from 'vue'
 import { RouterLink } from 'vue-router'

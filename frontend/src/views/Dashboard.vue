@@ -93,13 +93,9 @@
 </template>
 
 <script>
-/**
- * Enhanced Dashboard Component with I18n
- * Provides beautiful, role-based dashboard with internationalization
- */
+
 
 import { ref, computed, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
 import {
   ArrowPathIcon,
   PlusIcon,
