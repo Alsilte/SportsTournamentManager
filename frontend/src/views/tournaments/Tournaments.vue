@@ -9,11 +9,15 @@
         <div class="flex items-center space-x-4">
           <RouterLink 
             v-if="authStore.isAdmin"
+
+
+
+
             to="/tournaments/create" 
             class="btn-primary"
           >
             <PlusIcon class="w-4 h-4 mr-2" />
-            {{ $t('tournaments.create') }}
+            Crear Torneo
           </RouterLink>
         </div>
       </div>
@@ -206,7 +210,7 @@
           to="/tournaments/create" 
           class="btn-primary"
         >
-          {{ $t('tournaments.create') }}
+          Crear Torneo
         </RouterLink>
       </div>
     </div>

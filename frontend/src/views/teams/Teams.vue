@@ -243,7 +243,7 @@
           {{ $t('teams.clearFilters') }}
         </button>
         <RouterLink v-if="authStore.canManageTeams" to="/teams/create" class="btn-primary">
-          {{ $t('teams.create') }}
+          Crear Equipo
         </RouterLink>
       </div>
     </div>
