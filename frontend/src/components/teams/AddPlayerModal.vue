@@ -19,7 +19,7 @@
           <select v-model="form.player_id" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
             <option value="">Seleccionar jugador</option>
             <option v-for="player in availablePlayers" :key="player.id" :value="player.id">
-              {{ player.user?.name }} 
+              {{ player.user?.name || player.name }}
               <span v-if="player.position"> - {{ player.position }}</span>
               <span v-if="player.current_team" class="text-orange-600"> (En: {{ player.current_team.name }})</span>
             </option>
@@ -49,10 +49,10 @@
           </label>
           <select v-model="form.position" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
             <option value="">Seleccionar posición</option>
-            <option value="Goalkeeper">Portero</option>
-            <option value="Defender">Defensor</option>
-            <option value="Midfielder">Mediocampista</option>
-            <option value="Forward">Delantero</option>
+            <option value="goalkeeper">Portero</option>
+            <option value="defender">Defensor</option>
+            <option value="midfielder">Mediocampista</option>
+            <option value="forward">Delantero</option>
           </select>
         </div>
 
@@ -128,6 +128,7 @@
 
 <script>
 import { XMarkIcon } from '@heroicons/vue/24/outline'
+import { teamAPI, apiHelpers } from '@/services/api'
 
 export default {
   name: 'AddPlayerModal',
@@ -187,34 +188,43 @@ export default {
 
     async fetchAvailablePlayers() {
       try {
-        // AQUÍ VA TU LLAMADA A LA API REAL
-        // const response = await this.$api.get(`/teams/${this.teamId}/available-players`)
-        // this.availablePlayers = response.data.players
-
-        // MOCK DATA - reemplazar con API real
+        console.log('Fetching available players for team:', this.teamId)
+        
+        // ✅ USAR LA API REAL - NO MOCK DATA
+        const response = await teamAPI.getAvailablePlayers(this.teamId)
+        console.log('Available players response:', response)
+        
+        if (apiHelpers.isSuccess(response)) {
+          this.availablePlayers = apiHelpers.getData(response) || []
+          console.log('Available players loaded:', this.availablePlayers)
+        } else {
+          throw new Error(response.data?.message || 'Error al cargar jugadores')
+        }
+      } catch (err) {
+        console.error('Error loading players:', err)
+        this.error = err.message || 'Error al cargar jugadores disponibles'
+        
+        // Fallback: Si la API falla, mostrar datos mock temporales
         this.availablePlayers = [
           {
             id: 1,
             user: { name: 'Carlos Rodriguez' },
-            position: 'Forward',
+            position: 'forward',
             current_team: null
           },
           {
             id: 2,
             user: { name: 'Marco Silva' },
-            position: 'Midfielder',
-            current_team: { name: 'FC Barcelona' }
+            position: 'midfielder',
+            current_team: null
           },
           {
             id: 3,
             user: { name: 'John Smith' },
-            position: 'Defender',
+            position: 'defender',
             current_team: null
           }
         ]
-      } catch (err) {
-        console.error('Error loading players:', err)
-        this.error = 'Error al cargar jugadores disponibles'
       }
     },
 
@@ -223,22 +233,26 @@ export default {
       this.error = ''
 
       try {
-        // AQUÍ VA TU LLAMADA A LA API REAL
-        // const response = await this.$api.post(`/teams/${this.teamId}/players`, this.form)
+        console.log('Submitting player data:', this.form)
         
-        // SIMULACIÓN - reemplazar con API real
-        console.log('Enviando:', this.form)
-        await new Promise(resolve => setTimeout(resolve, 1000)) // Simular delay
-
-        this.$emit('success')
-        this.$emit('close')
+        // ✅ USAR LA API REAL - teamAPI.addPlayer
+        const response = await teamAPI.addPlayer(this.teamId, this.form)
+        console.log('Add player response:', response)
         
-        // Mostrar notificación
-        if (window.$notify) {
-          window.$notify.success('Jugador añadido correctamente')
+        if (apiHelpers.isSuccess(response)) {
+          this.$emit('success')
+          this.$emit('close')
+          
+          // Mostrar notificación
+          if (window.$notify) {
+            window.$notify.success('Jugador añadido correctamente')
+          }
+        } else {
+          this.error = response.data?.message || 'Error al añadir jugador'
         }
       } catch (err) {
-        this.error = err.response?.data?.message || 'Error al añadir jugador'
+        console.error('Error adding player:', err)
+        this.error = apiHelpers.handleError(err) || 'Error al añadir jugador'
       } finally {
         this.loading = false
       }

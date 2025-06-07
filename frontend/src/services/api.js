@@ -103,15 +103,23 @@ export const teamAPI = {
   getAll: (params) => api.get('/teams', { params }),
   getById: (id) => api.get(`/teams/${id}`),
   show: (id) => api.get(`/teams/${id}`), // Alias para getById
+  
+  // ✅ ENDPOINT CORRECTO PARA ROSTER
   getRoster: (id) => api.get(`/teams/${id}/roster`),
+  
   getStatistics: (id) => api.get(`/teams/${id}/statistics`),
   create: (data) => api.post('/teams', data),
   update: (id, data) => api.put(`/teams/${id}`, data),
   delete: (id) => api.delete(`/teams/${id}`),
   
-  // ✅ MÉTODOS DE JUGADORES CORREGIDOS
-  addPlayer: (teamId, playerData) => api.post(`/teams/${teamId}/players`, playerData),
-  removePlayer: (teamId, playerId) => api.delete(`/teams/${teamId}/players/${playerId}`),
+  // ✅ MÉTODOS CORREGIDOS SEGÚN TU BACKEND (routes/api.php)
+  // POST /teams/{id}/add-player (según tu backend)
+  addPlayer: (teamId, playerData) => api.post(`/teams/${teamId}/add-player`, playerData),
+  
+  // DELETE /teams/{teamId}/remove-player/{playerId} (según tu backend)
+  removePlayer: (teamId, playerId) => api.delete(`/teams/${teamId}/remove-player/${playerId}`),
+  
+  // GET /teams/{id}/available-players (asumiendo que existe)
   getAvailablePlayers: (teamId) => api.get(`/teams/${teamId}/available-players`),
 }
 
