@@ -114,9 +114,8 @@ import AdminDashboard from '@/components/dashboard/AdminDashboard.vue'
 import TeamManagerDashboard from '@/components/dashboard/TeamManagerDashboard.vue'
 import RefereeDashboard from '@/components/dashboard/RefereeDashboard.vue'
 import PlayerDashboard from '@/components/dashboard/PlayerDashboard.vue'
-import tournamentAPI from '@/api/tournament'
-import teamAPI from '@/api/team'
-import apiHelpers from '@/helpers/api'
+// ✅ IMPORTS CORREGIDOS - usar la estructura existente
+import { tournamentAPI, teamAPI, apiHelpers } from '@/services/api'
 
 export default {
   name: 'Dashboard',
