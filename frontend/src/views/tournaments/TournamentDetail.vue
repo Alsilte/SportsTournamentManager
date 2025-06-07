@@ -438,13 +438,7 @@
       @success="handleRegistrationSuccess"
     />
 
-    <!-- Edit Tournament Modal -->
-    <EditTournamentModal
-      v-if="showEditModal && tournament"
-      :tournament="tournament"
-      @close="showEditModal = false"
-      @updated="handleTournamentUpdated"
-    />
+   
   </MainLayout>
 </template>
 
@@ -472,14 +466,12 @@ import { useAuthStore } from '@/stores/auth'
 import { tournamentAPI, apiHelpers } from '@/services/api'
 import MainLayout from '@/components/layout/MainLayout.vue'
 import TeamRegistrationModal from '@/components/tournaments/TeamRegistrationModal.vue'
-import EditTournamentModal from '@/components/tournaments/EditTournamentModal.vue'
 
 export default {
   name: 'TournamentDetail',
   components: {
     MainLayout,
     TeamRegistrationModal,
-    EditTournamentModal,
     ArrowLeftIcon,
     PlusIcon,
     PencilIcon,
