@@ -224,7 +224,7 @@ export default {
       }
 
       // Validate team requirements
-      if ((team.players_count || 0) < 8) {
+      if ((team.players_count || 0) < 5) {
         error.value = 'El equipo debe tener al menos 8 jugadores'
         return
       }
