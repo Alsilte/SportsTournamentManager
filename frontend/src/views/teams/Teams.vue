@@ -9,7 +9,7 @@
         <div class="flex items-center space-x-4">
           <RouterLink v-if="authStore.canManageTeams" to="/teams/create" class="btn-primary">
             <PlusIcon class="w-4 h-4 mr-2" />
-            {{ $t('teams.create') }}
+            {{ $t('teams.create') || 'Crear Equipo' }}
           </RouterLink>
         </div>
       </div>

@@ -35,7 +35,7 @@
         <h2 class="text-xl font-semibold text-gray-900">{{ $t('dashboard.recentTournaments') }}</h2>
         <RouterLink to="/tournaments/create" class="btn-primary">
           <PlusIcon class="w-4 h-4 mr-2" />
-          {{ $t('tournaments.create') }}
+          {{ $t('tournaments.create') || 'Crear Torneo' }}
         </RouterLink>
       </div>
 
