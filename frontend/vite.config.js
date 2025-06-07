@@ -47,7 +47,7 @@ export default defineConfig({
         manualChunks: {
           'vendor': ['vue', 'vue-router', 'pinia'],
           'ui': ['@headlessui/vue', '@heroicons/vue'],
-          'utils': ['axios', 'vue-i18n']
+          'utils': ['axios']
         }
       }
     }
