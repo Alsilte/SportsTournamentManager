@@ -121,6 +121,20 @@ export const teamAPI = {
   
   // GET /teams/{id}/available-players (asumiendo que existe)
   getAvailablePlayers: (teamId) => api.get(`/teams/${teamId}/available-players`),
+
+  /**
+   * Get teams managed by current user
+   */
+  getMyTeams() {
+    return api.get('/teams/my-teams')
+  },
+
+  /**
+   * Get teams by manager ID
+   */
+  getByManager(managerId) {
+    return api.get(`/teams?manager_id=${managerId}`)
+  },
 }
 
 export const playerAPI = {

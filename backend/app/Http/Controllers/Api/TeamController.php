@@ -653,4 +653,41 @@ private function getNextAvailableNumber(Team $team): int
             ], 500);
         }
     }
+
+    /**
+     * Get teams managed by the authenticated user
+     */
+    public function getMyTeams(Request $request): JsonResponse
+    {
+        try {
+            $user = $request->user();
+            
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ], 401);
+            }
+
+            // Get teams where user is the manager
+            $teams = Team::with(['players:id,name,email', 'manager:id,name'])
+                ->withCount(['players as active_players_count' => function ($query) {
+                    $query->wherePivot('is_active', true);
+                }])
+                ->where('manager_id', $user->id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $teams
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch teams',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

@@ -114,6 +114,13 @@ Route::put('/profile', [AuthController::class, 'updateProfile']);
   Route::prefix('standings')->group(function () {
     Route::get('/tournament/{tournamentId}/team/{teamId}', [StandingController::class, 'teamStats']);
   });
+
+  // Team routes
+  Route::apiResource('teams', TeamController::class);
+  Route::get('teams/my-teams', [TeamController::class, 'getMyTeams']); // Nueva ruta
+  Route::post('teams/{team}/players', [TeamController::class, 'addPlayer']);
+  Route::put('teams/{team}/players/{player}', [TeamController::class, 'updatePlayer']);
+  Route::delete('teams/{team}/players/{player}', [TeamController::class, 'removePlayer']);
 });
 
 // Fallback route for API
