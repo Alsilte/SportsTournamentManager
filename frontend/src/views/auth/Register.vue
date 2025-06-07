@@ -246,14 +246,14 @@
           </div>
         </form>
 
-        <!-- Demo Accounts Info -->
-        <div class="mt-6 p-4 bg-gray-50 rounded-lg">
-          <h3 class="text-sm font-medium text-gray-900 mb-2">Roles disponibles para demostración</h3>
-          <div class="text-xs text-gray-600 space-y-1">
-            <div><strong>Jugador:</strong> Únete a equipos y participa en torneos</div>
-            <div><strong>Gestor de Equipo:</strong> Crea y gestiona equipos, registra equipos en torneos</div>
-            <div><strong>Árbitro:</strong> Arbitra partidos y gestiona eventos del partido</div>
-          </div>
+        <!-- Home Button -->
+        <div class="mt-6 text-center">
+          <RouterLink 
+            to="/" 
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-primary-600 bg-primary-50 hover:bg-primary-100 transition-colors"
+          >
+            Ir al Inicio
+          </RouterLink>
         </div>
       </div>
     </div>
