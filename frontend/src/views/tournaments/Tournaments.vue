@@ -433,8 +433,9 @@ export default {
         return
       }
 
-      // Corregir la validación de permisos
-      if (!authStore.isAdmin && !authStore.isTeamManager) {
+      // Verificar si el usuario puede gestionar equipos
+      const canManageTeams = authStore.isAdmin || authStore.canManageTeams || authStore.role === 'team_manager'
+      if (!canManageTeams) {
         window.$notify?.warning('Solo los administradores y gestores de equipos pueden registrar equipos')
         return
       }

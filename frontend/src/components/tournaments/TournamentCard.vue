@@ -174,16 +174,19 @@ export default {
     })
 
     const canRegisterForTournament = computed(() => {
+      const canManageTeams = authStore.isAdmin || authStore.canManageTeams || authStore.role === 'team_manager'
+      
       return (
         authStore.isAuthenticated && 
-        (authStore.isAdmin || authStore.isTeamManager) &&
+        canManageTeams &&
         (props.tournament.status === 'registration_open' || props.tournament.status === 'draft') &&
         !isRegistrationFull.value
       )
     })
 
     const canRegisterTeam = computed(() => {
-      return authStore.isAuthenticated && (authStore.isAdmin || authStore.isTeamManager)
+      const canManageTeams = authStore.isAdmin || authStore.canManageTeams || authStore.role === 'team_manager'
+      return authStore.isAuthenticated && canManageTeams
     })
 
     const statusBadgeClasses = computed(() => {

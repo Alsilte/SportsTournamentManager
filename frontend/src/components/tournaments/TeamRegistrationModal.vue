@@ -46,9 +46,17 @@
           </div>
 
           <!-- Manager Notice -->
-          <div v-else class="bg-yellow-50 border border-yellow-200 rounded p-3">
+          <div v-else-if="canManageTeams" class="bg-yellow-50 border border-yellow-200 rounded p-3">
             <p class="text-sm text-yellow-700">
-              • El equipo debe tener al menos 1 jugador
+              • Solo puedes registrar equipos que gestiones<br>
+              • El equipo debe tener al menos 1 jugador activo
+            </p>
+          </div>
+
+          <!-- No permissions notice -->
+          <div v-else class="bg-red-50 border border-red-200 rounded p-3">
+            <p class="text-sm text-red-700">
+              No tienes permisos para registrar equipos
             </p>
           </div>
 
@@ -69,7 +77,7 @@
             </button>
             <button
               type="submit"
-              :disabled="!selectedTeamId || isLoading || availableTeams.length === 0"
+              :disabled="!selectedTeamId || isLoading || availableTeams.length === 0 || (!isAdmin && !canManageTeams)"
               class="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
             >
               {{ isLoading ? 'Registrando...' : 'Registrar' }}
@@ -106,7 +114,8 @@ export default {
     const error = ref('')
 
     // Computed
-    const isAdmin = computed(() => authStore.user?.isAdmin || false)
+    const isAdmin = computed(() => authStore.isAdmin || authStore.user?.role === 'admin')
+    const canManageTeams = computed(() => authStore.canManageTeams || authStore.role === 'team_manager')
     
     const selectedTeam = computed(() => {
       return availableTeams.value.find(team => team.id === selectedTeamId.value)
@@ -122,91 +131,138 @@ export default {
         
         if (isAdmin.value) {
           // Admins ven TODOS los equipos
-          console.log('Fetching all teams for admin')
+          console.log('🔧 Cargando todos los equipos para admin')
           response = await teamAPI.getAll()
         } else {
           // Managers solo ven SUS equipos
-          console.log('Fetching teams for manager:', authStore.user?.id)
-response = await teamAPI.getAll({ 
-  manager_id: authStore.user?.id,
-  active: true  // Cambiar 'is_active' por 'active'
-})
+          console.log('🔧 Cargando equipos para manager:', authStore.user?.id)
+          response = await teamAPI.getMyTeams() // Cambiar por endpoint específico
         }
 
-        console.log('Teams response:', response)
+        console.log('📨 Respuesta de equipos:', response)
 
         if (apiHelpers.isSuccess(response)) {
           const data = apiHelpers.getData(response)
           // Handle both paginated and non-paginated responses
-          availableTeams.value = data.data || data || []
-          console.log('Available teams loaded:', availableTeams.value)
+          availableTeams.value = Array.isArray(data) ? data : (data.data || [])
+          
+          console.log('✅ Equipos disponibles:', availableTeams.value.length)
+          
+          if (availableTeams.value.length === 0) {
+            error.value = isAdmin.value 
+              ? 'No hay equipos en el sistema' 
+              : 'No tienes equipos asignados. Contacta al administrador.'
+          }
         } else {
-          console.error('Failed to fetch teams:', response)
+          console.error('❌ Error en respuesta de equipos:', response)
           availableTeams.value = []
           error.value = 'Error al cargar equipos'
         }
       } catch (err) {
-        console.error('Error loading teams:', err)
-        error.value = 'Error al cargar equipos'
+        console.error('💥 Error cargando equipos:', err)
+        
+        // Manejo específico de errores de permisos
+        if (err.response?.status === 403) {
+          error.value = 'No tienes permisos para ver equipos'
+        } else if (err.response?.status === 401) {
+          error.value = 'Sesión expirada. Inicia sesión nuevamente'
+        } else {
+          error.value = 'Error al cargar equipos. Intenta nuevamente.'
+        }
+        
         availableTeams.value = []
       } finally {
         isLoadingTeams.value = false
       }
     }
 
-   const handleSubmit = async () => {
-  error.value = ''
-  
-  if (!selectedTeamId.value) {
-    error.value = 'Selecciona un equipo'
-    return
-  }
+    const handleSubmit = async () => {
+      error.value = ''
+      
+      if (!selectedTeamId.value) {
+        error.value = 'Selecciona un equipo'
+        return
+      }
 
-  isLoading.value = true
+      // Validación adicional para managers
+      if (!isAdmin.value) {
+        const team = selectedTeam.value
+        if (!team) {
+          error.value = 'Equipo no válido'
+          return
+        }
+        
+        // Verificar que es el manager del equipo
+        if (team.manager_id !== authStore.user?.id) {
+          error.value = 'Solo puedes registrar equipos que gestiones'
+          return
+        }
+      }
 
-  try {
-    console.log('🚀 Intentando registrar equipo...')
-    console.log('📋 Datos:', {
-      tournamentId: props.tournament.id,
-      teamId: selectedTeamId.value,
-      tournament: props.tournament,
-      selectedTeam: selectedTeam.value
-    })
-    
-    const response = await tournamentAPI.registerTeam(props.tournament.id, {
-      team_id: selectedTeamId.value
-    })
+      isLoading.value = true
 
-    console.log('✅ Respuesta exitosa:', response)
+      try {
+        console.log('🚀 Registrando equipo:', {
+          tournamentId: props.tournament.id,
+          teamId: selectedTeamId.value,
+          userRole: authStore.user?.role,
+          isAdmin: isAdmin.value
+        })
+        
+        const response = await tournamentAPI.registerTeam(props.tournament.id, {
+          team_id: selectedTeamId.value
+        })
 
-    if (apiHelpers.isSuccess(response)) {
-      emit('success')
-    } else {
-      console.error('❌ Respuesta no exitosa:', response)
-      error.value = response.data?.message || 'Error en el registro'
+        console.log('✅ Registro exitoso:', response)
+
+        if (apiHelpers.isSuccess(response)) {
+          emit('success')
+        } else {
+          console.error('❌ Registro fallido:', response)
+          error.value = response.data?.message || 'Error en el registro'
+        }
+      } catch (err) {
+        console.error('💥 Error en registro:', err)
+        
+        // Manejo específico de errores del servidor
+        if (err.response?.data?.message) {
+          error.value = err.response.data.message
+        } else if (err.response?.status === 422) {
+          // Error de validación
+          const validationErrors = err.response?.data?.errors
+          if (validationErrors) {
+            const errorMessages = Object.values(validationErrors).flat()
+            error.value = errorMessages.join(', ')
+          } else {
+            error.value = 'Datos de registro inválidos'
+          }
+        } else if (err.response?.status === 403) {
+          error.value = 'No tienes permisos para registrar este equipo'
+        } else if (err.response?.status === 404) {
+          error.value = 'Torneo o equipo no encontrado'
+        } else {
+          error.value = 'Error al registrar equipo. Intenta nuevamente.'
+        }
+      } finally {
+        isLoading.value = false
+      }
     }
-  } catch (err) {
-    console.error('💥 Error completo:', err)
-    console.error('📄 Respuesta del servidor:', err.response?.data)
-    
-    // Mostrar mensaje específico del servidor
-    if (err.response?.data?.message) {
-      error.value = err.response.data.message
-    } else if (err.response?.data?.errors) {
-      // Si hay errores de validación específicos
-      const validationErrors = Object.values(err.response.data.errors).flat()
-      error.value = validationErrors.join(', ')
-    } else {
-      error.value = 'Error al registrar equipo'
-    }
-  } finally {
-    isLoading.value = false
-  }
-}
 
+    // Verificar permisos al montar el componente
     onMounted(() => {
-      console.log('Modal mounted, user:', authStore.user)
-      console.log('Is admin:', isAdmin.value)
+      console.log('🔧 Modal montado:', {
+        user: authStore.user,
+        isAdmin: isAdmin.value,
+        canManageTeams: canManageTeams.value,
+        tournament: props.tournament
+      })
+      
+      // Verificar que el usuario puede registrar equipos
+      if (!isAdmin.value && !canManageTeams.value) {
+        error.value = 'No tienes permisos para registrar equipos'
+        return
+      }
+      
       fetchAvailableTeams()
     })
 
@@ -217,6 +273,7 @@ response = await teamAPI.getAll({
       isLoading,
       isLoadingTeams,
       isAdmin,
+      canManageTeams,
       error,
       handleSubmit
     }

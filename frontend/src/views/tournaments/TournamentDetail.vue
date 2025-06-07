@@ -31,14 +31,14 @@
           </button>
 
           <!-- Edit Tournament Button -->
-          <button
+          <RouterLink
             v-if="canEditTournament"
-            @click="showEditModal = true"
+            :to="`/tournaments/${tournament?.id}/edit`"
             class="btn-secondary"
           >
             <PencilIcon class="w-4 h-4 mr-2" />
             Editar Torneo
-          </button>
+          </RouterLink>
         </div>
       </div>
     </template>
@@ -564,118 +564,6 @@ export default {
       window.$notify?.success('Equipo registrado exitosamente!')
     }
 
-    /**
-     * Handle tournament update
-     */
-    const handleTournamentUpdated = (updatedTournament) => {
-      tournament.value = updatedTournament
-      showEditModal.value = false
-      window.$notify?.success('Torneo actualizado exitosamente!')
-    }
-
-    /**
-     * Format tournament status
-     */
-    const formatStatus = (status) => {
-      const statusMap = {
-        draft: 'Borrador',
-        registration_open: 'Inscripciones Abiertas',
-        in_progress: 'En Progreso',
-        completed: 'Completado',
-        cancelled: 'Cancelado',
-      }
-      return statusMap[status] || status
-    }
-
-    /**
-     * Get status badge CSS classes
-     */
-    const getStatusBadgeClass = (status) => {
-      const classMap = {
-        draft: 'bg-gray-100 text-gray-800',
-        registration_open: 'bg-success-100 text-success-800',
-        in_progress: 'bg-primary-100 text-primary-800',
-        completed: 'bg-secondary-100 text-secondary-800',
-        cancelled: 'bg-danger-100 text-danger-800',
-      }
-      return classMap[status] || classMap.draft
-    }
-
-    /**
-     * Format tournament type
-     */
-    const formatTournamentType = (type) => {
-      const typeMap = {
-        league: 'Liga',
-        knockout: 'Eliminación directa',
-        group_knockout: 'Grupos + Eliminación',
-      }
-      return typeMap[type] || type
-    }
-
-    /**
-     * Format team registration status
-     */
-    const formatTeamStatus = (status) => {
-      const statusMap = {
-        pending: 'Pendiente',
-        approved: 'Aprobado',
-        rejected: 'Rechazado',
-      }
-      return statusMap[status] || status
-    }
-
-    /**
-     * Get team status CSS classes
-     */
-    const getTeamStatusClass = (status) => {
-      const classMap = {
-        pending: 'bg-warning-100 text-warning-800',
-        approved: 'bg-success-100 text-success-800',
-        rejected: 'bg-danger-100 text-danger-800',
-      }
-      return classMap[status] || classMap.pending
-    }
-
-    /**
-     * Format date for display
-     */
-    const formatDate = (dateString) => {
-      if (!dateString) return 'Por determinar'
-      return new Date(dateString).toLocaleDateString('es-ES', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })
-    }
-
-    /**
-     * Format match date
-     */
-    const formatMatchDate = (dateString) => {
-      return new Date(dateString).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-      })
-    }
-
-    /**
-     * Format match time
-     */
-    const formatMatchTime = (dateString) => {
-      return new Date(dateString).toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-      })
-    }
-
-    /**
-     * Format money amount
-     */
-    const formatMoney = (amount) => {
-      return Number(amount).toLocaleString()
-    }
-
     // Initialize
     onMounted(() => {
       fetchTournament()
@@ -696,7 +584,6 @@ export default {
       canEditTournament,
       getTabName,
       handleRegistrationSuccess,
-      handleTournamentUpdated,
       formatStatus,
       getStatusBadgeClass,
       formatTournamentType,
