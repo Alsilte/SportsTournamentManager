@@ -89,7 +89,7 @@
         </RouterLink>
 
         <button
-          v-if="tournament.status === 'registration_open' && canRegisterTeam"
+          v-if="canRegisterForTournament"
           @click="$emit('register', tournament)"
           class="btn-secondary px-4"
           :disabled="isRegistrationFull"
@@ -173,6 +173,15 @@ export default {
       return registered >= max
     })
 
+    const canRegisterForTournament = computed(() => {
+      return (
+        authStore.isAuthenticated && 
+        (authStore.isAdmin || authStore.isTeamManager) &&
+        (props.tournament.status === 'registration_open' || props.tournament.status === 'draft') &&
+        !isRegistrationFull.value
+      )
+    })
+
     const canRegisterTeam = computed(() => {
       return authStore.isAuthenticated && (authStore.isAdmin || authStore.isTeamManager)
     })
@@ -233,6 +242,7 @@ export default {
       authStore,
       registrationProgress,
       isRegistrationFull,
+      canRegisterForTournament,
       canRegisterTeam,
       statusBadgeClasses,
       formatStatus,

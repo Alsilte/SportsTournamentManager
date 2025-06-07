@@ -364,11 +364,14 @@ public function registerTeam(Request $request, Tournament $tournament): JsonResp
 
         // Check if tournament is full
         // NOTA: Los admins pueden saltarse esta restricción si es necesario
-        if (!$user->isAdmin() && $tournament->registered_teams_count >= $tournament->max_teams) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Tournament is full'
-            ], 422);
+        if (!$user->isAdmin()) {
+            $currentTeamsCount = $tournament->teams()->count();
+            if ($currentTeamsCount >= $tournament->max_teams) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tournament is full'
+                ], 422);
+            }
         }
 
         // *** VALIDACIÓN CONDICIONAL DE JUGADORES ***
@@ -453,14 +456,9 @@ public function adminRegisterTeam(Request $request, $id): JsonResponse
         // Solo verificar restricciones si no se quiere hacer bypass
         if (!$bypassRestrictions) {
             // REMOVIDO: Validación de registro abierto
-            // if (!$tournament->isRegistrationOpen()) {
-            //     return response()->json([
-            //         'success' => false,
-            //         'message' => 'Tournament registration is not open'
-            //     ], 422);
-            // }
 
-            if ($tournament->registered_teams_count >= $tournament->max_teams) {
+            $currentTeamsCount = $tournament->teams()->count();
+            if ($currentTeamsCount >= $tournament->max_teams) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Tournament is full'
