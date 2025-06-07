@@ -26,12 +26,14 @@
                 id="tournament_id"
                 v-model="form.tournament_id"
                 required
-                :disabled="isLoading"
+                :disabled="isLoading || isLoadingTournaments"
                 class="form-input"
                 :class="{ 'border-danger-300': errors.tournament_id }"
                 @change="onTournamentChange"
               >
-                <option value="">Seleccionar torneo</option>
+                <option value="" v-if="isLoadingTournaments">Cargando torneos...</option>
+                <option value="" v-else-if="tournaments.length === 0">No hay torneos disponibles</option>
+                <option value="" v-else>Seleccionar torneo</option>
                 <option 
                   v-for="tournament in tournaments" 
                   :key="tournament.id" 
@@ -41,6 +43,7 @@
                 </option>
               </select>
               <p v-if="errors.tournament_id" class="form-error">{{ errors.tournament_id }}</p>
+              <p v-if="tournamentsError" class="form-error">{{ tournamentsError }}</p>
               <p v-if="selectedTournament" class="text-sm text-gray-600 mt-1">
                 Estado: {{ formatTournamentStatus(selectedTournament.status) }} • 
                 {{ selectedTournament.registered_teams_count || 0 }} equipos registrados
@@ -337,6 +340,7 @@ export default {
     const availableTeams = ref([])
     const referees = ref([])
     const isLoading = ref(false)
+    const isLoadingTournaments = ref(false)
     const errors = ref({})
     const generalError = ref('')
 
@@ -364,19 +368,26 @@ export default {
      * Fetch tournaments
      */
     const fetchTournaments = async () => {
+      isLoadingTournaments.value = true
       try {
+        // Obtener todos los torneos disponibles para crear partidos
         const response = await tournamentAPI.getAll({ 
-          status: 'in_progress,registration_open',
           per_page: 100 
         })
         
         if (apiHelpers.isSuccess(response)) {
           const data = apiHelpers.getData(response)
-          tournaments.value = data.data || []
+          // Filtrar solo torneos donde se pueden crear partidos
+          tournaments.value = (data.data || []).filter(tournament => 
+            ['registration_open', 'in_progress'].includes(tournament.status)
+          )
         }
       } catch (err) {
         console.error('Failed to fetch tournaments:', err)
         tournaments.value = []
+        generalError.value = 'Error al cargar los torneos disponibles'
+      } finally {
+        isLoadingTournaments.value = false
       }
     }
 
@@ -610,6 +621,7 @@ export default {
       availableTeams,
       referees,
       isLoading,
+      isLoadingTournaments,
       errors,
       generalError,
       minDateTime,
