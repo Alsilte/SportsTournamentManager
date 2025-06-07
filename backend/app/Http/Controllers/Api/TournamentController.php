@@ -22,17 +22,28 @@ class TournamentController extends Controller
             $query = Tournament::with(['creator:id,name', 'teams'])
                 ->withCount('tournamentTeams as registered_teams_count');
 
-            // FILTRAR DRAFTS: Solo mostrar drafts al creador o admin
-            if (!$request->user() || !$request->user()->isAdmin()) {
-                $query->where(function($q) use ($request) {
-                    $q->where('status', '!=', 'draft');
-                    if ($request->user()) {
-                        $q->orWhere('created_by', $request->user()->id);
-                    }
+            // LÓGICA CORREGIDA PARA FILTRAR DRAFTS:
+            // - Los admins pueden ver TODOS los torneos (incluyendo drafts)
+            // - Los usuarios normales solo ven torneos públicos + sus propios drafts
+            // - Los usuarios no autenticados solo ven torneos públicos (sin drafts)
+            
+            $user = $request->user();
+            
+            if (!$user) {
+                // Usuario no autenticado: solo torneos públicos (sin drafts)
+                $query->where('status', '!=', 'draft');
+            } elseif (!$user->isAdmin()) {
+                // Usuario autenticado pero NO admin: 
+                // - Torneos públicos (sin drafts)
+                // - SUS PROPIOS drafts
+                $query->where(function($q) use ($user) {
+                    $q->where('status', '!=', 'draft')
+                      ->orWhere('created_by', $user->id);
                 });
             }
+            // Si es admin: NO se aplica ningún filtro, ve TODOS los torneos
 
-            // Filter by status
+            // Filter by status (si se especifica)
             if ($request->has('status')) {
                 $query->where('status', $request->status);
             }
@@ -53,7 +64,12 @@ class TournamentController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $tournaments
+                'data' => $tournaments,
+                'debug' => config('app.debug') ? [
+                    'user_id' => $user?->id,
+                    'is_admin' => $user?->isAdmin(),
+                    'user_role' => $user?->role,
+                ] : null
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -64,6 +80,23 @@ class TournamentController extends Controller
         }
     }
 
+    /**
+     * Método auxiliar para verificar permisos de admin
+     * (opcional, para debugging)
+     */
+    private function debugAdminAccess(Request $request): array
+    {
+        $user = $request->user();
+        
+        return [
+            'authenticated' => !!$user,
+            'user_id' => $user?->id,
+            'user_role' => $user?->role,
+            'is_admin_method' => $user?->isAdmin(),
+            'is_admin_direct' => $user?->role === 'admin',
+            'has_role_admin' => $user?->hasRole('admin'),
+        ];
+    }
     /**
      * Store a newly created tournament
      */
