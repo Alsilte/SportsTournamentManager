@@ -323,5 +323,17 @@ router.beforeEach(async (to, from, next) => {
 router.onError((error) => {
   console.error('Router error:', error)
 })
+// ← AGREGAR estas líneas al final, después de export default router
+router.onError((error, to, from) => {
+  console.error('Router error:', error)
+  
+  if (error.message.includes('Loading chunk') || 
+      error.message.includes('MIME type') ||
+      error.message.includes('module script')) {
+    
+    console.warn('Lazy loading error detected, reloading...')
+    window.location.reload()
+  }
+})
 
 export default router

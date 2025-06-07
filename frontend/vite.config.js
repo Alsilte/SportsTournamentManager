@@ -39,18 +39,29 @@ export default defineConfig({
   },
   
   build: {
-    outDir: 'dist',
-    sourcemap: true,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'vendor': ['vue', 'vue-router', 'pinia'],
-          'ui': ['@headlessui/vue', '@heroicons/vue'],
-          'utils': ['axios', 'vue-i18n']
-        }
+  outDir: 'dist',
+  sourcemap: false, // ← CAMBIO: Era true
+  manifest: true,   // ← NUEVO
+  assetsDir: 'assets',
+  chunkSizeWarningLimit: 1000,
+  base: './',       // ← NUEVO: Importante para Railway
+  
+  rollupOptions: {
+    output: {
+      // ← CAMBIO CRÍTICO: Nombres más estables
+      entryFileNames: 'assets/app-[hash].js',
+      chunkFileNames: 'assets/[name]-[hash].js', 
+      assetFileNames: 'assets/[name]-[hash].[ext]',
+      
+      // ← CAMBIO: Chunking más específico
+      manualChunks: {
+        'vue-vendor': ['vue', 'vue-router', 'pinia'],
+        'ui-vendor': ['@headlessui/vue', '@heroicons/vue'],
+        'utils-vendor': ['axios', 'vue-i18n']
       }
     }
-  },
+  }
+},
   
   define: {
     __VUE_PROD_DEVTOOLS__: false,
