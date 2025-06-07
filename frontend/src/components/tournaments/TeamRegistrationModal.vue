@@ -127,10 +127,10 @@ export default {
         } else {
           // Managers solo ven SUS equipos
           console.log('Fetching teams for manager:', authStore.user?.id)
-          response = await teamAPI.getAll({ 
-            manager_id: authStore.user?.id,
-            is_active: true 
-          })
+response = await teamAPI.getAll({ 
+  manager_id: authStore.user?.id,
+  active: true  // Cambiar 'is_active' por 'active'
+})
         }
 
         console.log('Teams response:', response)
