@@ -104,7 +104,10 @@
     "open": "Abrir",
     "submit": "Enviar",
     "reset": "Restablecer",
-    "unknown": "Desconocido"
+    "unknown": "Desconocido",
+    "approve": "Aprobar",
+    "reject": "Rechazar",
+    "review": "Revisar"
   },
   "navigation": {
     "tournaments": "Torneos",

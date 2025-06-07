@@ -105,7 +105,10 @@
     "open": "Open",
     "submit": "Submit",
     "reset": "Reset",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "approve": "Approve",
+    "reject": "Reject",
+    "review": "Review"
   },
   "navigation": {
     "tournaments": "Tournaments",

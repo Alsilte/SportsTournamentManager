@@ -3,10 +3,10 @@
     <!-- System Overview -->
     <div class="card p-6">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">System Overview</h2>
+        <h2 class="text-xl font-semibold text-gray-900">{{ $t('dashboard.systemOverview') }}</h2>
         <button @click="refreshData" :disabled="isLoading" class="btn-secondary flex items-center">
           <ArrowPathIcon :class="['w-4 h-4 mr-2', isLoading ? 'animate-spin' : '']" />
-          Refresh
+          {{ $t('common.refresh') }}
         </button>
       </div>
 
@@ -14,17 +14,17 @@
         <div class="text-center p-4 bg-primary-50 rounded-lg">
           <CalendarIcon class="w-8 h-8 text-primary-600 mx-auto mb-2" />
           <div class="text-2xl font-bold text-primary-600">{{ systemStats.totalTournaments }}</div>
-          <div class="text-sm text-gray-600">Total Tournaments</div>
+          <div class="text-sm text-gray-600">{{ $t('dashboard.totalTournaments') }}</div>
         </div>
         <div class="text-center p-4 bg-success-50 rounded-lg">
           <UserGroupIcon class="w-8 h-8 text-success-600 mx-auto mb-2" />
           <div class="text-2xl font-bold text-success-600">{{ systemStats.totalTeams }}</div>
-          <div class="text-sm text-gray-600">Registered Teams</div>
+          <div class="text-sm text-gray-600">{{ $t('dashboard.registeredTeams') }}</div>
         </div>
         <div class="text-center p-4 bg-warning-50 rounded-lg">
           <UsersIcon class="w-8 h-8 text-warning-600 mx-auto mb-2" />
           <div class="text-2xl font-bold text-warning-600">{{ systemStats.totalUsers }}</div>
-          <div class="text-sm text-gray-600">Active Users</div>
+          <div class="text-sm text-gray-600">{{ $t('dashboard.activeUsers') }}</div>
         </div>
       </div>
     </div>
@@ -32,10 +32,10 @@
     <!-- Recent Tournaments -->
     <div class="card p-6">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">Recent Tournaments</h2>
+        <h2 class="text-xl font-semibold text-gray-900">{{ $t('dashboard.recentTournaments') }}</h2>
         <RouterLink to="/tournaments/create" class="btn-primary">
           <PlusIcon class="w-4 h-4 mr-2" />
-          Create Tournament
+          {{ $t('tournaments.create') }}
         </RouterLink>
       </div>
 
@@ -43,31 +43,11 @@
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Tournament
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Status
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Teams
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Start Date
-              </th>
-              <th
-                class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Actions
-              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('tournaments.name') }}</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('common.status') }}</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teams</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('tournaments.startDate') }}</th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('common.actions') }}</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
@@ -91,18 +71,8 @@
                 {{ formatDate(tournament.start_date) }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <RouterLink
-                  :to="`/tournaments/${tournament.id}`"
-                  class="text-primary-600 hover:text-primary-900 mr-3"
-                >
-                  View
-                </RouterLink>
-                <button
-                  @click="editTournament(tournament.id)"
-                  class="text-secondary-600 hover:text-secondary-900"
-                >
-                  Edit
-                </button>
+                <RouterLink :to="`/tournaments/${tournament.id}`" class="text-primary-600 hover:text-primary-900 mr-3">{{ $t('common.view') }}</RouterLink>
+                <button @click="editTournament(tournament.id)" class="text-secondary-600 hover:text-secondary-900">{{ $t('common.edit') }}</button>
               </td>
             </tr>
           </tbody>
@@ -112,23 +82,17 @@
       <!-- Empty state for tournaments -->
       <div v-else class="text-center py-8 text-gray-500">
         <CalendarIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-        <p>No tournaments found</p>
-        <RouterLink to="/tournaments/create" class="btn-primary mt-4">
-          Create First Tournament
-        </RouterLink>
+        <p>{{ $t('tournaments.noTournaments') }}</p>
+        <RouterLink to="/tournaments/create" class="btn-primary mt-4">{{ $t('tournaments.createFirst') }}</RouterLink>
       </div>
     </div>
 
     <!-- Pending Actions -->
     <div class="card p-6">
-      <h2 class="text-xl font-semibold text-gray-900 mb-6">Pending Actions</h2>
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('dashboard.pendingActions') }}</h2>
 
       <div class="space-y-4">
-        <div
-          v-for="action in pendingActions"
-          :key="action.id"
-          class="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
-        >
+        <div v-for="action in pendingActions" :key="action.id" class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
           <div class="flex items-center">
             <div
               :class="[
@@ -149,61 +113,33 @@
               @click="approveTeamRegistration(action.id)"
               class="btn-success text-xs px-3 py-1"
             >
-              Approve
+              {{ $t('common.approve') }}
             </button>
             <button
               v-if="action.type === 'team_registration'"
               @click="rejectTeamRegistration(action.id)"
               class="btn-danger text-xs px-3 py-1"
             >
-              Reject
+              {{ $t('common.reject') }}
             </button>
             <button
               v-if="action.type === 'match_result'"
               @click="reviewMatchResult(action.id)"
               class="btn-primary text-xs px-3 py-1"
             >
-              Review
+              {{ $t('common.review') }}
             </button>
           </div>
         </div>
 
         <div v-if="pendingActions.length === 0" class="text-center py-8 text-gray-500">
           <CheckCircleIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-          <p>No pending actions</p>
+          <p>{{ $t('dashboard.noPendingActions') }}</p>
         </div>
       </div>
     </div>
 
-    <!-- System Health -->
-    <div class="card p-6">
-      <h2 class="text-xl font-semibold text-gray-900 mb-6">System Health</h2>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <h3 class="text-sm font-medium text-gray-700 mb-3">Database Status</h3>
-          <div class="flex items-center">
-            <div class="w-3 h-3 bg-success-500 rounded-full mr-2"></div>
-            <span class="text-sm text-gray-600">Operational</span>
-          </div>
-        </div>
-        <div>
-          <h3 class="text-sm font-medium text-gray-700 mb-3">API Status</h3>
-          <div class="flex items-center">
-            <div class="w-3 h-3 bg-success-500 rounded-full mr-2"></div>
-            <span class="text-sm text-gray-600">Operational</span>
-          </div>
-        </div>
-        <div>
-          <h3 class="text-sm font-medium text-gray-700 mb-3">Active Sessions</h3>
-          <div class="text-sm text-gray-600">{{ systemStats.activeSessions }} users online</div>
-        </div>
-        <div>
-          <h3 class="text-sm font-medium text-gray-700 mb-3">Last Backup</h3>
-          <div class="text-sm text-gray-600">{{ lastBackupTime }}</div>
-        </div>
-      </div>
-    </div>
+  
   </div>
 </template>
 
