@@ -316,17 +316,95 @@
     "registrationEnd": "Fin de Inscripciones",
     "prizePool": "Premio Total",
     "rules": "Reglas y Regulaciones",
+    "detail": {
+      "editTournament": "Editar Torneo",
+      "aboutThisTournament": "Acerca de este Torneo",
+      "noDescription": "Sin descripción disponible.",
+      "schedule": "Cronograma",
+      "registrationPeriod": "Período de Inscripción",
+      "tournamentPeriod": "Período del Torneo",
+      "start": "Inicio",
+      "end": "Fin",
+      "tournamentStats": "Estadísticas del Torneo",
+      "format": "Formato",
+      "teams": "Equipos",
+      "createdBy": "Creado por",
+      "registrationProgress": "Progreso de Inscripción",
+      "contact": "Contacto",
+      "tournamentOrganizer": "Organizador del Torneo",
+      "notAvailable": "No disponible",
+      "tabs": {
+        "teams": "Equipos",
+        "matches": "Partidos",
+        "standings": "Clasificación"
+      },
+      "players": "Jugadores",
+      "registered": "Registrado",
+      "viewTeam": "Ver Equipo",
+      "noTeamsRegistered": "Aún no hay equipos registrados",
+      "beFirstToRegister": "Sé el primero en registrar tu equipo para este torneo",
+      "roundTBD": "Ronda por definir",
+      "noMatchesScheduled": "Aún no hay partidos programados",
+      "matchesWillAppear": "Los partidos aparecerán aquí una vez que comience el torneo",
+      "noStandingsAvailable": "Aún no hay clasificaciones disponibles",
+      "standingsWillAppear": "Las clasificaciones aparecerán una vez que se jueguen los partidos",
+      "tournamentNotFound": "Torneo no encontrado",
+      "backToTournaments": "Volver a Torneos",
+      "teamStatus": {
+        "pending": "Pendiente",
+        "approved": "Aprobado",
+        "rejected": "Rechazado"
+      },
+      "standings": {
+        "position": "Posición",
+        "team": "Equipo",
+        "played": "J",
+        "won": "G",
+        "drawn": "E",
+        "lost": "P",
+        "goalsFor": "GF",
+        "goalsAgainst": "GC",
+        "goalDifference": "DG",
+        "points": "Pts"
+      }
+    },
+    "filters": {
+      "searchTournaments": "Buscar torneos...",
+      "allStatus": "Todos los Estados",
+      "allSports": "Todos los Deportes",
+      "activeFilters": "Filtros activos:",
+      "search": "Búsqueda",
+      "status": "Estado",
+      "sport": "Deporte",
+      "clearAll": "Limpiar todo"
+    },
+    "sports": {
+      "football": "Fútbol",
+      "basketball": "Baloncesto",
+      "tennis": "Tenis",
+      "volleyball": "Voleibol",
+      "other": "Otro"
+    },
+    "stats": {
+      "totalTournaments": "Torneos Totales",
+      "openForRegistration": "Abiertos para Registro",
+      "inProgress": "En Progreso",
+      "completed": "Completados"
+    },
+    "messages": {
+      "loginToRegister": "Por favor inicia sesión para registrarte en torneos",
+      "onlyManagersCanRegister": "Solo los gestores de equipo pueden registrarse en torneos",
+      "teamRegisteredSuccess": "¡Equipo registrado exitosamente!"
+    },
+    "noTournamentsFiltered": "No hay torneos que coincidan con tus filtros",
+    "tryAdjustingFilters": "Intenta ajustar tus criterios de búsqueda para encontrar torneos.",
+    "clearFilters": "Limpiar Filtros",
     "status": {
       "draft": "Borrador",
       "registrationOpen": "Inscripciones Abiertas",
       "inProgress": "En Progreso",
       "completed": "Completado",
       "cancelled": "Cancelado"
-    },
-    "formats": {
-      "league": "Liga",
-      "knockout": "Eliminación",
-      "groupKnockout": "Grupos + Eliminación"
     },
     "registration": {
       "registerTeam": "Registrar Equipo",

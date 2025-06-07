@@ -392,6 +392,89 @@
     "registrationEnd": "Registration End",
     "prizePool": "Prize Pool",
     "rules": "Rules & Regulations",
+    "detail": {
+      "editTournament": "Edit Tournament",
+      "aboutThisTournament": "About this Tournament",
+      "noDescription": "No description available.",
+      "schedule": "Schedule",
+      "registrationPeriod": "Registration Period",
+      "tournamentPeriod": "Tournament Period",
+      "start": "Start",
+      "end": "End",
+      "tournamentStats": "Tournament Stats",
+      "format": "Format",
+      "teams": "Teams",
+      "createdBy": "Created by",
+      "registrationProgress": "Registration Progress",
+      "contact": "Contact",
+      "tournamentOrganizer": "Tournament Organizer",
+      "notAvailable": "Not available",
+      "tabs": {
+        "teams": "Teams",
+        "matches": "Matches",
+        "standings": "Standings"
+      },
+      "players": "Players",
+      "registered": "Registered",
+      "viewTeam": "View Team",
+      "noTeamsRegistered": "No teams registered yet",
+      "beFirstToRegister": "Be the first to register your team for this tournament",
+      "roundTBD": "Round TBD",
+      "noMatchesScheduled": "No matches scheduled yet",
+      "matchesWillAppear": "Matches will appear here once the tournament begins",
+      "noStandingsAvailable": "No standings available yet",
+      "standingsWillAppear": "Standings will appear once matches are played",
+      "tournamentNotFound": "Tournament not found",
+      "backToTournaments": "Back to Tournaments",
+      "teamStatus": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "standings": {
+        "position": "Position",
+        "team": "Team",
+        "played": "P",
+        "won": "W",
+        "drawn": "D",
+        "lost": "L",
+        "goalsFor": "GF",
+        "goalsAgainst": "GA",
+        "goalDifference": "GD",
+        "points": "Pts"
+      }
+    },
+    "filters": {
+      "searchTournaments": "Search tournaments...",
+      "allStatus": "All Status",
+      "allSports": "All Sports",
+      "activeFilters": "Active filters:",
+      "search": "Search",
+      "status": "Status",
+      "sport": "Sport",
+      "clearAll": "Clear all"
+    },
+    "sports": {
+      "football": "Football",
+      "basketball": "Basketball",
+      "tennis": "Tennis",
+      "volleyball": "Volleyball",
+      "other": "Other"
+    },
+    "stats": {
+      "totalTournaments": "Total Tournaments",
+      "openForRegistration": "Open for Registration",
+      "inProgress": "In Progress",
+      "completed": "Completed"
+    },
+    "messages": {
+      "loginToRegister": "Please login to register for tournaments",
+      "onlyManagersCanRegister": "Only team managers can register for tournaments",
+      "teamRegisteredSuccess": "Team registered successfully!"
+    },
+    "noTournamentsFiltered": "No tournaments match your filters",
+    "tryAdjustingFilters": "Try adjusting your search criteria to find tournaments.",
+    "clearFilters": "Clear Filters",
     "status": {
       "draft": "Draft",
       "registrationOpen": "Registration Open",
