@@ -68,6 +68,9 @@
       "create": "Crear Torneo"
     }
   },
+  "tournaments" :{
+    "create": "Crear Torneo"
+  },
 
   "common": {
     "loading": "Cargando...",
