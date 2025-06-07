@@ -3,8 +3,8 @@
     <template #header>
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">{{ t('tournaments.title') }}</h1>
-          <p class="text-gray-600 mt-1">{{ t('tournaments.subtitle') }}</p>
+          <h1 class="text-3xl font-bold text-gray-900">{{ $t('tournaments.title') }}</h1>
+          <p class="text-gray-600 mt-1">{{ $t('tournaments.subtitle') }}</p>
         </div>
         <div class="flex items-center space-x-4">
           <RouterLink 
@@ -13,7 +13,7 @@
             class="btn-primary"
           >
             <PlusIcon class="w-4 h-4 mr-2" />
-            {{ t('tournaments.create') }}
+            {{ $t('tournaments.create') }}
           </RouterLink>
         </div>
       </div>
@@ -29,7 +29,7 @@
             <input
               v-model="filters.search"
               type="text"
-              :placeholder="t('tournaments.filters.searchTournaments')"
+              :placeholder="$t('tournaments.filters.searchTournaments')"
               class="form-input pl-10"
               @input="debouncedSearch"
             />
@@ -39,35 +39,35 @@
         <!-- Status Filter -->
         <div>
           <select v-model="filters.status" @change="applyFilters" class="form-input">
-            <option value="">{{ t('tournaments.filters.allStatus') }}</option>
-            <option value="draft">{{ t('tournaments.status.draft') }}</option>
-            <option value="registration_open">{{ t('tournaments.status.registrationOpen') }}</option>
-            <option value="in_progress">{{ t('tournaments.status.inProgress') }}</option>
-            <option value="completed">{{ t('tournaments.status.completed') }}</option>
+            <option value="">{{ $t('tournaments.filters.allStatus') }}</option>
+            <option value="draft">{{ $t('tournaments.status.draft') }}</option>
+            <option value="registration_open">{{ $t('tournaments.status.registrationOpen') }}</option>
+            <option value="in_progress">{{ $t('tournaments.status.inProgress') }}</option>
+            <option value="completed">{{ $t('tournaments.status.completed') }}</option>
           </select>
         </div>
 
         <!-- Sport Type Filter -->
         <div>
           <select v-model="filters.sport_type" @change="applyFilters" class="form-input">
-            <option value="">{{ t('tournaments.filters.allSports') }}</option>
-            <option value="Football">{{ t('tournaments.sports.football') }}</option>
-            <option value="Basketball">{{ t('tournaments.sports.basketball') }}</option>
-            <option value="Tennis">{{ t('tournaments.sports.tennis') }}</option>
-            <option value="Volleyball">{{ t('tournaments.sports.volleyball') }}</option>
-            <option value="Other">{{ t('tournaments.sports.other') }}</option>
+            <option value="">{{ $t('tournaments.filters.allSports') }}</option>
+            <option value="Football">{{ $t('tournaments.sports.football') }}</option>
+            <option value="Basketball">{{ $t('tournaments.sports.basketball') }}</option>
+            <option value="Tennis">{{ $t('tournaments.sports.tennis') }}</option>
+            <option value="Volleyball">{{ $t('tournaments.sports.volleyball') }}</option>
+            <option value="Other">{{ $t('tournaments.sports.other') }}</option>
           </select>
         </div>
       </div>
 
       <!-- Active Filters -->
       <div v-if="hasActiveFilters" class="flex flex-wrap gap-2 mt-4">
-        <span class="text-sm text-gray-600">{{ t('tournaments.filters.activeFilters') }}</span>
+        <span class="text-sm text-gray-600">{{ $t('tournaments.filters.activeFilters') }}</span>
         <span 
           v-if="filters.search"
           class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
         >
-          {{ t('tournaments.filters.search') }}: "{{ filters.search }}"
+          {{ $t('tournaments.filters.search') }}: "{{ filters.search }}"
           <button @click="clearFilter('search')" class="ml-2 hover:text-primary-900">
             <XMarkIcon class="w-3 h-3" />
           </button>
@@ -76,7 +76,7 @@
           v-if="filters.status"
           class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
         >
-          {{ t('tournaments.filters.status') }}: {{ formatStatus(filters.status) }}
+          {{ $t('tournaments.filters.status') }}: {{ formatStatus(filters.status) }}
           <button @click="clearFilter('status')" class="ml-2 hover:text-primary-900">
             <XMarkIcon class="w-3 h-3" />
           </button>
@@ -85,7 +85,7 @@
           v-if="filters.sport_type"
           class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
         >
-          {{ t('tournaments.filters.sport') }}: {{ filters.sport_type }}
+          {{ $t('tournaments.filters.sport') }}: {{ filters.sport_type }}
           <button @click="clearFilter('sport_type')" class="ml-2 hover:text-primary-900">
             <XMarkIcon class="w-3 h-3" />
           </button>
@@ -94,7 +94,7 @@
           @click="clearAllFilters"
           class="text-xs text-gray-500 hover:text-gray-700 underline"
         >
-          {{ t('tournaments.filters.clearAll') }}
+          {{ $t('tournaments.filters.clearAll') }}
         </button>
       </div>
     </div>
@@ -117,19 +117,19 @@
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-primary-600">{{ totalTournaments }}</div>
-          <div class="text-sm text-gray-600">{{ t('tournaments.stats.totalTournaments') }}</div>
+          <div class="text-sm text-gray-600">{{ $t('tournaments.stats.totalTournaments') }}</div>
         </div>
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-success-600">{{ openRegistrations }}</div>
-          <div class="text-sm text-gray-600">{{ t('tournaments.stats.openForRegistration') }}</div>
+          <div class="text-sm text-gray-600">{{ $t('tournaments.stats.openForRegistration') }}</div>
         </div>
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-warning-600">{{ inProgress }}</div>
-          <div class="text-sm text-gray-600">{{ t('tournaments.stats.inProgress') }}</div>
+          <div class="text-sm text-gray-600">{{ $t('tournaments.stats.inProgress') }}</div>
         </div>
         <div class="card p-4 text-center">
           <div class="text-2xl font-bold text-secondary-600">{{ completed }}</div>
-          <div class="text-sm text-gray-600">{{ t('tournaments.stats.completed') }}</div>
+          <div class="text-sm text-gray-600">{{ $t('tournaments.stats.completed') }}</div>
         </div>
       </div>
 
@@ -151,7 +151,7 @@
             :disabled="pagination.current_page <= 1"
             class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {{ t('common.previous') }}
+            {{ $t('common.previous') }}
           </button>
           
           <template v-for="page in visiblePages" :key="page">
@@ -175,7 +175,7 @@
             :disabled="pagination.current_page >= pagination.last_page"
             class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {{ t('common.next') }}
+            {{ $t('common.next') }}
           </button>
         </nav>
       </div>
@@ -185,12 +185,12 @@
     <div v-else class="text-center py-12">
       <CalendarIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
       <h3 class="text-lg font-medium text-gray-900 mb-2">
-        {{ hasActiveFilters ? t('tournaments.noTournamentsFiltered') : t('tournaments.noTournaments') }}
+        {{ hasActiveFilters ? $t('tournaments.noTournamentsFiltered') : $t('tournaments.noTournaments') }}
       </h3>
       <p class="text-gray-600 mb-6">
         {{ hasActiveFilters 
-          ? t('tournaments.tryAdjustingFilters')
-          : t('tournaments.createFirst') 
+          ? $t('tournaments.tryAdjustingFilters')
+          : $t('tournaments.createFirst') 
         }}
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -199,14 +199,14 @@
           @click="clearAllFilters"
           class="btn-secondary"
         >
-          {{ t('tournaments.clearFilters') }}
+          {{ $t('tournaments.clearFilters') }}
         </button>
         <RouterLink 
           v-if="authStore.isAdmin"
           to="/tournaments/create" 
           class="btn-primary"
         >
-          {{ t('tournaments.create') }}
+          {{ $t('tournaments.create') }}
         </RouterLink>
       </div>
     </div>
@@ -228,6 +228,7 @@
  */
 
 import { ref, computed, onMounted, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { 
   PlusIcon,
   MagnifyingGlassIcon,
@@ -252,6 +253,7 @@ export default {
     XMarkIcon
   },
   setup() {
+    const { t } = useI18n()
     const authStore = useAuthStore()
     
     // Data
