@@ -511,6 +511,7 @@
       "totalTournaments": "Torneos Totales",
       "openForRegistration": "Abiertos para Registro",
       "inProgress": "En Progreso",
+      ""
       "completed": "Completados"
     },
     "messages": {
@@ -526,7 +527,9 @@
       "registrationOpen": "Inscripciones Abiertas",
       "inProgress": "En Progreso",
       "completed": "Completado",
-      "cancelled": "Cancelado"
+      "cancelled": "Cancelado",
+      "in_progress": "En Progreso",
+      "registration_open": "Inscripciones Abierta"
     },
     "registration": {
       "registerTeam": "Registrar Equipo",
