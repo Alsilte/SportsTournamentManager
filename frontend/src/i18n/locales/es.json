@@ -369,6 +369,7 @@
   "tournaments": {
     "title": "Torneos",
     "subtitle": "Descubre y únete a torneos deportivos",
+    "create": "Crear Torneo",
     "create": {
       "title": "Crear Torneo",
       "subtitle": "Configura un nuevo torneo deportivo",
