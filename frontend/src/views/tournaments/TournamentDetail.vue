@@ -30,14 +30,15 @@
             Register Team
           </button>
 
-          <RouterLink
-            v-if="authStore.isAdmin"
-            :to="`/tournaments/${tournament?.id}/edit`"
+          <!-- Edit Tournament Button -->
+          <button
+            v-if="canEditTournament"
+            @click="showEditModal = true"
             class="btn-secondary"
           >
             <PencilIcon class="w-4 h-4 mr-2" />
-            Edit
-          </RouterLink>
+            Edit Tournament
+          </button>
         </div>
       </div>
     </template>
@@ -436,6 +437,14 @@
       @close="showRegistrationModal = false"
       @success="handleRegistrationSuccess"
     />
+
+    <!-- Edit Tournament Modal -->
+    <EditTournamentModal
+      v-if="showEditModal && tournament"
+      :tournament="tournament"
+      @close="showEditModal = false"
+      @updated="handleTournamentUpdated"
+    />
   </MainLayout>
 </template>
 
@@ -463,12 +472,14 @@ import { useAuthStore } from '@/stores/auth'
 import { tournamentAPI, apiHelpers } from '@/services/api'
 import MainLayout from '@/components/layout/MainLayout.vue'
 import TeamRegistrationModal from '@/components/tournaments/TeamRegistrationModal.vue'
+import EditTournamentModal from '@/components/tournaments/EditTournamentModal.vue'
 
 export default {
   name: 'TournamentDetail',
   components: {
     MainLayout,
     TeamRegistrationModal,
+    EditTournamentModal,
     ArrowLeftIcon,
     PlusIcon,
     PencilIcon,
@@ -493,6 +504,7 @@ export default {
     const error = ref('')
     const activeTab = ref('teams')
     const showRegistrationModal = ref(false)
+    const showEditModal = ref(false)
 
     // Computed
     const registrationProgress = computed(() => {
@@ -507,6 +519,13 @@ export default {
       { id: 'matches', name: 'Matches', count: matches.value.length },
       { id: 'standings', name: 'Standings' },
     ])
+
+    // Check if user can edit tournament
+    const canEditTournament = computed(() => {
+      return authStore.isAuthenticated && 
+             (authStore.isAdmin || tournament.value?.created_by === authStore.user?.id) &&
+             !['completed'].includes(tournament.value?.status)
+    })
 
     /**
      * Fetch tournament data
@@ -542,6 +561,15 @@ export default {
       showRegistrationModal.value = false
       fetchTournament() // Refresh data
       window.$notify?.success('Team registered successfully!')
+    }
+
+    /**
+     * Handle tournament update
+     */
+    const handleTournamentUpdated = (updatedTournament) => {
+      tournament.value = updatedTournament
+      showEditModal.value = false
+      window.$notify?.success('Tournament updated successfully!')
     }
 
     /**
@@ -662,9 +690,12 @@ export default {
       error,
       activeTab,
       showRegistrationModal,
+      showEditModal,
       registrationProgress,
       tabs,
+      canEditTournament,
       handleRegistrationSuccess,
+      handleTournamentUpdated,
       formatStatus,
       getStatusBadgeClass,
       formatTournamentType,

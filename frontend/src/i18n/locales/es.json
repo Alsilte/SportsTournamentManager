@@ -10,7 +10,9 @@
       "dashboard": "Ir al Dashboard",
       "viewTournaments": "Ver Torneos",
       "browseTournaments": "Explorar Torneos",
-      "signUpNow": "Regístrate Ahora"
+      "signUpNow": "Regístrate Ahora",
+      "title": "¿Listo para empezar?",
+      "description": "Únete a nuestra plataforma hoy y comienza a gestionar tus torneos como un profesional con todas las herramientas que necesitas"
     },
     "trust": {
       "rating": "4.9/5 Calificación Promedio",
@@ -108,6 +110,7 @@
     "approve": "Aprobar",
     "reject": "Rechazar",
     "review": "Revisar",
+    "viewHistory": "Ver Historial",
     "retry": "Reintentar"
   },
   "navigation": {
@@ -257,6 +260,7 @@
       "groupKnockout": "Grupos + Eliminación"
     },
     "registerTeam": "Registrar Equipo",
+    "viewAll": "Ver Todos los Torneos",
     "viewDetails": "Ver Detalles",
     "noTournaments": "Aún no hay torneos",
     "noTournamentsFiltered": "No hay torneos que coincidan con tus filtros",

@@ -53,6 +53,42 @@
         </div>
 
         <form @submit.prevent="handleSubmit" class="space-y-6">
+          <!-- Tournament Status -->
+          <div>
+            <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
+              Tournament Status *
+            </label>
+            <select
+              id="status"
+              v-model="form.status"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              :class="{ 'border-red-500': errors.status }"
+            >
+              <option value="draft">Draft (Not visible to public)</option>
+              <option value="registration_open">Registration Open</option>
+              <option 
+                value="in_progress" 
+                :disabled="!canSetInProgress"
+                :title="canSetInProgress ? '' : 'Registration must be open first'"
+              >
+                In Progress
+              </option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <p v-if="errors.status" class="mt-1 text-sm text-red-600">
+              {{ errors.status }}
+            </p>
+            <p class="mt-1 text-xs text-gray-500">
+              Current status: <span class="font-medium">{{ formatStatus(originalStatus) }}</span>
+            </p>
+            <div v-if="statusChangeWarning" class="mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <div class="flex items-center">
+                <ExclamationTriangleIcon class="h-5 w-5 text-yellow-500 mr-2" />
+                <p class="text-yellow-700 text-sm">{{ statusChangeWarning }}</p>
+              </div>
+            </div>
+          </div>
+
           <!-- Tournament Name -->
           <div>
             <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
@@ -171,7 +207,7 @@
  * Allows editing tournament information with API integration
  */
 
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
   ArrowLeftIcon,
@@ -202,21 +238,60 @@ export default {
     const error = ref('')
     const generalError = ref('')
     const errors = ref({})
+    const originalStatus = ref('')
 
     // Form data
     const form = ref({
       name: '',
       location: '',
       prize_pool: 0,
-      description: ''
+      description: '',
+      status: 'draft'
     })
 
     // Computed
     const isFormValid = computed(() => {
       return form.value.name.trim() !== '' && 
              form.value.location.trim() !== '' &&
+             form.value.status !== '' &&
              Object.keys(errors.value).length === 0
     })
+
+    // Check if can set to in_progress
+    const canSetInProgress = computed(() => {
+      return originalStatus.value === 'registration_open' || form.value.status === 'in_progress'
+    })
+
+    // Status change warning
+    const statusChangeWarning = computed(() => {
+      if (form.value.status === originalStatus.value) return ''
+      
+      const warnings = {
+        'draft_to_registration_open': 'Tournament will become visible to public and teams can register.',
+        'registration_open_to_in_progress': 'Registration will close and matches can begin.',
+        'registration_open_to_cancelled': 'Tournament will be cancelled. Registered teams will be notified.',
+        'draft_to_cancelled': 'Tournament will be cancelled and deleted.',
+        'in_progress_to_cancelled': 'Tournament will be cancelled. All matches will be stopped.',
+        'any_to_draft': 'Tournament will become private again.'
+      }
+
+      const key = `${originalStatus.value}_to_${form.value.status}`
+      return warnings[key] || warnings['any_to_draft']
+    })
+
+    /**
+     * Format status for display
+     */
+    const formatStatus = (status) => {
+      const statusMap = {
+        draft: 'Draft',
+        registration_open: 'Registration Open',
+        in_progress: 'In Progress',
+        completed: 'Completed',
+        cancelled: 'Cancelled',
+      }
+      return statusMap[status] || status
+    }
 
     /**
      * Validate form fields
@@ -248,6 +323,15 @@ export default {
         errors.value.description = 'Description must be less than 1000 characters'
       }
 
+      if (!form.value.status) {
+        errors.value.status = 'Status is required'
+      }
+
+      // Validate status transitions
+      if (form.value.status === 'in_progress' && !canSetInProgress.value) {
+        errors.value.status = 'Cannot set to In Progress. Registration must be open first.'
+      }
+
       return Object.keys(errors.value).length === 0
     }
 
@@ -264,13 +348,15 @@ export default {
         if (apiHelpers.isSuccess(response)) {
           const data = apiHelpers.getData(response)
           tournament.value = data
+          originalStatus.value = data.status
           
           // Populate form with existing data
           form.value = {
             name: data.name || '',
             location: data.location || '',
             prize_pool: data.prize_pool || 0,
-            description: data.description || ''
+            description: data.description || '',
+            status: data.status || 'draft'
           }
         } else {
           error.value = 'Tournament not found'
@@ -300,7 +386,8 @@ export default {
         const updateData = {
           name: form.value.name.trim(),
           location: form.value.location.trim(),
-          prize_pool: form.value.prize_pool || 0
+          prize_pool: form.value.prize_pool || 0,
+          status: form.value.status
         }
 
         // Only include description if it's not empty
@@ -311,9 +398,14 @@ export default {
         const response = await tournamentAPI.update(route.params.id, updateData)
 
         if (apiHelpers.isSuccess(response)) {
-          window.$notify?.success('Tournament updated successfully!')
+          const statusChanged = form.value.status !== originalStatus.value
+          const message = statusChanged 
+            ? `Tournament updated successfully! Status changed to ${formatStatus(form.value.status)}.`
+            : 'Tournament updated successfully!'
+            
+          window.$notify?.success(message)
           
-          // Navigate back to tournament detail or list
+          // Navigate back to tournament detail
           router.push(`/tournaments/${route.params.id}`)
         } else {
           // Handle validation errors from API
@@ -332,6 +424,13 @@ export default {
       }
     }
 
+    // Watch for status changes to clear errors
+    watch(() => form.value.status, () => {
+      if (errors.value.status) {
+        delete errors.value.status
+      }
+    })
+
     // Lifecycle
     onMounted(() => {
       fetchTournament()
@@ -346,13 +445,17 @@ export default {
       generalError,
       errors,
       form,
+      originalStatus,
       
       // Computed
       isFormValid,
+      canSetInProgress,
+      statusChangeWarning,
       
       // Methods
       fetchTournament,
-      handleSubmit
+      handleSubmit,
+      formatStatus
     }
   }
 }

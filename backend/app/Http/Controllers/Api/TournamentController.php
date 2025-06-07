@@ -22,6 +22,16 @@ class TournamentController extends Controller
             $query = Tournament::with(['creator:id,name', 'teams'])
                 ->withCount('tournamentTeams as registered_teams_count');
 
+            // FILTRAR DRAFTS: Solo mostrar drafts al creador o admin
+            if (!$request->user() || !$request->user()->isAdmin()) {
+                $query->where(function($q) use ($request) {
+                    $q->where('status', '!=', 'draft');
+                    if ($request->user()) {
+                        $q->orWhere('created_by', $request->user()->id);
+                    }
+                });
+            }
+
             // Filter by status
             if ($request->has('status')) {
                 $query->where('status', $request->status);
@@ -93,7 +103,7 @@ class TournamentController extends Controller
         try {
             $validatedData = $validator->validated();
             $validatedData['created_by'] = $request->user()->id;
-            $validatedData['status'] = 'draft';
+$validatedData['status'] = $request->input('status', 'draft');
 
             $tournament = Tournament::create($validatedData);
 
@@ -187,7 +197,30 @@ class TournamentController extends Controller
                 ], 422);
             }
 
-            $tournament->update($validator->validated());
+            // Obtener datos validados
+            $validatedData = $validator->validated();
+
+            // VALIDAR TRANSICIONES DE ESTADO
+            if (isset($validatedData['status'])) {
+                $currentStatus = $tournament->status;
+                $newStatus = $validatedData['status'];
+                
+                $invalidTransitions = [
+                    'completed' => ['draft', 'registration_open', 'in_progress'],
+                    'in_progress' => ['draft', 'registration_open']
+                ];
+                
+                if (isset($invalidTransitions[$currentStatus]) && 
+                    in_array($newStatus, $invalidTransitions[$currentStatus])) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Cannot change status from {$currentStatus} to {$newStatus}"
+                    ], 422);
+                }
+            }
+
+            // Actualizar torneo
+            $tournament->update($validatedData);
 
             return response()->json([
                 'success' => true,
