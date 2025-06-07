@@ -353,7 +353,9 @@ export default {
       if (user.role === 'admin') return true
     
       // Team manager puede gestionar solo sus equipos
-      if (user.role === 'team_manager' && team.value.manager_id === user.id) {
+      // Verificar tanto manager_id como user_id por compatibilidad
+      if (user.role === 'team_manager' && 
+          (team.value.manager_id === user.id || team.value.user_id === user.id)) {
         return true
       }
     
@@ -408,6 +410,11 @@ export default {
           team.value = data.team
           players.value = data.players || []
           captain.value = data.captain
+          
+          // Debug: Log para verificar la estructura del equipo
+          console.log('Team data:', team.value)
+          console.log('Current user:', authStore.user)
+          console.log('Can manage team:', canManageTeam.value)
         } else {
           error.value = 'Failed to load team roster'
           team.value = null
