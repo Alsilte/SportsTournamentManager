@@ -3,10 +3,10 @@
     <!-- Referee Overview -->
     <div class="card p-6">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">{{ $t('dashboard.refereeOverview') }}</h2>
+        <h2 class="text-xl font-semibold text-gray-900">Resumen del Árbitro</h2>
         <div class="flex items-center space-x-2">
           <div class="w-3 h-3 bg-success-500 rounded-full"></div>
-          <span class="text-sm text-gray-600">{{ $t('dashboard.availableForAssignments') }}</span>
+          <span class="text-sm text-gray-600">Disponible para asignaciones</span>
         </div>
       </div>
 
@@ -14,22 +14,22 @@
         <div class="text-center p-4 bg-primary-50 rounded-lg">
           <PlayIcon class="w-8 h-8 text-primary-600 mx-auto mb-2" />
           <div class="text-2xl font-bold text-primary-600">{{ refereeStats.totalMatches }}</div>
-          <div class="text-sm text-gray-600">{{ $t('dashboard.matchesOfficiated') }}</div>
+          <div class="text-sm text-gray-600">Partidos dirigidos</div>
         </div>
         <div class="text-center p-4 bg-warning-50 rounded-lg">
           <ClockIcon class="w-8 h-8 text-warning-600 mx-auto mb-2" />
           <div class="text-2xl font-bold text-warning-600">{{ refereeStats.upcomingMatches }}</div>
-          <div class="text-sm text-gray-600">{{ $t('dashboard.upcomingMatches') }}</div>
+          <div class="text-sm text-gray-600">Próximos partidos</div>
         </div>
         <div class="text-center p-4 bg-success-50 rounded-lg">
           <CheckCircleIcon class="w-8 h-8 text-success-600 mx-auto mb-2" />
           <div class="text-2xl font-bold text-success-600">{{ refereeStats.completedMatches }}</div>
-          <div class="text-sm text-gray-600">{{ $t('dashboard.completedThisMonth') }}</div>
+          <div class="text-sm text-gray-600">Completados este mes</div>
         </div>
         <div class="text-center p-4 bg-secondary-50 rounded-lg">
           <StarIcon class="w-8 h-8 text-secondary-600 mx-auto mb-2" />
           <div class="text-2xl font-bold text-secondary-600">{{ refereeStats.averageRating }}</div>
-          <div class="text-sm text-gray-600">{{ $t('dashboard.averageRating') }}</div>
+          <div class="text-sm text-gray-600">Calificación promedio</div>
         </div>
       </div>
     </div>
@@ -37,7 +37,7 @@
     <!-- My Assigned Matches -->
     <div class="card p-6">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">{{ $t('dashboard.myAssignedMatches') }}</h2>
+        <h2 class="text-xl font-semibold text-gray-900">Mis Partidos Asignados</h2>
         <div class="flex space-x-2">
           <button
             @click="filterMatches('upcoming')"
@@ -48,7 +48,7 @@
                 : 'text-gray-600 hover:bg-gray-100',
             ]"
           >
-            {{ $t('dashboard.upcoming') }}
+            Próximos
           </button>
           <button
             @click="filterMatches('completed')"
@@ -59,7 +59,7 @@
                 : 'text-gray-600 hover:bg-gray-100',
             ]"
           >
-            {{ $t('dashboard.completed') }}
+            Completados
           </button>
         </div>
       </div>
@@ -81,7 +81,7 @@
               <div class="flex items-center space-x-4">
                 <div class="text-right">
                   <div class="font-medium text-gray-900">{{ match.home_team?.name }}</div>
-                  <div class="text-xs text-gray-500">{{ $t('common.home') }}</div>
+                  <div class="text-xs text-gray-500">Local</div>
                 </div>
                 <div class="text-center">
                   <div v-if="match.status === 'completed'" class="text-xl font-bold text-gray-900">
@@ -91,7 +91,7 @@
                 </div>
                 <div class="text-left">
                   <div class="font-medium text-gray-900">{{ match.away_team?.name }}</div>
-                  <div class="text-xs text-gray-500">{{ $t('common.away') }}</div>
+                  <div class="text-xs text-gray-500">Visitante</div>
                 </div>
               </div>
             </div>
@@ -100,14 +100,14 @@
               <div class="text-xs text-gray-500 mb-2">{{ match.tournament?.name }}</div>
               <div class="flex space-x-2">
                 <RouterLink :to="`/matches/${match.id}`" class="btn-secondary text-xs px-3 py-1">
-                  {{ $t('dashboard.viewDetails') }}
+                  Ver detalles
                 </RouterLink>
                 <button
                   v-if="match.status === 'in_progress' || match.status === 'scheduled'"
                   @click="manageMatch(match)"
                   class="btn-primary text-xs px-3 py-1"
                 >
-                  {{ match.status === 'in_progress' ? $t('dashboard.manage') : $t('dashboard.startMatch') }}
+                  {{ match.status === 'in_progress' ? 'Gestionar' : 'Iniciar partido' }}
                 </button>
               </div>
             </div>
@@ -117,12 +117,12 @@
 
       <div v-else class="text-center py-8 text-gray-500">
         <CalendarIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-        <p>{{ matchFilter === 'upcoming' ? $t('dashboard.noUpcomingAssigned') : $t('dashboard.noCompletedAssigned') }}</p>
+        <p>{{ matchFilter === 'upcoming' ? 'No hay próximos partidos asignados' : 'No hay partidos completados asignados' }}</p>
         <p class="text-sm mt-2">
           {{
             matchFilter === 'upcoming'
-              ? $t('dashboard.newAssignmentsWillAppear')
-              : $t('dashboard.completedMatchesWillAppear')
+              ? 'Las nuevas asignaciones aparecerán aquí'
+              : 'Los partidos completados aparecerán aquí'
           }}
         </p>
       </div>
@@ -130,7 +130,7 @@
 
     <!-- Match Management Tools -->
     <div class="card p-6">
-      <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('dashboard.matchManagementTools') }}</h2>
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">Herramientas de Gestión de Partidos</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <button
@@ -141,8 +141,8 @@
             <DocumentPlusIcon class="w-6 h-6 text-primary-600" />
           </div>
           <div class="text-left">
-            <div class="font-medium text-gray-900">{{ $t('dashboard.recordEvents') }}</div>
-            <div class="text-sm text-gray-600">{{ $t('dashboard.logGoalsCards') }}</div>
+            <div class="font-medium text-gray-900">Registrar eventos</div>
+            <div class="text-sm text-gray-600">Registrar goles y tarjetas</div>
           </div>
         </button>
 
@@ -154,8 +154,8 @@
             <ClockIcon class="w-6 h-6 text-success-600" />
           </div>
           <div class="text-left">
-            <div class="font-medium text-gray-900">{{ $t('dashboard.matchTimer') }}</div>
-            <div class="text-sm text-gray-600">{{ $t('dashboard.trackMatchTime') }}</div>
+            <div class="font-medium text-gray-900">Cronómetro</div>
+            <div class="text-sm text-gray-600">Controlar tiempo del partido</div>
           </div>
         </button>
 
@@ -167,8 +167,8 @@
             <DocumentTextIcon class="w-6 h-6 text-warning-600" />
           </div>
           <div class="text-left">
-            <div class="font-medium text-gray-900">{{ $t('dashboard.matchReports') }}</div>
-            <div class="text-sm text-gray-600">{{ $t('dashboard.viewSubmitReports') }}</div>
+            <div class="font-medium text-gray-900">Reportes de partidos</div>
+            <div class="text-sm text-gray-600">Ver y enviar reportes</div>
           </div>
         </button>
 
@@ -180,8 +180,8 @@
             <BookOpenIcon class="w-6 h-6 text-secondary-600" />
           </div>
           <div class="text-left">
-            <div class="font-medium text-gray-900">{{ $t('dashboard.rulesReference') }}</div>
-            <div class="text-sm text-gray-600">{{ $t('dashboard.quickAccessRules') }}</div>
+            <div class="font-medium text-gray-900">Reglamento</div>
+            <div class="text-sm text-gray-600">Acceso rápido a reglas</div>
           </div>
         </button>
 
@@ -193,8 +193,8 @@
             <PhoneIcon class="w-6 h-6 text-danger-600" />
           </div>
           <div class="text-left">
-            <div class="font-medium text-gray-900">{{ $t('dashboard.emergencyContact') }}</div>
-            <div class="text-sm text-gray-600">{{ $t('dashboard.tournamentHotline') }}</div>
+            <div class="font-medium text-gray-900">Contacto de emergencia</div>
+            <div class="text-sm text-gray-600">Línea directa del torneo</div>
           </div>
         </button>
 
@@ -206,8 +206,8 @@
             <CalendarDaysIcon class="w-6 h-6 text-primary-600" />
           </div>
           <div class="text-left">
-            <div class="font-medium text-gray-900">{{ $t('dashboard.mySchedule') }}</div>
-            <div class="text-sm text-gray-600">{{ $t('dashboard.viewFullSchedule') }}</div>
+            <div class="font-medium text-gray-900">Mi horario</div>
+            <div class="text-sm text-gray-600">Ver horario completo</div>
           </div>
         </button>
       </div>
@@ -215,7 +215,7 @@
 
     <!-- Recent Activity -->
     <div class="card p-6">
-      <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('dashboard.recentActivity') }}</h2>
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">Actividad reciente</h2>
 
       <div v-if="recentActivity.length > 0" class="space-y-4">
         <div
@@ -249,41 +249,41 @@
 
       <div v-else class="text-center py-8 text-gray-500">
         <ClockIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-        <p>{{ $t('dashboard.noRecentActivity') }}</p>
+        <p>No hay actividad reciente</p>
         <p class="text-sm mt-2">
-          {{ $t('dashboard.activityWillAppear') }}
+          La actividad aparecerá aquí
         </p>
       </div>
     </div>
 
     <!-- Performance Metrics -->
     <div class="card p-6">
-      <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('dashboard.performanceMetrics') }}</h2>
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">Métricas de rendimiento</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <h3 class="text-sm font-medium text-gray-700 mb-3">{{ $t('dashboard.matchStatistics') }}</h3>
+          <h3 class="text-sm font-medium text-gray-700 mb-3">Estadísticas de partidos</h3>
           <div class="space-y-3">
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">{{ $t('dashboard.averageCardsPerMatch') }}</span>
+              <span class="text-sm text-gray-600">Tarjetas promedio por partido</span>
               <span class="text-sm font-medium text-gray-900">{{
                 performanceMetrics.avgCards
               }}</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">{{ $t('dashboard.averageGoalsPerMatch') }}</span>
+              <span class="text-sm text-gray-600">Goles promedio por partido</span>
               <span class="text-sm font-medium text-gray-900">{{
                 performanceMetrics.avgGoals
               }}</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">{{ $t('dashboard.onTimeMatchStarts') }}</span>
+              <span class="text-sm text-gray-600">Partidos iniciados a tiempo</span>
               <span class="text-sm font-medium text-gray-900"
                 >{{ performanceMetrics.onTimeRate }}%</span
               >
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">{{ $t('dashboard.matchesThisSeason') }}</span>
+              <span class="text-sm text-gray-600">Partidos esta temporada</span>
               <span class="text-sm font-medium text-gray-900">{{
                 performanceMetrics.seasonMatches
               }}</span>
@@ -292,10 +292,10 @@
         </div>
 
         <div>
-          <h3 class="text-sm font-medium text-gray-700 mb-3">{{ $t('dashboard.feedbackSummary') }}</h3>
+          <h3 class="text-sm font-medium text-gray-700 mb-3">Resumen de comentarios</h3>
           <div class="space-y-3">
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">{{ $t('dashboard.overallRating') }}</span>
+              <span class="text-sm text-gray-600">Calificación general</span>
               <div class="flex items-center">
                 <span class="text-sm font-medium text-gray-900 mr-1">{{
                   performanceMetrics.rating
@@ -315,19 +315,19 @@
               </div>
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">{{ $t('dashboard.positiveFeedback') }}</span>
+              <span class="text-sm text-gray-600">Comentarios positivos</span>
               <span class="text-sm font-medium text-gray-900"
                 >{{ performanceMetrics.positiveFeedback }}%</span
               >
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">{{ $t('dashboard.consistencyScore') }}</span>
+              <span class="text-sm text-gray-600">Puntuación de consistencia</span>
               <span class="text-sm font-medium text-gray-900"
                 >{{ performanceMetrics.consistency }}%</span
               >
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">{{ $t('dashboard.punctualityScore') }}</span>
+              <span class="text-sm text-gray-600">Puntuación de puntualidad</span>
               <span class="text-sm font-medium text-gray-900"
                 >{{ performanceMetrics.punctuality }}%</span
               >
@@ -343,9 +343,9 @@
             <StarIcon class="w-5 h-5 text-blue-600" />
           </div>
           <div class="ml-3">
-            <h4 class="text-sm font-medium text-blue-800">{{ $t('dashboard.performanceTracking') }}</h4>
+            <h4 class="text-sm font-medium text-blue-800">Seguimiento de rendimiento</h4>
             <p class="mt-1 text-sm text-blue-700">
-              {{ $t('dashboard.performanceTrackingDescription') }}
+              Las métricas se calculan en base a tus partidos completados y comentarios de equipos
             </p>
           </div>
         </div>
@@ -494,7 +494,7 @@ export default {
             totalMatches: assignedMatches.value.filter((m) => m.status === 'completed').length,
             upcomingMatches: upcoming,
             completedMatches: completedThisMonth,
-            averageRating: 0, // Will be calculated when feedback system is available
+            averageRating: 0,
           }
         } else {
           assignedMatches.value = []

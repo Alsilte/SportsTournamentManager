@@ -12,7 +12,7 @@
               <img src="../../../public/logo.png" alt="Logo">
             </div>
             <span class="font-bold text-xl text-gray-900 hidden sm:block">
-              {{ $t('common.appName', 'Tournament Manager') }}
+              Tournament Manager
             </span>
           </RouterLink>
         </div>
@@ -28,19 +28,16 @@
             active-class="nav-link-active"
           >
             <component :is="item.icon" class="w-4 h-4 mr-2" />
-            {{ $t(item.translationKey) }}
+            {{ item.label }}
           </RouterLink>
-
-          <!-- Language Selector -->
-          <LanguageSelector variant="compact" class="mx-2" />
 
           <!-- Authentication Section -->
           <div v-if="!authStore.isAuthenticated" class="flex items-center space-x-4">
             <RouterLink to="/login" class="nav-link">
-              {{ $t('auth.signIn') }}
+              Iniciar Sesión
             </RouterLink>
             <RouterLink to="/register" class="btn-primary">
-              {{ $t('auth.signUp') }}
+              Registrarse
             </RouterLink>
           </div>
 
@@ -71,7 +68,7 @@
                     <div class="px-4 py-3 border-b border-gray-200">
                       <p class="text-sm font-medium text-gray-900">{{ authStore.userName }}</p>
                       <p class="text-sm text-gray-500">{{ authStore.userEmail }}</p>
-                      <p class="text-xs text-primary-600 capitalize mt-1">{{ $t(`auth.${authStore.userRole}`) }}</p>
+                      <p class="text-xs text-primary-600 capitalize mt-1">{{ getRoleLabel(authStore.userRole) }}</p>
                     </div>
 
                     <!-- Menu Items -->
@@ -84,7 +81,7 @@
                         ]"
                       >
                         <component :is="item.icon" class="w-4 h-4 mr-3 text-gray-400" />
-                        {{ $t(item.translationKey) }}
+                        {{ item.label }}
                       </RouterLink>
                     </MenuItem>
 
@@ -98,7 +95,7 @@
                         ]"
                       >
                         <ArrowRightOnRectangleIcon class="w-4 h-4 mr-3 text-gray-400" />
-                        {{ $t('auth.signOut') }}
+                        Cerrar Sesión
                       </button>
                     </MenuItem>
                   </div>
@@ -110,9 +107,6 @@
 
         <!-- Mobile Menu Button -->
         <div class="md:hidden flex items-center space-x-2">
-          <!-- Language Selector Mobile -->
-          <LanguageSelector variant="icon-only" />
-          
           <button
             @click="toggleMobileMenu"
             class="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
@@ -151,8 +145,6 @@ import {
   ChartBarIcon
 } from '@heroicons/vue/24/outline'
 import { useAuthStore } from '@/stores/auth'
-import { useI18n } from 'vue-i18n'
-import LanguageSelector from '@/components/ui/LanguageSelector.vue'
 
 export default {
   name: 'NavigationHeader',
@@ -161,7 +153,6 @@ export default {
     MenuButton,
     MenuItems,
     MenuItem,
-    LanguageSelector,
     TrophyIcon,
     UserIcon,
     ChevronDownIcon,
@@ -179,39 +170,38 @@ export default {
   setup() {
     const authStore = useAuthStore()
     const mobileMenu = inject('mobileMenu')
-    const { t } = useI18n()
 
-    // Public navigation items with i18n
+    // Public navigation items
     const publicNavItems = [
       { 
         name: 'Home', 
         to: '/', 
         icon: HomeIcon,
-        translationKey: 'navigation.home'
+        label: 'Inicio'
       },
       { 
         name: 'Tournaments', 
         to: '/tournaments', 
         icon: CalendarIcon,
-        translationKey: 'navigation.tournaments'
+        label: 'Torneos'
       },
       { 
         name: 'Teams', 
         to: '/teams', 
         icon: UserGroupIcon,
-        translationKey: 'navigation.teams'
+        label: 'Equipos'
       },
       { 
         name: 'Players', 
         to: '/players', 
         icon: UsersIcon,
-        translationKey: 'navigation.players'
+        label: 'Jugadores'
       },
       { 
         name: 'Matches', 
         to: '/matches', 
         icon: PlayIcon,
-        translationKey: 'navigation.matches'
+        label: 'Partidos'
       }
     ]
 
@@ -221,21 +211,31 @@ export default {
         name: 'Dashboard', 
         to: '/dashboard', 
         icon: ChartBarIcon,
-        translationKey: 'common.dashboard'
+        label: 'Panel de Control'
       },
       { 
         name: 'Profile', 
         to: '/profile', 
         icon: UserIcon,
-        translationKey: 'common.profile'
+        label: 'Perfil'
       },
       { 
         name: 'Settings', 
         to: '/settings', 
         icon: CogIcon,
-        translationKey: 'common.settings'
+        label: 'Configuración'
       }
     ]
+
+    const getRoleLabel = (role) => {
+      const roleLabels = {
+        admin: 'Administrador',
+        manager: 'Gestor',
+        player: 'Jugador',
+        referee: 'Árbitro'
+      }
+      return roleLabels[role] || role
+    }
 
     const toggleMobileMenu = () => {
       mobileMenu.toggle()
@@ -252,7 +252,7 @@ export default {
       userMenuItems,
       toggleMobileMenu,
       handleLogout,
-      t
+      getRoleLabel
     }
   }
 }

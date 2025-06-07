@@ -3,10 +3,10 @@
     <!-- My Teams Overview -->
     <div class="card p-6">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">{{ $t('dashboard.myTeams') }}</h2>
+        <h2 class="text-xl font-semibold text-gray-900">Mis Equipos</h2>
         <RouterLink to="/teams/create" class="btn-primary">
           <PlusIcon class="w-4 h-4 mr-2" />
-          {{ $t('dashboard.createTeam') }}
+          Crear Equipo
         </RouterLink>
       </div>
 
@@ -27,22 +27,22 @@
                 team.is_active ? 'bg-success-100 text-success-800' : 'bg-gray-100 text-gray-800',
               ]"
             >
-              {{ team.is_active ? $t('dashboard.active') : $t('dashboard.inactive') }}
+              {{ team.is_active ? 'Activo' : 'Inactivo' }}
             </span>
           </div>
 
           <div class="space-y-2 text-sm text-gray-600 mb-4">
             <div class="flex items-center">
               <UsersIcon class="w-4 h-4 mr-2" />
-              <span>{{ team.players_count || 0 }} {{ $t('dashboard.players') }}</span>
+              <span>{{ team.players_count || 0 }} jugadores</span>
             </div>
             <div class="flex items-center">
               <CalendarIcon class="w-4 h-4 mr-2" />
-              <span>{{ team.tournaments_count || 0 }} {{ $t('dashboard.tournaments') }}</span>
+              <span>{{ team.tournaments_count || 0 }} torneos</span>
             </div>
             <div class="flex items-center">
               <TrophyIcon class="w-4 h-4 mr-2" />
-              <span>{{ team.wins || 0 }} {{ $t('dashboard.wins') }}</span>
+              <span>{{ team.wins || 0 }} victorias</span>
             </div>
           </div>
 
@@ -51,13 +51,13 @@
               :to="`/teams/${team.id}`"
               class="btn-primary text-xs px-3 py-1 flex-1 text-center"
             >
-              {{ $t('common.view') }}
+              Ver
             </RouterLink>
             <RouterLink
               :to="`/teams/${team.id}/roster`"
               class="btn-secondary text-xs px-3 py-1 flex-1 text-center"
             >
-              {{ $t('dashboard.roster') }}
+              Plantilla
             </RouterLink>
           </div>
         </div>
@@ -68,20 +68,20 @@
           class="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-primary-300 hover:bg-primary-50 transition-colors flex flex-col items-center justify-center text-center"
         >
           <PlusIcon class="w-8 h-8 text-gray-400 mb-2" />
-          <span class="text-sm font-medium text-gray-600">{{ $t('dashboard.createNewTeam') }}</span>
+          <span class="text-sm font-medium text-gray-600">Crear Nuevo Equipo</span>
         </RouterLink>
       </div>
 
       <!-- Empty state for teams -->
       <div v-else class="text-center py-12">
         <UserGroupIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
-        <h3 class="text-lg font-medium text-gray-900 mb-2">{{ $t('dashboard.noTeamsYet') }}</h3>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Aún no tienes equipos</h3>
         <p class="text-gray-600 mb-6">
-          {{ $t('dashboard.createFirstTeamDescription') }}
+          Crea tu primer equipo para comenzar a gestionar jugadores y participar en torneos
         </p>
         <RouterLink to="/teams/create" class="btn-primary">
           <PlusIcon class="w-4 h-4 mr-2" />
-          {{ $t('dashboard.createYourFirstTeam') }}
+          Crear tu primer equipo
         </RouterLink>
       </div>
     </div>
@@ -89,12 +89,12 @@
     <!-- Upcoming Matches -->
     <div class="card p-6">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">{{ $t('dashboard.upcomingMatches') }}</h2>
+        <h2 class="text-xl font-semibold text-gray-900">Próximos Partidos</h2>
         <RouterLink
           to="/matches"
           class="text-primary-600 hover:text-primary-700 text-sm font-medium"
         >
-          {{ $t('dashboard.viewAll') }}
+          Ver todos
         </RouterLink>
       </div>
 
@@ -114,12 +114,12 @@
             <div class="flex items-center space-x-3">
               <div class="text-right">
                 <div class="font-medium text-gray-900">{{ match.home_team?.name }}</div>
-                <div class="text-xs text-gray-500">{{ $t('common.home') }}</div>
+                <div class="text-xs text-gray-500">Local</div>
               </div>
               <div class="text-gray-400 font-bold">VS</div>
               <div class="text-left">
                 <div class="font-medium text-gray-900">{{ match.away_team?.name }}</div>
-                <div class="text-xs text-gray-500">{{ $t('common.away') }}</div>
+                <div class="text-xs text-gray-500">Visitante</div>
               </div>
             </div>
           </div>
@@ -132,9 +132,9 @@
 
       <div v-else class="text-center py-8 text-gray-500">
         <CalendarIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-        <p>{{ $t('dashboard.noUpcomingMatches') }}</p>
+        <p>No hay próximos partidos</p>
         <p class="text-sm mt-2">
-          {{ $t('dashboard.matchesWillAppear') }}
+          Los partidos aparecerán aquí cuando sean programados
         </p>
       </div>
     </div>
@@ -142,21 +142,21 @@
     <!-- Player Management -->
     <div class="card p-6">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">{{ $t('dashboard.playerManagement') }}</h2>
+        <h2 class="text-xl font-semibold text-gray-900">Gestión de Jugadores</h2>
         <button
           @click="showPlayerSearch = true"
           class="btn-secondary"
           :disabled="managedTeams.length === 0"
         >
           <MagnifyingGlassIcon class="w-4 h-4 mr-2" />
-          {{ $t('dashboard.findPlayers') }}
+          Buscar Jugadores
         </button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Recent Player Additions -->
         <div>
-          <h3 class="text-sm font-medium text-gray-700 mb-3">{{ $t('dashboard.recentAdditions') }}</h3>
+          <h3 class="text-sm font-medium text-gray-700 mb-3">Incorporaciones Recientes</h3>
           <div v-if="recentPlayers.length > 0" class="space-y-3">
             <div
               v-for="player in recentPlayers"
@@ -171,7 +171,7 @@
                 </div>
                 <div>
                   <div class="text-sm font-medium text-gray-900">{{ player.user?.name }}</div>
-                  <div class="text-xs text-gray-500">{{ player.position || $t('dashboard.noPosition') }}</div>
+                  <div class="text-xs text-gray-500">{{ player.position || 'Sin posición' }}</div>
                 </div>
               </div>
               <div class="text-xs text-gray-500">{{ player.team?.name }}</div>
@@ -179,32 +179,32 @@
           </div>
           <div v-else class="text-center py-6 text-gray-500">
             <UserIcon class="w-8 h-8 mx-auto mb-2 text-gray-300" />
-            <p class="text-sm">{{ $t('dashboard.noRecentPlayerAdditions') }}</p>
+            <p class="text-sm">No hay incorporaciones recientes</p>
           </div>
         </div>
 
         <!-- Player Statistics -->
         <div>
-          <h3 class="text-sm font-medium text-gray-700 mb-3">{{ $t('dashboard.playerStats') }}</h3>
+          <h3 class="text-sm font-medium text-gray-700 mb-3">Estadísticas de Jugadores</h3>
           <div class="space-y-3">
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">{{ $t('dashboard.totalPlayers') }}</span>
+              <span class="text-sm text-gray-600">Total de jugadores</span>
               <span class="text-sm font-medium text-gray-900">{{ playerStats.total }}</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">{{ $t('dashboard.activePlayers') }}</span>
+              <span class="text-sm text-gray-600">Jugadores activos</span>
               <span class="text-sm font-medium text-gray-900">{{ playerStats.active }}</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">{{ $t('dashboard.topScorer') }}</span>
+              <span class="text-sm text-gray-600">Máximo goleador</span>
               <span class="text-sm font-medium text-gray-900">{{
-                playerStats.topScorer || $t('common.na')
+                playerStats.topScorer || 'N/A'
               }}</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-sm text-gray-600">{{ $t('dashboard.mostActive') }}</span>
+              <span class="text-sm text-gray-600">Más activo</span>
               <span class="text-sm font-medium text-gray-900">{{
-                playerStats.mostActive || $t('common.na')
+                playerStats.mostActive || 'N/A'
               }}</span>
             </div>
           </div>
@@ -215,10 +215,10 @@
     <!-- Tournament Registrations -->
     <div class="card p-6">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">{{ $t('dashboard.tournamentRegistrations') }}</h2>
+        <h2 class="text-xl font-semibold text-gray-900">Inscripciones a Torneos</h2>
         <RouterLink to="/tournaments" class="btn-primary">
           <CalendarIcon class="w-4 h-4 mr-2" />
-          {{ $t('dashboard.browseTournaments') }}
+          Explorar Torneos
         </RouterLink>
       </div>
 
@@ -230,9 +230,9 @@
         >
           <div>
             <div class="font-medium text-gray-900">{{ registration.tournament?.name }}</div>
-            <div class="text-sm text-gray-600">{{ $t('dashboard.team') }}: {{ registration.team?.name }}</div>
+            <div class="text-sm text-gray-600">Equipo: {{ registration.team?.name }}</div>
             <div class="text-xs text-gray-500">
-              {{ $t('dashboard.registered') }}: {{ formatDate(registration.registration_date) }}
+              Registrado: {{ formatDate(registration.registration_date) }}
             </div>
           </div>
           <div class="text-right">
@@ -246,7 +246,7 @@
               {{
                 registration.tournament?.start_date
                   ? formatDate(registration.tournament.start_date)
-                  : $t('common.tbd')
+                  : 'Por determinar'
               }}
             </div>
           </div>
@@ -255,10 +255,10 @@
 
       <div v-else class="text-center py-8 text-gray-500">
         <CalendarIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-        <p>{{ $t('dashboard.noTournamentRegistrations') }}</p>
-        <p class="text-sm mt-2">{{ $t('dashboard.registerTeamsDescription') }}</p>
+        <p>No hay inscripciones a torneos</p>
+        <p class="text-sm mt-2">Inscribe tus equipos en torneos para comenzar a competir</p>
         <RouterLink to="/tournaments" class="btn-secondary mt-4">
-          {{ $t('dashboard.browseAvailableTournaments') }}
+          Explorar torneos disponibles
         </RouterLink>
       </div>
     </div>
@@ -430,11 +430,11 @@ export default {
      */
     const formatRegistrationStatus = (status) => {
       const statusMap = {
-        pending: 'dashboard.pending',
-        approved: 'dashboard.approved',
-        rejected: 'dashboard.rejected',
+        pending: 'Pendiente',
+        approved: 'Aprobado',
+        rejected: 'Rechazado',
       }
-      return statusMap[status] ? $t(statusMap[status]) : status
+      return statusMap[status] || status
     }
 
     /**

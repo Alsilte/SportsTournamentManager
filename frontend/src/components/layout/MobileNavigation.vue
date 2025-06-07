@@ -60,14 +60,14 @@
                         active-class="mobile-nav-link-active"
                       >
                         <component :is="item.icon" class="w-5 h-5 mr-3" />
-                        {{ $t(item.name) }}
+                        {{ item.label }}
                       </RouterLink>
                     </div>
   
                     <!-- Authenticated User Navigation -->
                     <div v-if="authStore.isAuthenticated" class="mt-6 pt-6 border-t border-gray-200">
                       <div class="px-4 pb-2">
-                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ $t('common.account') }}</h3>
+                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Cuenta</h3>
                       </div>
                       <div class="space-y-1">
                         <RouterLink
@@ -79,7 +79,7 @@
                           active-class="mobile-nav-link-active"
                         >
                           <component :is="item.icon" class="w-5 h-5 mr-3" />
-                          {{ $t(item.name) }}
+                          {{ item.label }}
                         </RouterLink>
                       </div>
                     </div>
@@ -87,7 +87,7 @@
                     <!-- Admin Navigation -->
                     <div v-if="authStore.isAdmin" class="mt-6 pt-6 border-t border-gray-200">
                       <div class="px-4 pb-2">
-                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ $t('common.admin') }}</h3>
+                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Administración</h3>
                       </div>
                       <div class="space-y-1">
                         <RouterLink
@@ -99,7 +99,7 @@
                           active-class="mobile-nav-link-active"
                         >
                           <component :is="item.icon" class="w-5 h-5 mr-3" />
-                          {{ $t(item.name) }}
+                          {{ item.label }}
                         </RouterLink>
                       </div>
                     </div>
@@ -107,7 +107,7 @@
                     <!-- Team Manager Navigation -->
                     <div v-if="authStore.canManageTeams" class="mt-6 pt-6 border-t border-gray-200">
                       <div class="px-4 pb-2">
-                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ $t('common.management') }}</h3>
+                        <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Gestión</h3>
                       </div>
                       <div class="space-y-1">
                         <RouterLink
@@ -119,7 +119,7 @@
                           active-class="mobile-nav-link-active"
                         >
                           <component :is="item.icon" class="w-5 h-5 mr-3" />
-                          {{ $t(item.name) }}
+                          {{ item.label }}
                         </RouterLink>
                       </div>
                     </div>
@@ -134,14 +134,14 @@
                       @click="$emit('close')"
                       class="block w-full text-center btn-secondary"
                     >
-                      {{ $t('navigation.signIn') }}
+                      Iniciar Sesión
                     </RouterLink>
                     <RouterLink
                       to="/register"
                       @click="$emit('close')"
                       class="block w-full text-center btn-primary"
                     >
-                      {{ $t('navigation.signUp') }}
+                      Registrarse
                     </RouterLink>
                   </div>
                   <div v-else>
@@ -150,7 +150,7 @@
                       class="flex items-center w-full text-left p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
                     >
                       <ArrowRightOnRectangleIcon class="w-5 h-5 mr-3 text-gray-400" />
-                      {{ $t('navigation.signOut') }}
+                      Cerrar Sesión
                     </button>
                   </div>
                 </div>
@@ -216,28 +216,28 @@
   
       // Navigation items
       const publicNavItems = [
-        { name: 'navigation.home', to: '/', icon: HomeIcon },
-        { name: 'navigation.tournaments', to: '/tournaments', icon: CalendarIcon },
-        { name: 'navigation.teams', to: '/teams', icon: UserGroupIcon },
-        { name: 'navigation.players', to: '/players', icon: UsersIcon },
-        { name: 'navigation.matches', to: '/matches', icon: PlayIcon }
+        { name: 'home', to: '/', icon: HomeIcon, label: 'Inicio' },
+        { name: 'tournaments', to: '/tournaments', icon: CalendarIcon, label: 'Torneos' },
+        { name: 'teams', to: '/teams', icon: UserGroupIcon, label: 'Equipos' },
+        { name: 'players', to: '/players', icon: UsersIcon, label: 'Jugadores' },
+        { name: 'matches', to: '/matches', icon: PlayIcon, label: 'Partidos' }
       ]
   
       const userNavItems = [
-        { name: 'common.dashboard', to: '/dashboard', icon: ChartBarIcon },
-        { name: 'common.profile', to: '/profile', icon: UserIcon },
-        { name: 'common.settings', to: '/settings', icon: CogIcon }
+        { name: 'dashboard', to: '/dashboard', icon: ChartBarIcon, label: 'Panel de Control' },
+        { name: 'profile', to: '/profile', icon: UserIcon, label: 'Perfil' },
+        { name: 'settings', to: '/settings', icon: CogIcon, label: 'Configuración' }
       ]
   
       const adminNavItems = [
-        { name: 'navigation.admin', to: '/admin', icon: ShieldCheckIcon },
-        { name: 'common.userManagement', to: '/admin/users', icon: UsersIcon },
-        { name: 'navigation.createTournament', to: '/tournaments/create', icon: PlusIcon }
+        { name: 'admin', to: '/admin', icon: ShieldCheckIcon, label: 'Administración' },
+        { name: 'userManagement', to: '/admin/users', icon: UsersIcon, label: 'Gestión de Usuarios' },
+        { name: 'createTournament', to: '/tournaments/create', icon: PlusIcon, label: 'Crear Torneo' }
       ]
   
       const managerNavItems = [
-        { name: 'navigation.createTeam', to: '/teams/create', icon: PlusIcon },
-        { name: 'common.manageTeams', to: '/teams/manage', icon: AdjustmentsHorizontalIcon }
+        { name: 'createTeam', to: '/teams/create', icon: PlusIcon, label: 'Crear Equipo' },
+        { name: 'manageTeams', to: '/teams/manage', icon: AdjustmentsHorizontalIcon, label: 'Gestionar Equipos' }
       ]
   
       const handleLogout = async () => {

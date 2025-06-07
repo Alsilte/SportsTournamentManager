@@ -3,10 +3,10 @@
     <!-- Player Profile Summary -->
     <div class="card p-6">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">{{ $t('dashboard.myProfile') }}</h2>
+        <h2 class="text-xl font-semibold text-gray-900">Mi Perfil</h2>
         <RouterLink to="/profile" class="btn-secondary">
           <PencilIcon class="w-4 h-4 mr-2" />
-          {{ $t('common.edit') }}
+          Editar
         </RouterLink>
       </div>
 
@@ -16,16 +16,16 @@
         </div>
         <div class="flex-1">
           <h3 class="text-xl font-semibold text-gray-900">{{ playerProfile.name }}</h3>
-          <p class="text-gray-600">{{ playerProfile.position || $t('common.unknown') }}</p>
+          <p class="text-gray-600">{{ playerProfile.position || 'Desconocida' }}</p>
           <div class="flex items-center space-x-4 mt-2 text-sm text-gray-500">
-            <span v-if="playerProfile.age">{{ playerProfile.age }} {{ $t('dashboard.yearsOld') }}</span>
+            <span v-if="playerProfile.age">{{ playerProfile.age }} años</span>
             <span v-if="playerProfile.nationality">{{ playerProfile.nationality }}</span>
             <span v-if="playerProfile.height">{{ playerProfile.height }}cm</span>
           </div>
         </div>
         <div class="text-right">
           <div class="text-2xl font-bold text-primary-600">{{ playerStats.totalGoals }}</div>
-          <div class="text-sm text-gray-500">{{ $t('dashboard.totalGoals') }}</div>
+          <div class="text-sm text-gray-500">Goles totales</div>
         </div>
       </div>
     </div>
@@ -33,8 +33,8 @@
     <!-- My Teams -->
     <div class="card p-6">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">{{ $t('dashboard.myTeams') }}</h2>
-        <span class="text-sm text-gray-500">{{ playerTeams.length }} {{ $t('dashboard.activeTeams') }}</span>
+        <h2 class="text-xl font-semibold text-gray-900">Mis Equipos</h2>
+        <span class="text-sm text-gray-500">{{ playerTeams.length }} equipos activos</span>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -49,21 +49,21 @@
               v-if="team.pivot?.is_captain"
               class="bg-warning-100 text-warning-800 px-2 py-1 text-xs font-medium rounded-full"
             >
-              {{ $t('teams.roster.captain') }}
+              Capitán
             </span>
           </div>
 
           <div class="space-y-2 text-sm text-gray-600 mb-4">
             <div class="flex justify-between">
-              <span>{{ $t('teams.roster.position') }}:</span>
-              <span class="font-medium">{{ team.pivot?.position || $t('common.unknown') }}</span>
+              <span>Posición:</span>
+              <span class="font-medium">{{ team.pivot?.position || 'Desconocida' }}</span>
             </div>
             <div class="flex justify-between">
-              <span>{{ $t('teams.roster.jerseyNumber') }}:</span>
-              <span class="font-medium">{{ team.pivot?.jersey_number || $t('common.na') }}</span>
+              <span>Número:</span>
+              <span class="font-medium">{{ team.pivot?.jersey_number || 'N/A' }}</span>
             </div>
             <div class="flex justify-between">
-              <span>{{ $t('teams.roster.joinedDate') }}:</span>
+              <span>Fecha de ingreso:</span>
               <span class="font-medium">{{ formatDate(team.pivot?.joined_date) }}</span>
             </div>
           </div>
@@ -72,63 +72,55 @@
             :to="`/teams/${team.id}`"
             class="btn-primary text-xs px-4 py-2 w-full text-center block"
           >
-            {{ $t('common.view') }}
+            Ver
           </RouterLink>
         </div>
 
         <div v-if="playerTeams.length === 0" class="col-span-2 text-center py-8 text-gray-500">
           <UserGroupIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-          <p>{{ $t('dashboard.noTeamsYet') }}</p>
+          <p>Aún no tienes equipos</p>
         </div>
       </div>
     </div>
 
     <!-- My Statistics -->
     <div class="card p-6">
-      <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('dashboard.myStatistics') }}</h2>
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">Mis Estadísticas</h2>
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
         <div class="text-center">
           <div class="text-3xl font-bold text-primary-600">{{ playerStats.totalMatches }}</div>
-          <div class="text-sm text-gray-500">
-            {{ $t('dashboard.matchesPlayed') }}
-          </div>
+          <div class="text-sm text-gray-500">Partidos jugados</div>
         </div>
         <div class="text-center">
           <div class="text-3xl font-bold text-success-600">{{ playerStats.totalGoals }}</div>
-          <div class="text-sm text-gray-500">
-            {{ $t('dashboard.goalsScored') }}
-          </div>
+          <div class="text-sm text-gray-500">Goles anotados</div>
         </div>
         <div class="text-center">
           <div class="text-3xl font-bold text-warning-600">{{ playerStats.yellowCards }}</div>
-          <div class="text-sm text-gray-500">
-            {{ $t('dashboard.yellowCards') }}
-          </div>
+          <div class="text-sm text-gray-500">Tarjetas amarillas</div>
         </div>
         <div class="text-center">
           <div class="text-3xl font-bold text-danger-600">{{ playerStats.redCards }}</div>
-          <div class="text-sm text-gray-500">
-            {{ $t('dashboard.redCards') }}
-          </div>
+          <div class="text-sm text-gray-500">Tarjetas rojas</div>
         </div>
       </div>
 
       <div class="bg-gray-50 rounded-lg p-6 text-center">
         <ChartBarIcon class="w-12 h-12 text-gray-300 mx-auto mb-2" />
-        <p class="text-gray-500 text-sm">{{ $t('dashboard.performancePlaceholder') }}</p>
+        <p class="text-gray-500 text-sm">Los gráficos de rendimiento estarán disponibles pronto</p>
       </div>
     </div>
 
     <!-- Upcoming Matches -->
     <div class="card p-6">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">{{ $t('dashboard.upcomingMatches') }}</h2>
+        <h2 class="text-xl font-semibold text-gray-900">Próximos Partidos</h2>
         <RouterLink
           to="/matches/mine"
           class="text-primary-600 hover:text-primary-700 text-sm font-medium"
         >
-          {{ $t('dashboard.viewAll') }}
+          Ver todos
         </RouterLink>
       </div>
 
@@ -148,16 +140,12 @@
             <div class="flex items-center space-x-3">
               <div class="text-right">
                 <div class="font-medium text-gray-900">{{ match.home_team?.name }}</div>
-                <div class="text-xs text-gray-500">
-                  {{ $t('common.home') }}
-                </div>
+                <div class="text-xs text-gray-500">Local</div>
               </div>
               <div class="text-gray-400 font-bold">VS</div>
               <div class="text-left">
                 <div class="font-medium text-gray-900">{{ match.away_team?.name }}</div>
-                <div class="text-xs text-gray-500">
-                  {{ $t('dashboard.away') }}
-                </div>
+                <div class="text-xs text-gray-500">Visitante</div>
               </div>
             </div>
           </div>
@@ -168,14 +156,14 @@
               v-if="isMyTeamMatch(match)"
               class="inline-block mt-1 bg-primary-100 text-primary-800 px-2 py-1 text-xs font-medium rounded"
             >
-              {{ $t('dashboard.myTeam') }}
+              Mi equipo
             </span>
           </div>
         </div>
 
         <div v-if="upcomingMatches.length === 0" class="text-center py-8 text-gray-500">
           <CalendarIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-          <p>{{ $t('dashboard.noUpcomingMatches') }}</p>
+          <p>No hay próximos partidos</p>
         </div>
       </div>
     </div>
@@ -183,12 +171,12 @@
     <!-- Recent Match Results -->
     <div class="card p-6">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">{{ $t('dashboard.recentMatches') }}</h2>
+        <h2 class="text-xl font-semibold text-gray-900">Partidos Recientes</h2>
         <RouterLink
           to="/matches/history"
           class="text-primary-600 hover:text-primary-700 text-sm font-medium"
         >
-          {{ $t('common.viewHistory') }}
+          Ver historial
         </RouterLink>
       </div>
 
@@ -202,23 +190,17 @@
             <div class="flex items-center space-x-3">
               <div class="text-center">
                 <div class="font-medium text-gray-900">{{ match.home_team?.name }}</div>
-                <div class="text-xs text-gray-500">
-                  {{ $t('common.home') }}
-                </div>
+                <div class="text-xs text-gray-500">Local</div>
               </div>
               <div class="text-center">
                 <div class="text-xl font-bold text-gray-900">
                   {{ match.home_score }} - {{ match.away_score }}
                 </div>
-                <div class="text-xs text-gray-500">
-                  {{ $t('dashboard.final') }}
-                </div>
+                <div class="text-xs text-gray-500">Final</div>
               </div>
               <div class="text-center">
                 <div class="font-medium text-gray-900">{{ match.away_team?.name }}</div>
-                <div class="text-xs text-gray-500">
-                  {{ $t('dashboard.away') }}
-                </div>
+                <div class="text-xs text-gray-500">Visitante</div>
               </div>
             </div>
           </div>
@@ -238,14 +220,14 @@
 
         <div v-if="recentMatches.length === 0" class="text-center py-8 text-gray-500">
           <PlayIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-          <p>{{ $t('dashboard.noRecentMatches') }}</p>
+          <p>No hay partidos recientes</p>
         </div>
       </div>
     </div>
 
     <!-- Achievements -->
     <div class="card p-6" v-if="hasRealAchievements">
-      <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('dashboard.achievements') }}</h2>
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">Logros</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- First Goal Achievement -->
@@ -257,8 +239,8 @@
             <StarIcon class="w-6 h-6 text-white" />
           </div>
           <div>
-            <div class="font-medium text-gray-900">{{ $t('dashboard.achievementGoalScorer') }}</div>
-            <div class="text-sm text-gray-600">{{ playerStats.totalGoals }} {{ $t('dashboard.goalsScored') }}</div>
+            <div class="font-medium text-gray-900">Goleador</div>
+            <div class="text-sm text-gray-600">{{ playerStats.totalGoals }} goles anotados</div>
           </div>
         </div>
 
@@ -271,8 +253,8 @@
            <img src="../../../public/logo.png" alt="Team Captain Icon" class="w-6 h-6" />
           </div>
           <div>
-            <div class="font-medium text-gray-900">{{ $t('teams.teamCaptain') }}</div>
-            <div class="text-sm text-gray-600">{{ $t('dashboard.achievementLeadershipRole') }}</div>
+            <div class="font-medium text-gray-900">Capitán de Equipo</div>
+            <div class="text-sm text-gray-600">Rol de liderazgo</div>
           </div>
         </div>
 
@@ -285,8 +267,8 @@
             <FireIcon class="w-6 h-6 text-white" />
           </div>
           <div>
-            <div class="font-medium text-gray-900">{{ $t('dashboard.achievementExperiencedPlayer') }}</div>
-            <div class="text-sm text-gray-600">{{ playerStats.totalMatches }} {{ $t('dashboard.matchesPlayed') }}</div>
+            <div class="font-medium text-gray-900">Jugador Experimentado</div>
+            <div class="text-sm text-gray-600">{{ playerStats.totalMatches }} partidos jugados</div>
           </div>
         </div>
       </div>
@@ -294,10 +276,10 @@
 
     <!-- No achievements state -->
     <div class="card p-6" v-if="!hasRealAchievements">
-      <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ $t('dashboard.achievements') }}</h2>
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">Logros</h2>
       <div class="text-center py-8 text-gray-500">
         <TrophyIcon class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-        <p>{{ $t('dashboard.noAchievementsYet') }}</p>
+        <p>Aún no tienes logros</p>
       </div>
     </div>
   </div>
