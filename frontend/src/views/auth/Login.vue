@@ -8,15 +8,15 @@
           </div>
         </div>
         <h2 class="mt-6 text-center text-3xl font-bold text-gray-900">
-          {{ $t('auth.signInToAccount') }}
+          Iniciar sesión en tu cuenta
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600">
-          {{ $t('auth.or') }}
+          O
           <RouterLink 
             to="/register" 
             class="font-medium text-primary-600 hover:text-primary-500 transition-colors"
           >
-            {{ $t('auth.createNewAccount') }}
+            crear una nueva cuenta
           </RouterLink>
         </p>
       </div>
@@ -28,7 +28,7 @@
             <!-- Email Field -->
             <div>
               <label for="email" class="form-label">
-                {{ $t('auth.emailAddress') }}
+                Dirección de correo electrónico
               </label>
               <div class="relative">
                 <input
@@ -41,7 +41,7 @@
                     'form-input',
                     errors.email ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500' : ''
                   ]"
-                  :placeholder="$t('auth.enterEmail')"
+                  placeholder="Ingresa tu correo electrónico"
                   :disabled="isLoading"
                 />
                 <EnvelopeIcon class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -54,7 +54,7 @@
             <!-- Password Field -->
             <div>
               <label for="password" class="form-label">
-                {{ $t('auth.password') }}
+                Contraseña
               </label>
               <div class="relative">
                 <input
@@ -67,7 +67,7 @@
                     'form-input pr-10',
                     errors.password ? 'border-danger-300 focus:border-danger-500 focus:ring-danger-500' : ''
                   ]"
-                  :placeholder="$t('auth.enterPassword')"
+                  placeholder="Ingresa tu contraseña"
                   :disabled="isLoading"
                 />
                 <button
@@ -96,12 +96,12 @@
                   :disabled="isLoading"
                 />
                 <label for="remember" class="ml-2 block text-sm text-gray-700">
-                  {{ $t('auth.rememberMe') }}
+                  Recordarme
                 </label>
               </div>
               <div class="text-sm">
                 <a href="#" class="font-medium text-primary-600 hover:text-primary-500 transition-colors">
-                  {{ $t('auth.forgotPassword') }}
+                  ¿Olvidaste tu contraseña?
                 </a>
               </div>
             </div>
@@ -123,9 +123,9 @@
               >
                 <div v-if="isLoading" class="flex items-center justify-center">
                   <div class="spinner w-5 h-5 mr-2"></div>
-                  {{ $t('auth.signingIn') }}
+                  Iniciando sesión...
                 </div>
-                <span v-else>{{ $t('auth.signIn') }}</span>
+                <span v-else>Iniciar sesión</span>
               </button>
             </div>
           </form>
@@ -137,14 +137,14 @@
                 <div class="w-full border-t border-gray-300" />
               </div>
               <div class="relative flex justify-center text-sm">
-                <span class="px-2 bg-white text-gray-500">{{ $t('auth.orContinueWith') }}</span>
+                <span class="px-2 bg-white text-gray-500">O continúa con</span>
               </div>
             </div>
   
             <!-- Social Login (Future Enhancement) -->
             <div class="mt-6 text-center">
               <p class="text-sm text-gray-500">
-                {{ $t('auth.socialLoginSoon') }}
+                Acceso con redes sociales próximamente
               </p>
             </div>
           </div>
@@ -154,10 +154,10 @@
       <!-- Demo Accounts -->
       <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div class="card p-6">
-          <h3 class="text-sm font-medium text-gray-900 mb-4">{{ $t('auth.demoAccounts') }}</h3>
+          <h3 class="text-sm font-medium text-gray-900 mb-4">Cuentas de demostración</h3>
           <div class="space-y-3 text-sm">
             <div class="flex justify-between items-center">
-              <span class="text-gray-600">{{ $t('auth.admin') }}:</span>
+              <span class="text-gray-600">Administrador:</span>
               <button 
                 @click="fillDemoCredentials('admin')"
                 class="text-primary-600 hover:text-primary-700 font-medium"
@@ -167,7 +167,7 @@
               </button>
             </div>
             <div class="flex justify-between items-center">
-              <span class="text-gray-600">{{ $t('auth.teamManager') }}:</span>
+              <span class="text-gray-600">Gestor de Equipo:</span>
               <button 
                 @click="fillDemoCredentials('manager')"
                 class="text-primary-600 hover:text-primary-700 font-medium"
@@ -177,7 +177,7 @@
               </button>
             </div>
             <div class="flex justify-between items-center">
-              <span class="text-gray-600">{{ $t('auth.player') }}:</span>
+              <span class="text-gray-600">Jugador:</span>
               <button 
                 @click="fillDemoCredentials('player')"
                 class="text-primary-600 hover:text-primary-700 font-medium"
@@ -207,7 +207,6 @@
     ExclamationTriangleIcon
   } from '@heroicons/vue/24/outline'
   import { useAuthStore } from '@/stores/auth'
-  import { useI18n } from 'vue-i18n'
   
   export default {
     name: 'Login',
@@ -220,7 +219,6 @@
     },
     setup() {
       const authStore = useAuthStore()
-      const { t } = useI18n()
       
       // Form state
       const form = ref({
@@ -250,19 +248,19 @@
         
         // Basic validation
         if (!form.value.email) {
-          errors.value.email = t('auth.emailRequired')
+          errors.value.email = 'El correo electrónico es requerido'
           return
         }
         
         if (!form.value.password) {
-          errors.value.password = t('auth.passwordRequired')
+          errors.value.password = 'La contraseña es requerida'
           return
         }
   
         // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(form.value.email)) {
-          errors.value.email = t('auth.emailInvalid')
+          errors.value.email = 'Formato de correo electrónico inválido'
           return
         }
   
@@ -275,12 +273,12 @@
           })
   
           if (!result.success) {
-            generalError.value = result.error || t('auth.loginFailed')
+            generalError.value = result.error || 'Error al iniciar sesión'
           }
           // Success case is handled by the store (redirect)
         } catch (error) {
           console.error('Login error:', error)
-          generalError.value = t('auth.unexpectedError')
+          generalError.value = 'Error inesperado'
         } finally {
           isLoading.value = false
         }

@@ -2,8 +2,8 @@
   <MainLayout>
     <template #header>
       <div>
-        <h1 class="text-3xl font-bold text-gray-900">{{ $t('admin.panel.title') }}</h1>
-        <p class="text-gray-600 mt-1">{{ $t('admin.panel.subtitle') }}</p>
+        <h1 class="text-3xl font-bold text-gray-900">Panel de Administración</h1>
+        <p class="text-gray-600 mt-1">Gestiona usuarios, torneos y configuraciones del sistema</p>
       </div>
     </template>
 
