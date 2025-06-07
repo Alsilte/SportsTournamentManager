@@ -154,46 +154,55 @@ response = await teamAPI.getAll({
       }
     }
 
-    const handleSubmit = async () => {
-      error.value = ''
-      
-      if (!selectedTeamId.value) {
-        error.value = 'Selecciona un equipo'
-        return
-      }
+   const handleSubmit = async () => {
+  error.value = ''
+  
+  if (!selectedTeamId.value) {
+    error.value = 'Selecciona un equipo'
+    return
+  }
 
-      // Solo validar para no-admins
-      if (!isAdmin.value) {
-        const team = selectedTeam.value
-        if (!team || (team.players_count || 0) < 1) {
-          error.value = 'El equipo debe tener al menos 1 jugador'
-          return
-        }
-      }
+  isLoading.value = true
 
-      isLoading.value = true
+  try {
+    console.log('🚀 Intentando registrar equipo...')
+    console.log('📋 Datos:', {
+      tournamentId: props.tournament.id,
+      teamId: selectedTeamId.value,
+      tournament: props.tournament,
+      selectedTeam: selectedTeam.value
+    })
+    
+    const response = await tournamentAPI.registerTeam(props.tournament.id, {
+      team_id: selectedTeamId.value
+    })
 
-      try {
-        console.log('Registering team:', selectedTeamId.value, 'in tournament:', props.tournament.id)
-        
-        const response = await tournamentAPI.registerTeam(props.tournament.id, {
-          team_id: selectedTeamId.value
-        })
+    console.log('✅ Respuesta exitosa:', response)
 
-        console.log('Registration response:', response)
-
-        if (apiHelpers.isSuccess(response)) {
-          emit('success')
-        } else {
-          error.value = response.data?.message || 'Error en el registro'
-        }
-      } catch (err) {
-        console.error('Registration error:', err)
-        error.value = 'Error al registrar equipo'
-      } finally {
-        isLoading.value = false
-      }
+    if (apiHelpers.isSuccess(response)) {
+      emit('success')
+    } else {
+      console.error('❌ Respuesta no exitosa:', response)
+      error.value = response.data?.message || 'Error en el registro'
     }
+  } catch (err) {
+    console.error('💥 Error completo:', err)
+    console.error('📄 Respuesta del servidor:', err.response?.data)
+    
+    // Mostrar mensaje específico del servidor
+    if (err.response?.data?.message) {
+      error.value = err.response.data.message
+    } else if (err.response?.data?.errors) {
+      // Si hay errores de validación específicos
+      const validationErrors = Object.values(err.response.data.errors).flat()
+      error.value = validationErrors.join(', ')
+    } else {
+      error.value = 'Error al registrar equipo'
+    }
+  } finally {
+    isLoading.value = false
+  }
+}
 
     onMounted(() => {
       console.log('Modal mounted, user:', authStore.user)
