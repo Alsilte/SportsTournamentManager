@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TournamentController extends Controller
 {
@@ -313,11 +314,16 @@ $validatedData['status'] = $request->input('status', 'draft');
      * Register team for tournament
      */
    /**
- * Register a team for a tournament (SIMPLIFIED)
+ * Register a team for a tournament (FIXED)
  */
-public function registerTeam(Request $request, Tournament $tournament): JsonResponse
+public function registerTeam(Request $request, $tournamentId): JsonResponse
 {
     try {
+        Log::info('🚀 REGISTER TEAM - Inicio', [
+            'tournament_id_param' => $tournamentId,
+            'request_data' => $request->all()
+        ]);
+
         $validator = Validator::make($request->all(), [
             'team_id' => 'required|exists:teams,id'
         ]);
@@ -330,7 +336,11 @@ public function registerTeam(Request $request, Tournament $tournament): JsonResp
             ], 422);
         }
 
-        // Solo verificar si el equipo ya está registrado
+        // Buscar el torneo manualmente
+        $tournament = Tournament::findOrFail($tournamentId);
+        Log::info('✅ Torneo encontrado:', ['tournament' => $tournament->toArray()]);
+
+        // Verificar si ya está registrado
         if ($tournament->teams()->where('team_id', $request->team_id)->exists()) {
             return response()->json([
                 'success' => false,
@@ -338,13 +348,15 @@ public function registerTeam(Request $request, Tournament $tournament): JsonResp
             ], 422);
         }
 
-        // Crear registro directamente - sin más validaciones
+        // Crear registro
         $registration = TournamentTeam::create([
-            'tournament_id' => $tournament->id,
+            'tournament_id' => $tournamentId, // Usar el ID de la URL
             'team_id' => $request->team_id,
             'registration_date' => now(),
-            'status' => 'approved' // Siempre aprobado automáticamente
+            'status' => 'approved'
         ]);
+
+        Log::info('✅ Registro creado exitosamente:', ['id' => $registration->id]);
 
         return response()->json([
             'success' => true,
@@ -353,10 +365,16 @@ public function registerTeam(Request $request, Tournament $tournament): JsonResp
         ]);
 
     } catch (\Exception $e) {
+        Log::error('💥 ERROR:', [
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine()
+        ]);
+        
         return response()->json([
             'success' => false,
             'message' => 'Failed to register team',
-            'error' => $e->getMessage(),
+            'error' => $e->getMessage()
         ], 500);
     }
 }
