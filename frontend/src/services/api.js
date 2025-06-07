@@ -120,7 +120,19 @@ export const teamAPI = {
   removePlayer: (teamId, playerId) => api.delete(`/teams/${teamId}/remove-player/${playerId}`),
   
   // GET /teams/{id}/available-players (asumiendo que existe)
-  getAvailablePlayers: (teamId) => api.get(`/teams/${teamId}/available-players`),
+  getAvailablePlayers: async (teamId) => {
+    console.log('🌐 teamAPI.getAvailablePlayers called with teamId:', teamId)
+    
+    const url = `/teams/${teamId}/available-players`
+    console.log('🌐 Making request to:', url)
+    
+    const response = await apiCall(url, {
+        method: 'GET',
+    })
+    
+    console.log('🌐 teamAPI.getAvailablePlayers response:', response)
+    return response
+  },
 
   /**
    * Get teams managed by current user

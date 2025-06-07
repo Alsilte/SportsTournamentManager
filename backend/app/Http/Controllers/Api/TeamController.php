@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TeamController extends Controller
 {
@@ -622,30 +623,43 @@ private function getNextAvailableNumber(Team $team): int
     }
 
     /**
-     * Get available players for a team - NUEVO ENDPOINT
+     * Get available players for a team - VERSIÓN DEBUG
      */
     public function getAvailablePlayers(int $id): JsonResponse
     {
         try {
+            // Verificar que el equipo existe
             $team = Team::findOrFail($id);
             
-            // Obtener jugadores que NO están activos en ningún equipo
-            $availablePlayers = Player::with(['user:id,name,email'])
-                ->whereDoesntHave('teams', function ($query) {
-                    $query->where('is_active', true);
-                })
-                ->orderBy('created_at', 'desc')
-                ->get();
-
+            // Obtener TODOS los jugadores sin filtros complejos
+            $allPlayers = Player::with('user:id,name,email')->get();
+            
+            // Log para debug
+            Log::info('Available players request', [
+                'team_id' => $id,
+                'total_players_in_db' => $allPlayers->count(),
+                'players' => $allPlayers->pluck('id', 'user.name')
+            ]);
+            
             return response()->json([
                 'success' => true,
-                'data' => $availablePlayers,
-                'total' => $availablePlayers->count(),
-                'message' => $availablePlayers->isEmpty() ? 
-                    'No available players found' : 
-                    'Available players retrieved successfully'
+                'data' => $allPlayers,
+                'total' => $allPlayers->count(),
+                'message' => 'Players retrieved successfully',
+                'debug' => [
+                    'team_id' => $id,
+                    'team_name' => $team->name,
+                    'timestamp' => now()
+                ]
             ]);
+            
         } catch (\Exception $e) {
+            Log::error('Error fetching available players', [
+                'team_id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch available players',
