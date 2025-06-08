@@ -9,10 +9,7 @@
           <div>
             <h1 class="text-3xl font-bold text-gray-900">{{ tournament?.name }}</h1>
             <div class="flex items-center space-x-4 mt-2">
-              <span
-                :class="getStatusBadgeClass(tournament?.status)"
-                class="px-3 py-1 rounded-full text-sm font-medium"
-              >
+              <span :class="getStatusBadgeClass(tournament?.status)" class="px-3 py-1 rounded-full text-sm font-medium">
                 {{ formatStatus(tournament?.status) }}
               </span>
               <span class="text-gray-600">{{ tournament?.sport_type }}</span>
@@ -21,23 +18,20 @@
         </div>
 
         <div class="flex items-center space-x-3">
-          <button
-            v-if="tournament?.status === 'registration_open' && authStore.canManageTeams"
-            @click="showRegistrationModal = true"
-            class="btn-primary"
-          >
+          <button v-if="tournament?.status === 'registration_open' && authStore.canManageTeams"
+            @click="showRegistrationModal = true" class="btn-primary">
             <PlusIcon class="w-4 h-4 mr-2" />
             Registrar Equipo
           </button>
 
-        <button
-  v-if="canEditTournament"
-  @click="editTournament"
-  class="btn-secondary"
+          <RouterLink
+  v-if="canEditTournament && tournament?.id"
+  :to="`/tournaments/${tournament.id}/edit`"
+  class="btn-secondary inline-flex items-center"
 >
   <PencilIcon class="w-4 h-4 mr-2" />
   Editar Torneo
-</button>
+</RouterLink>
         </div>
       </div>
     </template>
@@ -118,13 +112,11 @@
                 <span class="text-gray-600">Formato</span>
                 <span class="font-medium">{{
                   formatTournamentType(tournament.tournament_type)
-                }}</span>
+                  }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-600">Equipos</span>
-                <span class="font-medium"
-                  >{{ tournament.registered_teams_count || 0 }}/{{ tournament.max_teams }}</span
-                >
+                <span class="font-medium">{{ tournament.registered_teams_count || 0 }}/{{ tournament.max_teams }}</span>
               </div>
               <div v-if="tournament.location" class="flex justify-between">
                 <span class="text-gray-600">Ubicación</span>
@@ -147,10 +139,8 @@
                 <span>{{ Math.round(registrationProgress) }}%</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  class="bg-primary-600 h-2 rounded-full transition-all duration-300"
-                  :style="{ width: `${registrationProgress}%` }"
-                ></div>
+                <div class="bg-primary-600 h-2 rounded-full transition-all duration-300"
+                  :style="{ width: `${registrationProgress}%` }"></div>
               </div>
             </div>
           </div>
@@ -180,22 +170,14 @@
       <!-- Tabs Navigation -->
       <div class="border-b border-gray-200">
         <nav class="-mb-px flex space-x-8">
-          <button
-            v-for="tab in tabs"
-            :key="tab.id"
-            @click="activeTab = tab.id"
-            :class="[
-              'py-2 px-1 border-b-2 font-medium text-sm transition-colors',
-              activeTab === tab.id
-                ? 'border-primary-500 text-primary-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
-            ]"
-          >
+          <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id" :class="[
+            'py-2 px-1 border-b-2 font-medium text-sm transition-colors',
+            activeTab === tab.id
+              ? 'border-primary-500 text-primary-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+          ]">
             {{ getTabName(tab.id) }}
-            <span
-              v-if="tab.count !== undefined"
-              class="ml-2 px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600"
-            >
+            <span v-if="tab.count !== undefined" class="ml-2 px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600">
               {{ tab.count }}
             </span>
           </button>
@@ -206,21 +188,13 @@
       <div class="min-h-[400px]">
         <!-- Teams Tab -->
         <div v-if="activeTab === 'teams'" class="space-y-6">
-          <div
-            v-if="registeredTeams.length"
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            <div
-              v-for="team in registeredTeams"
-              :key="team.id"
-              class="card p-6 hover:shadow-card-hover transition-shadow"
-            >
+          <div v-if="registeredTeams.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-for="team in registeredTeams" :key="team.id"
+              class="card p-6 hover:shadow-card-hover transition-shadow">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="font-semibold text-gray-900">{{ team.name }}</h3>
-                <span
-                  :class="getTeamStatusClass(team.pivot?.status)"
-                  class="px-2 py-1 text-xs font-medium rounded-full"
-                >
+                <span :class="getTeamStatusClass(team.pivot?.status)"
+                  class="px-2 py-1 text-xs font-medium rounded-full">
                   {{ formatTeamStatus(team.pivot?.status) }}
                 </span>
               </div>
@@ -235,10 +209,7 @@
                 </div>
               </div>
               <div class="mt-4">
-                <RouterLink
-                  :to="`/teams/${team.id}`"
-                  class="btn-secondary text-xs px-3 py-1 w-full text-center block"
-                >
+                <RouterLink :to="`/teams/${team.id}`" class="btn-secondary text-xs px-3 py-1 w-full text-center block">
                   Ver equipo
                 </RouterLink>
               </div>
@@ -270,10 +241,7 @@
                       <div class="text-xs text-gray-500">Local</div>
                     </div>
                     <div class="text-center">
-                      <div
-                        v-if="match.status === 'completed'"
-                        class="text-xl font-bold text-gray-900"
-                      >
+                      <div v-if="match.status === 'completed'" class="text-xl font-bold text-gray-900">
                         {{ match.home_score }} - {{ match.away_score }}
                       </div>
                       <div v-else class="text-gray-400 font-bold">VS</div>
@@ -287,10 +255,8 @@
                 <div class="text-right">
                   <div v-if="match.venue" class="text-sm text-gray-600">{{ match.venue }}</div>
                   <div class="text-xs text-gray-500">{{ match.round || 'Ronda por determinar' }}</div>
-                  <RouterLink
-                    :to="`/matches/${match.id}`"
-                    class="text-primary-600 hover:text-primary-700 text-sm font-medium mt-2 inline-block"
-                  >
+                  <RouterLink :to="`/matches/${match.id}`"
+                    class="text-primary-600 hover:text-primary-700 text-sm font-medium mt-2 inline-block">
                     Ver detalles
                   </RouterLink>
                 </div>
@@ -312,54 +278,34 @@
               <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                   <tr>
-                    <th
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Posición
                     </th>
-                    <th
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Equipo
                     </th>
-                    <th
-                      class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Jugados
                     </th>
-                    <th
-                      class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Ganados
                     </th>
-                    <th
-                      class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Empatados
                     </th>
-                    <th
-                      class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Perdidos
                     </th>
-                    <th
-                      class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                       GF
                     </th>
-                    <th
-                      class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                       GC
                     </th>
-                    <th
-                      class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                       DG
                     </th>
-                    <th
-                      class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Puntos
                     </th>
                   </tr>
@@ -393,17 +339,12 @@
                       {{ standing.goals_against }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
-                      <span
-                        :class="
-                          standing.goal_difference >= 0 ? 'text-success-600' : 'text-danger-600'
-                        "
-                      >
+                      <span :class="standing.goal_difference >= 0 ? 'text-success-600' : 'text-danger-600'
+                        ">
                         {{ standing.goal_difference > 0 ? '+' : '' }}{{ standing.goal_difference }}
                       </span>
                     </td>
-                    <td
-                      class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 text-center"
-                    >
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 text-center">
                       {{ standing.points }}
                     </td>
                   </tr>
@@ -430,12 +371,8 @@
     </div>
 
     <!-- Team Registration Modal -->
-    <TeamRegistrationModal
-      v-if="showRegistrationModal && tournament"
-      :tournament="tournament"
-      @close="showRegistrationModal = false"
-      @success="handleRegistrationSuccess"
-    />
+    <TeamRegistrationModal v-if="showRegistrationModal && tournament" :tournament="tournament"
+      @close="showRegistrationModal = false" @success="handleRegistrationSuccess" />
   </MainLayout>
 </template>
 
@@ -512,9 +449,9 @@ export default {
 
     // Check if user can edit tournament
     const canEditTournament = computed(() => {
-      return authStore.isAuthenticated && 
-             (authStore.isAdmin || tournament.value?.created_by === authStore.user?.id) &&
-             !['completed'].includes(tournament.value?.status)
+      return authStore.isAuthenticated &&
+        (authStore.isAdmin || tournament.value?.created_by === authStore.user?.id) &&
+        !['completed'].includes(tournament.value?.status)
     })
 
     /**
