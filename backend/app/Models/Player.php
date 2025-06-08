@@ -1,6 +1,5 @@
 <?php
-
-// app/Models/Player.php
+// app/Models/Player.php - CORREGIDO
 
 namespace App\Models;
 
@@ -67,6 +66,18 @@ class Player extends Model
     }
 
     /**
+     * 🆕 NUEVA RELACIÓN: Get the current active team (if any)
+     */
+    public function currentTeam()
+    {
+        return $this->belongsToMany(Team::class, 'team_players')
+            ->withPivot('jersey_number', 'position', 'is_captain', 'is_active', 'joined_date', 'left_date')
+            ->wherePivot('is_active', true)
+            ->withTimestamps()
+            ->limit(1);
+    }
+
+    /**
      * Get the match events for this player.
      */
     public function matchEvents()
@@ -93,21 +104,19 @@ class Player extends Model
     }
 
     /**
-     * Get the current active team for this player.
-     */
-    public function currentTeam()
-    {
-        return $this->belongsToMany(Team::class, 'team_players')
-            ->withPivot('jersey_number', 'position', 'is_captain', 'is_active', 'joined_date')
-            ->wherePivot('is_active', true)
-            ->first(); // Solo el primer equipo activo
-    }
-
-    /**
-     * Check if player has an active team
+     * 🆕 Check if player is currently active in any team
      */
     public function hasActiveTeam(): bool
     {
         return $this->teams()->wherePivot('is_active', true)->exists();
+    }
+
+    /**
+     * 🆕 Get current team name (helper)
+     */
+    public function getCurrentTeamNameAttribute(): ?string
+    {
+        $currentTeam = $this->currentTeam()->first();
+        return $currentTeam ? $currentTeam->name : null;
     }
 }

@@ -1,6 +1,6 @@
 <template>
   <div v-if="show" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-lg max-w-md w-full p-6">
+    <div class="bg-white rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between mb-6">
         <h3 class="text-lg font-semibold text-gray-900">
           {{ isAdmin ? 'Agregar Jugador (Administrador)' : 'Agregar Jugador' }}
@@ -18,9 +18,23 @@
           </label>
           
           <!-- Estado de carga -->
-          <div v-if="loadingPlayers" class="flex items-center justify-center py-3">
+          <div v-if="loadingPlayers" class="flex items-center justify-center py-3 bg-gray-50 rounded-lg">
             <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
             <span class="ml-2 text-sm text-gray-600">Cargando jugadores...</span>
+          </div>
+          
+          <!-- Mensaje cuando no hay jugadores -->
+          <div v-else-if="availablePlayers.length === 0" class="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <p class="text-sm text-yellow-800">
+              {{ playersErrorMessage || 'No hay jugadores disponibles' }}
+            </p>
+            <button 
+              @click="fetchAvailablePlayers" 
+              type="button"
+              class="mt-2 text-xs text-blue-600 hover:text-blue-800"
+            >
+              🔄 Recargar jugadores
+            </button>
           </div>
           
           <!-- Dropdown de jugadores -->
@@ -31,19 +45,38 @@
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Seleccionar jugador</option>
-            <option v-for="player in availablePlayers" :key="player.id" :value="player.id">
-              {{ getPlayerName(player) }}
-              <span v-if="player.position"> - {{ getPositionLabel(player.position) }}</span>
-              <span v-if="player.current_team" class="text-orange-600"> (En {{ player.current_team.name }})</span>
-            </option>
+            <optgroup v-if="isAdmin && playersInOtherTeams.length > 0" label="⚠️ En otros equipos">
+              <option 
+                v-for="player in playersInOtherTeams" 
+                :key="'busy-' + player.id" 
+                :value="player.id"
+                class="text-orange-600"
+              >
+                {{ getPlayerName(player) }}
+                <span v-if="player.current_team"> - {{ player.current_team.name }}</span>
+              </option>
+            </optgroup>
+            <optgroup :label="isAdmin ? '✅ Disponibles' : 'Jugadores Disponibles'">
+              <option 
+                v-for="player in availablePlayersOnly" 
+                :key="'free-' + player.id" 
+                :value="player.id"
+              >
+                {{ getPlayerName(player) }}
+                <span v-if="player.position"> - {{ getPositionLabel(player.position) }}</span>
+              </option>
+            </optgroup>
           </select>
           
-          <!-- Debug info -->
-          <div v-if="debugMode" class="mt-2 p-2 bg-gray-100 rounded text-xs">
-            <strong>Debug:</strong><br>
-            Total jugadores: {{ availablePlayers.length }}<br>
-            Loading: {{ loadingPlayers }}<br>
-            Error: {{ error || 'Ninguno' }}
+          <!-- Info del jugador seleccionado -->
+          <div v-if="selectedPlayer && isAdmin" class="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-sm">
+            <strong>{{ getPlayerName(selectedPlayer) }}</strong>
+            <span v-if="selectedPlayer.current_team" class="text-orange-600">
+              - Actualmente en: {{ selectedPlayer.current_team.name }}
+            </span>
+            <span v-else class="text-green-600">
+              - Disponible
+            </span>
           </div>
         </div>
 
@@ -123,6 +156,13 @@
         <!-- Error Message -->
         <div v-if="error" class="p-3 bg-red-50 border border-red-200 rounded-lg">
           <p class="text-sm text-red-700">{{ error }}</p>
+          <button 
+            @click="error = ''" 
+            type="button"
+            class="mt-1 text-xs text-red-600 hover:text-red-800"
+          >
+            ✕ Cerrar
+          </button>
         </div>
 
         <!-- Buttons -->
@@ -136,13 +176,35 @@
           </button>
           <button
             type="submit"
-            :disabled="loading || loadingPlayers"
+            :disabled="loading || loadingPlayers || availablePlayers.length === 0"
             class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
           >
             {{ loading ? 'Agregando...' : 'Agregar Jugador' }}
           </button>
         </div>
       </form>
+      
+      <!-- Debug Panel -->
+      <div v-if="debugMode" class="mt-4 p-3 bg-gray-100 rounded text-xs space-y-2">
+        <div class="flex justify-between">
+          <strong>Debug Info:</strong>
+          <button @click="debugMode = false" class="text-red-600">✕</button>
+        </div>
+        <div><strong>Team ID:</strong> {{ teamId }}</div>
+        <div><strong>Total jugadores:</strong> {{ availablePlayers.length }}</div>
+        <div><strong>Disponibles:</strong> {{ availablePlayersOnly.length }}</div>
+        <div><strong>En otros equipos:</strong> {{ playersInOtherTeams.length }}</div>
+        <div><strong>Loading:</strong> {{ loadingPlayers }}</div>
+        <div><strong>Is Admin:</strong> {{ isAdmin }}</div>
+        <div><strong>Error:</strong> {{ error || 'Ninguno' }}</div>
+        <div><strong>API Response:</strong> {{ lastApiResponse || 'Ninguna' }}</div>
+        <button 
+          @click="fetchAvailablePlayers" 
+          class="px-2 py-1 bg-blue-500 text-white rounded text-xs"
+        >
+          🔄 Recargar
+        </button>
+      </div>
       
       <!-- Toggle Debug -->
       <button 
@@ -187,6 +249,8 @@ export default {
       error: '',
       availablePlayers: [],
       debugMode: false,
+      playersErrorMessage: '',
+      lastApiResponse: null,
       form: {
         player_id: '',
         jersey_number: '',
@@ -195,6 +259,19 @@ export default {
         joined_date: new Date().toISOString().split('T')[0],
         admin_override: false
       }
+    }
+  },
+  computed: {
+    selectedPlayer() {
+      return this.availablePlayers.find(p => p.id == this.form.player_id)
+    },
+    
+    availablePlayersOnly() {
+      return this.availablePlayers.filter(player => player.is_available !== false)
+    },
+    
+    playersInOtherTeams() {
+      return this.availablePlayers.filter(player => player.is_available === false)
     }
   },
   watch: {
@@ -209,6 +286,8 @@ export default {
     resetForm() {
       this.error = ''
       this.debugMode = false
+      this.playersErrorMessage = ''
+      this.lastApiResponse = null
       this.form = {
         player_id: '',
         jersey_number: '',
@@ -236,36 +315,33 @@ export default {
     async fetchAvailablePlayers() {
       this.loadingPlayers = true
       this.error = ''
+      this.playersErrorMessage = ''
       
       try {
         console.log('🔍 Fetching available players for team:', this.teamId)
         
         const response = await teamAPI.getAvailablePlayers(this.teamId)
+        this.lastApiResponse = JSON.stringify(response.data?.meta || response, null, 2)
+        
         console.log('📡 API response:', response)
         
         if (apiHelpers.isSuccess(response)) {
-          const data = apiHelpers.getData(response)
-          this.availablePlayers = Array.isArray(data) ? data : []
-          
-          console.log('✅ Available players loaded:', this.availablePlayers.length)
-          console.log('📋 Players details:', this.availablePlayers.map(p => ({
-            id: p.id,
-            name: p.user?.name,
-            has_team: !!p.current_team,
-            is_available: p.is_available !== false
-          })))
+          this.availablePlayers = apiHelpers.getData(response) || []
+          console.log('✅ Available players loaded:', this.availablePlayers)
           
           if (this.availablePlayers.length === 0) {
-            this.error = 'No hay jugadores disponibles para agregar al equipo'
+            this.playersErrorMessage = response.data?.message || 'No hay jugadores disponibles para agregar al equipo'
           }
         } else {
-          console.error('❌ Error en respuesta:', response)
           this.error = apiHelpers.getMessage(response) || 'Error al cargar jugadores'
+          this.playersErrorMessage = this.error
         }
         
       } catch (err) {
-        console.error('💥 Error loading players:', err)
-        this.error = 'Error al cargar jugadores'
+        console.error('❌ Error loading players:', err)
+        this.error = apiHelpers.handleError(err) || 'Error al cargar jugadores'
+        this.playersErrorMessage = this.error
+        this.availablePlayers = []
       } finally {
         this.loadingPlayers = false
       }
