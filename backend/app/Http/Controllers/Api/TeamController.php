@@ -637,11 +637,10 @@ private function getNextAvailableNumber(Team $team): int
             ->pluck('player_id')
             ->toArray();
 
-        // Obtener jugadores que NO están activos en ningún equipo
-        $availablePlayers = Player::with(['user:id,name,email'])
-            ->whereNotIn('id', $activePlayerIds)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        // Opción: Mostrar todos los jugadores disponibles
+$availablePlayers = Player::with(['user:id,name,email', 'currentTeam:id,name'])
+    ->orderBy('created_at', 'desc')
+    ->get();
 
         // Si es admin, también incluir jugadores que ya están en otros equipos
         // pero marcarlos como tales
