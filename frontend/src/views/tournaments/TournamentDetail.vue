@@ -30,15 +30,14 @@
             Registrar Equipo
           </button>
 
-          <!-- Edit Tournament Button -->
-          <button
-            v-if="canEditTournament"
-            @click="$router.push({ name: 'EditTournament', params: { id: tournament.id } })"
-            class="btn-secondary"
-          >
-            <PencilIcon class="w-4 h-4 mr-2" />
-            Editar Torneo
-          </button>
+        <button
+  v-if="canEditTournament"
+  @click="editTournament"
+  class="btn-secondary"
+>
+  <PencilIcon class="w-4 h-4 mr-2" />
+  Editar Torneo
+</button>
         </div>
       </div>
     </template>
@@ -676,6 +675,9 @@ export default {
     const formatMoney = (amount) => {
       return Number(amount).toLocaleString()
     }
+    const editTournament = () => {
+  router.push(`/tournaments/${route.params.id}/edit`)
+}
 
     // Initialize
     onMounted(() => {
