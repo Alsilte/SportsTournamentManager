@@ -33,7 +33,7 @@
           <!-- Edit Tournament Button -->
           <button
             v-if="canEditTournament"
-            @click="$router.push(`/tournaments/${tournament.id}/edit`)"
+            @click="$router.push({ name: 'EditTournament', params: { id: tournament.id } })"
             class="btn-secondary"
           >
             <PencilIcon class="w-4 h-4 mr-2" />
@@ -494,6 +494,7 @@ export default {
     const error = ref('')
     const activeTab = ref('teams')
     const showRegistrationModal = ref(false)
+    const showEditModal = ref(false)
 
     // Computed
     const registrationProgress = computed(() => {
@@ -569,6 +570,7 @@ export default {
      */
     const handleTournamentUpdated = (updatedTournament) => {
       tournament.value = updatedTournament
+      showEditModal.value = false
       window.$notify?.success('Torneo actualizado exitosamente!')
     }
 
@@ -690,6 +692,7 @@ export default {
       error,
       activeTab,
       showRegistrationModal,
+      showEditModal,
       registrationProgress,
       tabs,
       canEditTournament,
