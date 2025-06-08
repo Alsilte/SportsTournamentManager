@@ -91,4 +91,23 @@ class Player extends Model
     {
         return $this->user->name;
     }
+
+    /**
+     * Get the current active team for this player.
+     */
+    public function currentTeam()
+    {
+        return $this->belongsToMany(Team::class, 'team_players')
+            ->withPivot('jersey_number', 'position', 'is_captain', 'is_active', 'joined_date')
+            ->wherePivot('is_active', true)
+            ->first(); // Solo el primer equipo activo
+    }
+
+    /**
+     * Check if player has an active team
+     */
+    public function hasActiveTeam(): bool
+    {
+        return $this->teams()->wherePivot('is_active', true)->exists();
+    }
 }

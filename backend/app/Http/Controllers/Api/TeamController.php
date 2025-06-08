@@ -628,7 +628,6 @@ private function getNextAvailableNumber(Team $team): int
    public function getAvailablePlayers(int $id): JsonResponse
 {
     try {
-        // Verificar que el equipo existe
         $team = Team::findOrFail($id);
         
         // Obtener IDs de jugadores que ya están activos en equipos
@@ -637,20 +636,20 @@ private function getNextAvailableNumber(Team $team): int
             ->pluck('player_id')
             ->toArray();
 
-        // Opción: Mostrar todos los jugadores disponibles
-$availablePlayers = Player::with(['user:id,name,email', 'currentTeam:id,name'])
-    ->orderBy('created_at', 'desc')
-    ->get();
+        // ✅ CORRECCIÓN: Filtrar jugadores que NO están en equipos activos
+        $availablePlayers = Player::with(['user:id,name,email'])
+            ->whereNotIn('id', $activePlayerIds)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        // Si es admin, también incluir jugadores que ya están en otros equipos
-        // pero marcarlos como tales
+        // Si es admin, incluir TODOS los jugadores pero marcar disponibilidad
         if (request()->user()?->isAdmin()) {
-            $allPlayers = Player::with(['user:id,name,email', 'currentTeam:id,name'])
+            $allPlayers = Player::with(['user:id,name,email'])
                 ->get();
                 
-            // Marcar cuáles están disponibles y cuáles no
             $allPlayers->each(function ($player) use ($activePlayerIds) {
                 $player->is_available = !in_array($player->id, $activePlayerIds);
+                $player->current_team = null; // Limpiar relación problemática
             });
             
             $playersToReturn = $allPlayers;
@@ -658,7 +657,6 @@ $availablePlayers = Player::with(['user:id,name,email', 'currentTeam:id,name'])
             $playersToReturn = $availablePlayers;
         }
 
-        // Log para debug
         Log::info('Available players request', [
             'team_id' => $id,
             'user_id' => request()->user()?->id,
@@ -666,44 +664,32 @@ $availablePlayers = Player::with(['user:id,name,email', 'currentTeam:id,name'])
             'total_players_in_db' => Player::count(),
             'active_players_in_teams' => count($activePlayerIds),
             'available_players' => $playersToReturn->count(),
-            'available_players_ids' => $playersToReturn->pluck('id')->toArray()
         ]);
 
-        return response()->json([
-            'success' => true,
-            'data' => $playersToReturn,
-            'meta' => [
-                'total' => $playersToReturn->count(),
-                'total_in_db' => Player::count(),
-                'active_in_teams' => count($activePlayerIds),
-                'team_id' => $id,
-                'team_name' => $team->name,
-                'is_admin_request' => request()->user()?->isAdmin(),
-                'timestamp' => now()->toISOString()
-            ],
-            'message' => $playersToReturn->isEmpty() 
-                ? 'No hay jugadores disponibles' 
-                : 'Jugadores disponibles obtenidos correctamente'
-        ]);
+       
+return response()->json([
+    'success' => true,
+    'data' => $playersToReturn,
+    'meta' => [
+        'total' => $playersToReturn->count(),
+        'available_only' => !request()->user()?->isAdmin(),
+        'team_id' => $id,
+    ],
+    'message' => $playersToReturn->isEmpty() 
+        ? 'No hay jugadores disponibles' 
+        : 'Jugadores disponibles obtenidos correctamente'
+]);
         
     } catch (\Exception $e) {
         Log::error('Error fetching available players', [
             'team_id' => $id,
-            'user_id' => request()->user()?->id,
             'error' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-            'trace' => $e->getTraceAsString()
         ]);
         
         return response()->json([
             'success' => false,
             'message' => 'Error al obtener jugadores disponibles',
             'error' => $e->getMessage(),
-            'debug' => [
-                'team_id' => $id,
-                'timestamp' => now()->toISOString()
-            ]
         ], 500);
     }
 }

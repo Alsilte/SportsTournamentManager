@@ -244,20 +244,28 @@ export default {
         console.log('📡 API response:', response)
         
         if (apiHelpers.isSuccess(response)) {
-          this.availablePlayers = apiHelpers.getData(response) || []
-          console.log('✅ Available players loaded:', this.availablePlayers)
+          const data = apiHelpers.getData(response)
+          this.availablePlayers = Array.isArray(data) ? data : []
+          
+          console.log('✅ Available players loaded:', this.availablePlayers.length)
+          console.log('📋 Players details:', this.availablePlayers.map(p => ({
+            id: p.id,
+            name: p.user?.name,
+            has_team: !!p.current_team,
+            is_available: p.is_available !== false
+          })))
           
           if (this.availablePlayers.length === 0) {
             this.error = 'No hay jugadores disponibles para agregar al equipo'
           }
         } else {
+          console.error('❌ Error en respuesta:', response)
           this.error = apiHelpers.getMessage(response) || 'Error al cargar jugadores'
         }
         
       } catch (err) {
-        console.error('❌ Error loading players:', err)
-        this.error = apiHelpers.handleError(err) || 'Error al cargar jugadores'
-        this.availablePlayers = []
+        console.error('💥 Error loading players:', err)
+        this.error = 'Error al cargar jugadores'
       } finally {
         this.loadingPlayers = false
       }
