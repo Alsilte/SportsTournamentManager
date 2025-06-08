@@ -24,7 +24,7 @@
             Registrar Equipo
           </button>
 
-          <RouterLink
+         <RouterLink
   v-if="canEditTournament && tournament?.id"
   :to="`/tournaments/${tournament.id}/edit`"
   class="btn-secondary inline-flex items-center"
@@ -617,9 +617,7 @@ export default {
     /**
      * Navigate to edit tournament
      */
-    const editTournament = () => {
-      router.push(`/tournaments/${route.params.id}/edit`)
-    }
+  
 
     // Initialize
     onMounted(() => {
@@ -640,7 +638,6 @@ export default {
       registrationProgress,
       tabs,
       canEditTournament,
-      editTournament,
       getTabName,
       handleRegistrationSuccess,
       handleTournamentUpdated,
