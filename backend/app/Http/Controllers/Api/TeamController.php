@@ -15,46 +15,46 @@ use Illuminate\Support\Facades\Log;
 
 class TeamController extends Controller
 {
-   /**
- * Display a listing of teams (public access)
- */
-public function index(Request $request): JsonResponse
-{
-    try {
-        $query = Team::with('manager:id,name')
-            ->withCount(['activePlayers as players_count']);
+    /**
+     * Display a listing of teams (public access)
+     */
+    public function index(Request $request): JsonResponse
+    {
+        try {
+            $query = Team::with('manager:id,name')
+                ->withCount(['activePlayers as players_count']);
 
-        // Filter by active status
-        if ($request->has('active')) {
-            $query->where('is_active', $request->boolean('active'));
+            // Filter by active status
+            if ($request->has('active')) {
+                $query->where('is_active', $request->boolean('active'));
+            }
+
+            // 🆕 NUEVO: Filter by manager_id (para el dashboard del team manager)
+            if ($request->has('manager_id')) {
+                $query->where('manager_id', $request->manager_id);
+            }
+
+            // Search by name
+            if ($request->has('search')) {
+                $query->where('name', 'LIKE', '%' . $request->search . '%');
+            }
+
+            // Pagination
+            $perPage = $request->get('per_page', 15);
+            $teams = $query->orderBy('name')->paginate($perPage);
+
+            return response()->json([
+                'success' => true,
+                'data'    => $teams,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch teams',
+                'error'   => $e->getMessage(),
+            ], 500);
         }
-
-        // 🆕 NUEVO: Filter by manager_id (para el dashboard del team manager)
-        if ($request->has('manager_id')) {
-            $query->where('manager_id', $request->manager_id);
-        }
-
-        // Search by name
-        if ($request->has('search')) {
-            $query->where('name', 'LIKE', '%' . $request->search . '%');
-        }
-
-        // Pagination
-        $perPage = $request->get('per_page', 15);
-        $teams = $query->orderBy('name')->paginate($perPage);
-
-        return response()->json([
-            'success' => true,
-            'data'    => $teams,
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Failed to fetch teams',
-            'error'   => $e->getMessage(),
-        ], 500);
     }
-}
 
     /**
      * Get team roster - MÉTODO CORREGIDO
@@ -285,142 +285,141 @@ public function index(Request $request): JsonResponse
      * Add player to team
      */
     public function addPlayer(Request $request, int $id): JsonResponse
-{
-    try {
-        $team = Team::findOrFail($id);
-        $user = $request->user();
+    {
+        try {
+            $team = Team::findOrFail($id);
+            $user = $request->user();
 
-        // PERMISOS BÁSICOS:
-        // - Admin puede añadir a cualquier equipo
-        // - Team Manager solo a sus equipos
-        if (!$user->isAdmin() && $team->manager_id !== $user->id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No autorizado. Solo el manager del equipo o admin pueden añadir jugadores.'
-            ], 403);
-        }
-
-        $validator = Validator::make($request->all(), [
-            'player_id'     => 'required|exists:players,id',
-            'jersey_number' => 'required|integer|min:1|max:99',
-            'position'      => 'nullable|string|max:50',
-            'is_captain'    => 'boolean',
-            'joined_date'   => 'required|date',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Errores de validación',
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
-        // VERIFICACIONES BÁSICAS (admins pueden saltárselas con parámetro especial)
-        $isAdmin = $user->isAdmin();
-        $skipChecks = $isAdmin && $request->boolean('admin_override', false);
-
-        // 1. Verificar si el jugador ya está en el equipo
-        if ($team->players()->where('player_id', $request->player_id)->wherePivot('is_active', true)->exists()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'El jugador ya está en este equipo'
-            ], 422);
-        }
-
-        // 2. Verificar número de camiseta (admin puede forzar)
-        $existingJersey = $team->teamPlayers()
-            ->where('jersey_number', $request->jersey_number)
-            ->where('is_active', true)
-            ->first();
-
-        if ($existingJersey && !$skipChecks) {
-            return response()->json([
-                'success' => false,
-                'message' => 'El número de camiseta ya está ocupado'
-            ], 422);
-        } elseif ($existingJersey && $skipChecks) {
-            // Admin: Cambiar número al jugador existente
-            $existingJersey->update(['jersey_number' => $this->getNextAvailableNumber($team)]);
-        }
-
-        // 3. Verificar si jugador está en otro equipo (solo para team managers)
-        if (!$isAdmin) {
-            $player = Player::findOrFail($request->player_id);
-            $hasActiveTeam = $player->teams()->wherePivot('is_active', true)->exists();
-            
-            if ($hasActiveTeam) {
+            // PERMISOS BÁSICOS:
+            // - Admin puede añadir a cualquier equipo
+            // - Team Manager solo a sus equipos
+            if (!$user->isAdmin() && $team->manager_id !== $user->id) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'El jugador ya está activo en otro equipo'
+                    'message' => 'No autorizado. Solo el manager del equipo o admin pueden añadir jugadores.'
+                ], 403);
+            }
+
+            $validator = Validator::make($request->all(), [
+                'player_id'     => 'required|exists:players,id',
+                'jersey_number' => 'required|integer|min:1|max:99',
+                'position'      => 'nullable|string|max:50',
+                'is_captain'    => 'boolean',
+                'joined_date'   => 'required|date',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Errores de validación',
+                    'errors' => $validator->errors(),
                 ], 422);
             }
-        }
 
-        // 4. Manejar capitanía
-        if ($request->boolean('is_captain', false)) {
-            if ($skipChecks) {
-                // Admin: Quitar capitanía al actual
-                $team->teamPlayers()->where('is_captain', true)->update(['is_captain' => false]);
-            } else {
-                // Verificar que no haya capitán
-                $hasCaptain = $team->teamPlayers()->where('is_captain', true)->where('is_active', true)->exists();
-                if ($hasCaptain) {
+            // VERIFICACIONES BÁSICAS (admins pueden saltárselas con parámetro especial)
+            $isAdmin = $user->isAdmin();
+            $skipChecks = $isAdmin && $request->boolean('admin_override', false);
+
+            // 1. Verificar si el jugador ya está en el equipo
+            if ($team->players()->where('player_id', $request->player_id)->wherePivot('is_active', true)->exists()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El jugador ya está en este equipo'
+                ], 422);
+            }
+
+            // 2. Verificar número de camiseta (admin puede forzar)
+            $existingJersey = $team->teamPlayers()
+                ->where('jersey_number', $request->jersey_number)
+                ->where('is_active', true)
+                ->first();
+
+            if ($existingJersey && !$skipChecks) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El número de camiseta ya está ocupado'
+                ], 422);
+            } elseif ($existingJersey && $skipChecks) {
+                // Admin: Cambiar número al jugador existente
+                $existingJersey->update(['jersey_number' => $this->getNextAvailableNumber($team)]);
+            }
+
+            // 3. Verificar si jugador está en otro equipo (solo para team managers)
+            if (!$isAdmin) {
+                $player = Player::findOrFail($request->player_id);
+                $hasActiveTeam = $player->teams()->wherePivot('is_active', true)->exists();
+
+                if ($hasActiveTeam) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'El equipo ya tiene un capitán'
+                        'message' => 'El jugador ya está activo en otro equipo'
                     ], 422);
                 }
             }
+
+            // 4. Manejar capitanía
+            if ($request->boolean('is_captain', false)) {
+                if ($skipChecks) {
+                    // Admin: Quitar capitanía al actual
+                    $team->teamPlayers()->where('is_captain', true)->update(['is_captain' => false]);
+                } else {
+                    // Verificar que no haya capitán
+                    $hasCaptain = $team->teamPlayers()->where('is_captain', true)->where('is_active', true)->exists();
+                    if ($hasCaptain) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'El equipo ya tiene un capitán'
+                        ], 422);
+                    }
+                }
+            }
+
+            // CREAR EL REGISTRO
+            $teamPlayer = TeamPlayer::create([
+                'team_id'       => $team->id,
+                'player_id'     => $request->player_id,
+                'jersey_number' => $request->jersey_number,
+                'position'      => $request->position,
+                'is_captain'    => $request->boolean('is_captain', false),
+                'is_active'     => true,
+                'joined_date'   => $request->joined_date,
+            ]);
+
+            $message = $skipChecks ?
+                'Jugador añadido por admin (restricciones omitidas)' :
+                'Jugador añadido al equipo correctamente';
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'data' => $teamPlayer->load('player.user:id,name', 'team:id,name'),
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al añadir jugador al equipo',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        // CREAR EL REGISTRO
-        $teamPlayer = TeamPlayer::create([
-            'team_id'       => $team->id,
-            'player_id'     => $request->player_id,
-            'jersey_number' => $request->jersey_number,
-            'position'      => $request->position,
-            'is_captain'    => $request->boolean('is_captain', false),
-            'is_active'     => true,
-            'joined_date'   => $request->joined_date,
-        ]);
-
-        $message = $skipChecks ? 
-            'Jugador añadido por admin (restricciones omitidas)' : 
-            'Jugador añadido al equipo correctamente';
-
-        return response()->json([
-            'success' => true,
-            'message' => $message,
-            'data' => $teamPlayer->load('player.user:id,name', 'team:id,name'),
-        ], 201);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Error al añadir jugador al equipo',
-            'error' => $e->getMessage()
-        ], 500);
     }
-}
 
-/**
- * Helper: Obtener siguiente número disponible
- */
-private function getNextAvailableNumber(Team $team): int
-{
-    $usedNumbers = $team->teamPlayers()
-        ->where('is_active', true)
-        ->pluck('jersey_number')
-        ->toArray();
+    /**
+     * Helper: Obtener siguiente número disponible
+     */
+    private function getNextAvailableNumber(Team $team): int
+    {
+        $usedNumbers = $team->teamPlayers()
+            ->where('is_active', true)
+            ->pluck('jersey_number')
+            ->toArray();
 
-    for ($i = 1; $i <= 99; $i++) {
-        if (!in_array($i, $usedNumbers)) {
-            return $i;
+        for ($i = 1; $i <= 99; $i++) {
+            if (!in_array($i, $usedNumbers)) {
+                return $i;
+            }
         }
+        return 99; // Fallback
     }
-    return 99; // Fallback
-}
 
     /**
      * Remove player from team
@@ -625,48 +624,110 @@ private function getNextAvailableNumber(Team $team): int
     /**
      * Get available players for a team - VERSIÓN DEBUG
      */
-   public function getAvailablePlayers(int $id): JsonResponse
+   /**
+ * Get available players for a team - VERSIÓN FINAL CORREGIDA
+ */
+public function getAvailablePlayers(int $id): JsonResponse
 {
     try {
         // Verificar que el equipo existe
         $team = Team::findOrFail($id);
+        $user = request()->user();
+        $isAdmin = $user && $user->isAdmin();
         
+        Log::info('Getting available players', [
+            'team_id' => $id,
+            'user_id' => $user?->id,
+            'is_admin' => $isAdmin
+        ]);
+
         // Obtener IDs de jugadores que ya están activos en equipos
         $activePlayerIds = DB::table('team_players')
             ->where('is_active', true)
             ->pluck('player_id')
             ->toArray();
 
-        // Opción: Mostrar todos los jugadores disponibles
-$availablePlayers = Player::with(['user:id,name,email', 'currentTeam:id,name'])
-    ->orderBy('created_at', 'desc')
-    ->get();
+        // Obtener IDs de jugadores que ya están en ESTE equipo específico
+        $teamPlayerIds = DB::table('team_players')
+            ->where('team_id', $id)
+            ->where('is_active', true)
+            ->pluck('player_id')
+            ->toArray();
 
-        // Si es admin, también incluir jugadores que ya están en otros equipos
-        // pero marcarlos como tales
-        if (request()->user()?->isAdmin()) {
-            $allPlayers = Player::with(['user:id,name,email', 'currentTeam:id,name'])
+        if ($isAdmin) {
+            // ADMIN: Mostrar todos los jugadores, marcando su disponibilidad
+            $allPlayers = Player::with(['user:id,name,email'])
                 ->get();
                 
-            // Marcar cuáles están disponibles y cuáles no
-            $allPlayers->each(function ($player) use ($activePlayerIds) {
+            // Para cada jugador, obtener su equipo actual manualmente
+            $allPlayers->each(function ($player) use ($activePlayerIds, $teamPlayerIds) {
                 $player->is_available = !in_array($player->id, $activePlayerIds);
+                $player->is_in_current_team = in_array($player->id, $teamPlayerIds);
+                
+                // Obtener equipo actual si existe
+                $currentTeamData = DB::table('team_players')
+                    ->join('teams', 'team_players.team_id', '=', 'teams.id')
+                    ->where('team_players.player_id', $player->id)
+                    ->where('team_players.is_active', true)
+                    ->select('teams.id', 'teams.name')
+                    ->first();
+                
+                $player->current_team = $currentTeamData ? [
+                    'id' => $currentTeamData->id,
+                    'name' => $currentTeamData->name
+                ] : null;
             });
             
             $playersToReturn = $allPlayers;
+            
         } else {
+            // TEAM MANAGER: Solo mostrar jugadores verdaderamente disponibles
+            $availablePlayerIds = Player::whereNotIn('id', $activePlayerIds)
+                ->pluck('id')
+                ->toArray();
+                
+            $availablePlayers = Player::with(['user:id,name,email'])
+                ->whereIn('id', $availablePlayerIds)
+                ->orderBy('created_at', 'desc')
+                ->get();
+                
+            // Marcar todos como disponibles (ya están filtrados)
+            $availablePlayers->each(function ($player) {
+                $player->is_available = true;
+                $player->is_in_current_team = false;
+                $player->current_team = null;
+            });
+            
             $playersToReturn = $availablePlayers;
         }
 
-        // Log para debug
-        Log::info('Available players request', [
+        // Verificar si hay jugadores
+        $totalPlayers = Player::count();
+        $message = '';
+        
+        if ($totalPlayers === 0) {
+            $message = 'No hay jugadores registrados en el sistema';
+        } elseif ($playersToReturn->isEmpty()) {
+            $message = $isAdmin 
+                ? 'No hay jugadores en el sistema' 
+                : 'No hay jugadores disponibles para agregar al equipo';
+        } else {
+            $availableCount = $playersToReturn->where('is_available', true)->count();
+            $message = $isAdmin 
+                ? "Se encontraron {$playersToReturn->count()} jugadores ({$availableCount} disponibles)"
+                : "Se encontraron {$availableCount} jugadores disponibles";
+        }
+
+        // Log detallado para debug
+        Log::info('Available players result', [
             'team_id' => $id,
-            'user_id' => request()->user()?->id,
-            'is_admin' => request()->user()?->isAdmin(),
-            'total_players_in_db' => Player::count(),
-            'active_players_in_teams' => count($activePlayerIds),
-            'available_players' => $playersToReturn->count(),
-            'available_players_ids' => $playersToReturn->pluck('id')->toArray()
+            'total_in_db' => $totalPlayers,
+            'active_in_teams' => count($activePlayerIds),
+            'in_current_team' => count($teamPlayerIds),
+            'returned_count' => $playersToReturn->count(),
+            'available_count' => $playersToReturn->where('is_available', true)->count(),
+            'is_admin_request' => $isAdmin,
+            'player_ids' => $playersToReturn->pluck('id')->toArray()
         ]);
 
         return response()->json([
@@ -674,16 +735,15 @@ $availablePlayers = Player::with(['user:id,name,email', 'currentTeam:id,name'])
             'data' => $playersToReturn,
             'meta' => [
                 'total' => $playersToReturn->count(),
-                'total_in_db' => Player::count(),
+                'available_count' => $playersToReturn->where('is_available', true)->count(),
+                'total_in_db' => $totalPlayers,
                 'active_in_teams' => count($activePlayerIds),
                 'team_id' => $id,
                 'team_name' => $team->name,
-                'is_admin_request' => request()->user()?->isAdmin(),
+                'is_admin_request' => $isAdmin,
                 'timestamp' => now()->toISOString()
             ],
-            'message' => $playersToReturn->isEmpty() 
-                ? 'No hay jugadores disponibles' 
-                : 'Jugadores disponibles obtenidos correctamente'
+            'message' => $message
         ]);
         
     } catch (\Exception $e) {
@@ -693,21 +753,20 @@ $availablePlayers = Player::with(['user:id,name,email', 'currentTeam:id,name'])
             'error' => $e->getMessage(),
             'file' => $e->getFile(),
             'line' => $e->getLine(),
-            'trace' => $e->getTraceAsString()
         ]);
         
         return response()->json([
             'success' => false,
             'message' => 'Error al obtener jugadores disponibles',
-            'error' => $e->getMessage(),
+            'error' => config('app.debug') ? $e->getMessage() : 'Error interno del servidor',
             'debug' => [
                 'team_id' => $id,
-                'timestamp' => now()->toISOString()
+                'timestamp' => now()->toISOString(),
+                'total_players_in_db' => Player::count() ?? 'unknown'
             ]
         ], 500);
     }
 }
-
     /**
      * Get teams managed by the authenticated user
      */
@@ -715,7 +774,7 @@ $availablePlayers = Player::with(['user:id,name,email', 'currentTeam:id,name'])
     {
         try {
             $user = $request->user();
-            
+
             if (!$user) {
                 return response()->json([
                     'success' => false,

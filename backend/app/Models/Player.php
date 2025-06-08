@@ -65,17 +65,17 @@ class Player extends Model
         return $this->teams()->wherePivot('is_active', true);
     }
 
-    /**
-     * 🆕 NUEVA RELACIÓN: Get the current active team (if any)
-     */
-    public function currentTeam()
-    {
-        return $this->belongsToMany(Team::class, 'team_players')
-            ->withPivot('jersey_number', 'position', 'is_captain', 'is_active', 'joined_date', 'left_date')
-            ->wherePivot('is_active', true)
-            ->withTimestamps()
-            ->limit(1);
-    }
+   /**
+ * Get the current active team (if any)
+ */
+public function currentTeam()
+{
+    return $this->belongsToMany(Team::class, 'team_players')
+        ->withPivot('jersey_number', 'position', 'is_captain', 'is_active', 'joined_date', 'left_date')
+        ->wherePivot('is_active', true)
+        ->withTimestamps()
+        ->limit(1);
+}
 
     /**
      * Get the match events for this player.
@@ -103,14 +103,13 @@ class Player extends Model
         return $this->user->name;
     }
 
-    /**
-     * 🆕 Check if player is currently active in any team
-     */
-    public function hasActiveTeam(): bool
-    {
-        return $this->teams()->wherePivot('is_active', true)->exists();
-    }
-
+  /**
+ * Check if player is currently active in any team
+ */
+public function hasActiveTeam(): bool
+{
+    return $this->teams()->wherePivot('is_active', true)->exists();
+}
     /**
      * 🆕 Get current team name (helper)
      */
