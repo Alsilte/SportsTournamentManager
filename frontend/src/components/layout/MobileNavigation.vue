@@ -20,7 +20,7 @@
                       <TrophyIcon class="w-5 h-5 text-white" />
                     </div>
                     <span class="font-bold text-lg text-gray-900">
-                      Tournament Manager
+                      Compitio
                     </span>
                   </div>
                   <button

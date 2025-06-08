@@ -9,7 +9,7 @@
               <img src="../../../public/logo.png" alt="Logo">
               </div>
               <span class="font-bold text-xl text-gray-900">
-                Tournament Manager
+                Compitio
               </span>
             </div>
             <p class="text-gray-600 mb-4 max-w-md">
@@ -99,7 +99,7 @@
         <!-- Bottom Section -->
         <div class="mt-8 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
           <p class="text-gray-500 text-sm">
-            © {{ currentYear }} Tournament Manager. Todos los derechos reservados.
+            © {{ currentYear }} Compitio. Todos los derechos reservados.
           </p>
           
         </div>

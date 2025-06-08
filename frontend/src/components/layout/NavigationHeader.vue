@@ -12,7 +12,7 @@
               <img src="../../../public/logo.png" alt="Logo">
             </div>
             <span class="font-bold text-xl text-gray-900 hidden sm:block">
-              Tournament Manager
+              Compitio
             </span>
           </RouterLink>
         </div>
