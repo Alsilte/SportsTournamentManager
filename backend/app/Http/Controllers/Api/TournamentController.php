@@ -1,5 +1,13 @@
 <?php
-// app/Http/Controllers/Api/TournamentController.php
+
+/**
+ * Tournament Controller for Sports Tournament Manager API
+ * 
+ * Manages tournament CRUD operations, team registration, standings,
+ * and tournament lifecycle with comprehensive validation.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace App\Http\Controllers\Api;
 

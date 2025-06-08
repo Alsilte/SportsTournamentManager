@@ -1,6 +1,14 @@
 <?php
 
-// database/seeders/MatchEventSeeder.php
+/**
+ * Match Event Seeder
+ * 
+ * Seeds the database with match events such as goals, cards, and substitutions.
+ * Creates realistic match scenarios with detailed event descriptions
+ * for comprehensive match statistics and reporting testing.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace Database\Seeders;
 

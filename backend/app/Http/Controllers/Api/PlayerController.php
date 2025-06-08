@@ -1,5 +1,13 @@
 <?php
-// app/Http/Controllers/Api/PlayerController.php - MÉTODO AVAILABLE CORREGIDO
+
+/**
+ * Player Controller for Sports Tournament Manager API
+ * 
+ * Manages player profiles, statistics, team history, and availability
+ * with comprehensive player data handling.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace App\Http\Controllers\Api;
 

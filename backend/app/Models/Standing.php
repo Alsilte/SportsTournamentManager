@@ -1,6 +1,13 @@
 <?php
 
-// app/Models/Standing.php
+/**
+ * Standing Model for Sports Tournament Manager
+ * 
+ * Manages tournament standings with team statistics, points calculation,
+ * and ranking functionality for competitive analysis.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace App\Models;
 

@@ -1,6 +1,14 @@
 <?php
 
-// database/seeders/StandingSeeder.php
+/**
+ * Standing Seeder
+ * 
+ * Seeds the database with calculated standings for tournaments.
+ * Processes match results to generate accurate team standings including
+ * points, wins, draws, losses, and goal statistics.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace Database\Seeders;
 

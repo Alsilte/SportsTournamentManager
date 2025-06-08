@@ -1,5 +1,13 @@
 <?php
-// app/Models/Team.php - CORREGIDO
+
+/**
+ * Team Model for Sports Tournament Manager
+ * 
+ * Represents team entities with player management, tournament participation,
+ * and performance tracking capabilities.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace App\Models;
 

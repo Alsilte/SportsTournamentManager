@@ -1,5 +1,13 @@
 <?php
-// app/Models/User.php - Updated User model with proper Sanctum configuration
+
+/**
+ * User Model for Sports Tournament Manager
+ * 
+ * Extends Laravel's Authenticatable with role-based access control,
+ * API token management, and user relationship handling.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace App\Models;
 

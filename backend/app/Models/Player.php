@@ -1,5 +1,13 @@
 <?php
-// app/Models/Player.php - CORREGIDO
+
+/**
+ * Player Model for Sports Tournament Manager
+ * 
+ * Represents player entities with personal information, team associations,
+ * and performance statistics tracking.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace App\Models;
 

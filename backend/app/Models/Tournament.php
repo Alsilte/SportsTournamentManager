@@ -1,5 +1,13 @@
 <?php
-// app/Models/Tournament.php - FIXED VERSION
+
+/**
+ * Tournament Model for Sports Tournament Manager
+ * 
+ * Represents tournament entities with relationships to teams, matches, and standings.
+ * Handles tournament lifecycle, status management, and statistical calculations.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace App\Models;
 

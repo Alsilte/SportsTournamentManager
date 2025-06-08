@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Authentication Controller for Sports Tournament Manager API
+ * 
+ * Handles user registration, login, logout, and profile management with
+ * JWT token authentication and role-based access control.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace App\Http\Controllers\Api;
 

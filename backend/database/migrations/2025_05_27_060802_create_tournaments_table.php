@@ -1,6 +1,13 @@
 <?php
 
-// 2. database/migrations/XXXX_XX_XX_XXXXXX_create_tournaments_table.php
+/**
+ * Create Tournaments Table Migration
+ * 
+ * Creates the tournaments table with all necessary fields for tournament management
+ * including schedule, registration periods, rules, and status tracking.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

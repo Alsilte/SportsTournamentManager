@@ -1,6 +1,14 @@
 <?php
 
-// database/seeders/TeamPlayerSeeder.php
+/**
+ * Team Player Seeder
+ * 
+ * Seeds the database with player assignments to teams.
+ * Creates the relationship between players and teams with jersey numbers
+ * and contract information for comprehensive team roster testing.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace Database\Seeders;
 

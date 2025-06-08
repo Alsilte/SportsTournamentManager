@@ -1,41 +1,41 @@
-// router/index.js - Con ruta de edición de torneo añadida
+/**
+ * Vue Router Configuration for Sports Tournament Manager
+ * 
+ * This file configures client-side routing with authentication guards and role-based access control.
+ * Implements lazy loading for optimal performance and provides navigation guards for protected routes.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-
-// Lazy load components for better performance
+// Component imports with lazy loading
 const Home = () => import('@/views/Home.vue')
 const Login = () => import('@/views/auth/Login.vue')
 const Register = () => import('@/views/auth/Register.vue')
 const Dashboard = () => import('@/views/Dashboard.vue')
 const Profile = () => import('@/views/Profile.vue')
 
-// Tournament views
 const Tournaments = () => import('@/views/tournaments/Tournaments.vue')
 const TournamentDetail = () => import('@/views/tournaments/TournamentDetail.vue')
 const CreateTournament = () => import('@/views/tournaments/CreateTournament.vue')
-const EditTournament = () => import('@/views/tournaments/EditTournament.vue') // ← NUEVA IMPORTACIÓN
+const EditTournament = () => import('@/views/tournaments/EditTournament.vue')
 
-// Team views
 const Teams = () => import('@/views/teams/Teams.vue')
 const TeamDetail = () => import('@/views/teams/TeamDetail.vue')
 const CreateTeam = () => import('@/views/teams/CreateTeam.vue')
 const TeamRoster = () => import('@/views/teams/TeamRoster.vue')
 
-// Player views
 const Players = () => import('@/views/players/Players.vue')
 const PlayerDetail = () => import('@/views/players/PlayerDetail.vue')
 
-// Match views
 const Matches = () => import('@/views/matches/Matches.vue')
 const MatchDetail = () => import('@/views/matches/MatchDetail.vue')
 const CreateMatch = () => import('@/views/matches/CreateMatch.vue')
 
-// Admin views
 const AdminPanel = () => import('@/views/admin/AdminPanel.vue')
 const UserManagement = () => import('@/views/admin/UserManagement.vue')
 
 const routes = [
-  // Public routes
   {
     path: '/',
     name: 'home',
@@ -118,7 +118,6 @@ const routes = [
     }
   },
 
-  // Authentication routes
   {
     path: '/login',
     name: 'login',
@@ -140,7 +139,6 @@ const routes = [
     }
   },
 
-  // Protected routes
   {
     path: '/dashboard',
     name: 'dashboard',
@@ -160,7 +158,6 @@ const routes = [
     }
   },
 
-  // Team management (Team Manager + Admin)
   {
     path: '/teams/create',
     name: 'create-team',
@@ -182,7 +179,6 @@ const routes = [
     }
   },
 
-  // Tournament management (Admin only)
   {
     path: '/tournaments/create',
     name: 'create-tournament',
@@ -193,7 +189,6 @@ const routes = [
       roles: ['admin']
     }
   },
-  // ← NUEVA RUTA PARA EDITAR TORNEO
   {
     path: '/tournaments/:id/edit',
     name: 'edit-tournament',
@@ -205,7 +200,6 @@ const routes = [
     }
   },
 
-  // Match management (Admin + Referee)
   {
     path: '/matches/create',
     name: 'create-match',
@@ -217,7 +211,6 @@ const routes = [
     }
   },
 
-  // Admin routes
   {
     path: '/admin',
     name: 'admin',
@@ -239,7 +232,6 @@ const routes = [
     }
   },
 
-  // 404 catch-all
   {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
@@ -264,29 +256,19 @@ const router = createRouter({
 })
 
 /**
- * Navigation guards with proper async auth initialization
+ * Navigation guards with authentication and role-based access control
  */
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
   
-  // Set document title
   document.title = to.meta.title ? `${to.meta.title} - Tournament Manager` : 'Tournament Manager'
   
-  console.log('🧭 Router guard:', to.path, 'requiresAuth:', to.meta.requiresAuth)
-  
-  // CRÍTICO: Esperar a que la autenticación se inicialice
   if (!authStore.isInitialized) {
-    console.log('⏳ Waiting for auth initialization...')
     await authStore.initializeAuth()
   }
   
-  console.log('✅ Auth initialized. isAuthenticated:', authStore.isAuthenticated)
-  
-  // Skip auth check for public routes
   if (to.meta.public && !to.meta.requiresAuth) {
-    // Hide login/register pages for authenticated users
     if (to.meta.hideForAuth && authStore.isAuthenticated) {
-      console.log('🔒 Hiding auth page for authenticated user')
       next({ name: 'dashboard' })
       return
     }
@@ -294,10 +276,8 @@ router.beforeEach(async (to, from, next) => {
     return
   }
   
-  // Check authentication for protected routes
   if (to.meta.requiresAuth) {
     if (!authStore.isAuthenticated) {
-      console.log('❌ Not authenticated, redirecting to login')
       next({ 
         name: 'login', 
         query: { redirect: to.fullPath } 
@@ -305,33 +285,19 @@ router.beforeEach(async (to, from, next) => {
       return
     }
     
-    // Check role-based access
     if (to.meta.roles && !authStore.hasAnyRole(to.meta.roles)) {
-      console.log('🚫 Insufficient permissions, redirecting to dashboard')
       next({ name: 'dashboard' })
       return
     }
   }
   
-  console.log('✅ Navigation allowed')
   next()
 })
 
-/**
- * Error handler for navigation failures
- */
-router.onError((error) => {
-  console.error('Router error:', error)
-})
-// ← AGREGAR estas líneas al final, después de export default router
 router.onError((error, to, from) => {
-  console.error('Router error:', error)
-  
   if (error.message.includes('Loading chunk') || 
       error.message.includes('MIME type') ||
       error.message.includes('module script')) {
-    
-    console.warn('Lazy loading error detected, reloading...')
     window.location.reload()
   }
 })

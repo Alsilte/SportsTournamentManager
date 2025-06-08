@@ -1,6 +1,13 @@
 <?php
 
-// app/Models/GameMatch.php
+/**
+ * GameMatch Model for Sports Tournament Manager
+ * 
+ * Represents individual matches within tournaments with teams, scores,
+ * events tracking, and referee assignment capabilities.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace App\Models;
 

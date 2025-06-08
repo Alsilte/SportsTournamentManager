@@ -1,6 +1,14 @@
 <?php
 
-// database/seeders/TeamSeeder.php
+/**
+ * Team Seeder
+ * 
+ * Seeds the database with sample teams and their associated managers.
+ * Creates teams with realistic information including contact details,
+ * home venues, and manager assignments for testing purposes.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace Database\Seeders;
 

@@ -1,4 +1,11 @@
-// vite.config.js
+/**
+ * Vite Configuration for Sports Tournament Manager Frontend
+ * 
+ * Configures build tools, development server, and Vue.js application setup.
+ * Includes proxy configuration for API development and build optimizations.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
@@ -22,25 +29,14 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         ws: true,
-        rewrite: (path) => path,  // No reescribir la ruta
-        configure: (proxy, _options) => {
-          proxy.on('error', (err, _req, _res) => {
-            console.log('❌ Proxy error:', err);
-          });
-          proxy.on('proxyReq', (proxyReq, req, _res) => {
-            console.log('🔄 Proxying:', `${req.method} ${req.url} -> http://localhost:8000${req.url}`);
-          });
-          proxy.on('proxyRes', (proxyRes, req, _res) => {
-            console.log('✅ Proxy response:', proxyRes.statusCode, req.url);
-          });
-        },
+        rewrite: (path) => path,
       }
     }
   },
   
   build: {
     outDir: 'dist',
-      base: './',
+    base: './',
     sourcemap: true,
     rollupOptions: {
       output: {

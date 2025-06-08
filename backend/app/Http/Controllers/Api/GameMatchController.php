@@ -1,5 +1,13 @@
 <?php
-// app/Http/Controllers/Api/GameMatchController.php
+
+/**
+ * Game Match Controller for Sports Tournament Manager API
+ * 
+ * Handles match scheduling, score management, event tracking,
+ * and match lifecycle operations.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace App\Http\Controllers\Api;
 

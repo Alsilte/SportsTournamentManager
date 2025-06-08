@@ -1,5 +1,14 @@
 <?php
-// database/seeders/DatabaseSeeder.php
+
+/**
+ * Database Seeder
+ * 
+ * Main seeder class that orchestrates the execution of all database seeders
+ * in the correct order to populate the database with sample data for development
+ * and testing purposes.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace Database\Seeders;
 
@@ -14,14 +23,14 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            PlayerSeeder::class,        // Después de User
-            TeamSeeder::class,          // Después de User
-            TeamPlayerSeeder::class,    // Después de Team y Player
-            TournamentSeeder::class,    // Después de User
-            TournamentTeamSeeder::class, // Después de Tournament y Team
-            GameMatchSeeder::class,     // Después de Tournament y Team
-            MatchEventSeeder::class,    // Después de GameMatch
-            StandingSeeder::class,      // Al final para calcular standings
+            PlayerSeeder::class,
+            TeamSeeder::class,
+            TeamPlayerSeeder::class,
+            TournamentSeeder::class,
+            TournamentTeamSeeder::class,
+            GameMatchSeeder::class,
+            MatchEventSeeder::class,
+            StandingSeeder::class,
         ]);
     }
 }

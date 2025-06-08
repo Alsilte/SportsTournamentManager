@@ -1,6 +1,14 @@
 <?php
 
-// database/seeders/GameMatchSeeder.php
+/**
+ * Game Match Seeder
+ * 
+ * Seeds the database with sample matches for tournaments.
+ * Creates matches with different statuses, scores, and referee assignments
+ * to test match management and tournament progression features.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace Database\Seeders;
 

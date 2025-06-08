@@ -1,7 +1,13 @@
-// frontend/src/services/api.js
+/**
+ * API Services for Sports Tournament Manager
+ * 
+ * Configures Axios client with authentication, error handling, and organized API endpoints.
+ * Provides centralized API communication layer with automatic token management.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 import axios from 'axios'
 
-// Obtener URL desde variables de entorno
 const getApiBaseUrl = () => {
   return import.meta.env.VITE_API_URL || 
          import.meta.env.VITE_API_BASE_URL || 
@@ -10,7 +16,6 @@ const getApiBaseUrl = () => {
 
 const API_BASE_URL = getApiBaseUrl()
 
-// Configuración de Axios
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: parseInt(import.meta.env.VITE_API_TIMEOUT) || 15000,
@@ -21,42 +26,7 @@ const api = axios.create({
   withCredentials: false
 })
 
-// Interceptor para logging en desarrollo
-if (import.meta.env.DEV) {
-  api.interceptors.request.use((config) => {
-    console.log('🚀 API Request:', {
-      method: config.method?.toUpperCase(),
-      url: config.url,
-      baseURL: config.baseURL,
-      fullURL: `${config.baseURL}${config.url}`
-    })
-    return config
-  })
-
-  api.interceptors.response.use(
-    (response) => {
-      console.log('✅ API Response:', {
-        status: response.status,
-        url: response.config.url,
-        data: response.data
-      })
-      return response
-    },
-    (error) => {
-      console.error('❌ API Error:', {
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        url: error.config?.url,
-        method: error.config?.method,
-        data: error.response?.data,
-        headers: error.response?.headers
-      })
-      return Promise.reject(error)
-    }
-  )
-}
-
-// Interceptor para token de autenticación
+// Request interceptor for authentication
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('auth_token')
   if (token) {
@@ -65,7 +35,7 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// Interceptor para manejar errores de autenticación
+// Response interceptor for authentication errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -77,8 +47,6 @@ api.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-
-// Servicios API
 export const authAPI = {
   login: (credentials) => api.post('/auth/login', credentials),
   register: (userData) => api.post('/auth/register', userData),
@@ -102,54 +70,28 @@ export const tournamentAPI = {
 export const teamAPI = {
   getAll: (params) => api.get('/teams', { params }),
   getById: (id) => api.get(`/teams/${id}`),
-  show: (id) => api.get(`/teams/${id}`), // Alias para getById
-  
-  // ✅ ENDPOINT CORRECTO PARA ROSTER
+  show: (id) => api.get(`/teams/${id}`),
   getRoster: (id) => api.get(`/teams/${id}/roster`),
-  
   getStatistics: (id) => api.get(`/teams/${id}/statistics`),
   create: (data) => api.post('/teams', data),
   update: (id, data) => api.put(`/teams/${id}`, data),
   delete: (id) => api.delete(`/teams/${id}`),
-  
-  // ✅ MÉTODOS CORREGIDOS SEGÚN TU BACKEND (routes/api.php)
-  // POST /teams/{id}/add-player (según tu backend)
   addPlayer: (teamId, playerData) => api.post(`/teams/${teamId}/add-player`, playerData),
-  
-  // DELETE /teams/{teamId}/remove-player/{playerId} (según tu backend)
   removePlayer: (teamId, playerId) => api.delete(`/teams/${teamId}/remove-player/${playerId}`),
   
-  // GET /teams/{id}/available-players (asumiendo que existe)
- // ✅ VERSIÓN CORREGIDA
-getAvailablePlayers: async (teamId) => {
-  console.log('🌐 teamAPI.getAvailablePlayers called with teamId:', teamId)
-  
-  try {
-    const url = `/teams/${teamId}/available-players`
-    console.log('🌐 Making request to:', url)
-    
-    // ✅ CORREGIDO: Usar api.get() en lugar de apiCall()
-    const response = await api.get(url)
-    
-    console.log('🌐 teamAPI.getAvailablePlayers response:', response)
-    return response
-    
-  } catch (error) {
-    console.error('❌ Error in getAvailablePlayers:', error)
-    throw error
-  }
-},
+  getAvailablePlayers: async (teamId) => {
+    try {
+      const response = await api.get(`/teams/${teamId}/available-players`)
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 
-  /**
-   * Get teams managed by current user
-   */
   getMyTeams() {
     return api.get('/teams/my-teams')
   },
 
-  /**
-   * Get teams by manager ID
-   */
   getByManager(managerId) {
     return api.get(`/teams?manager_id=${managerId}`)
   },
@@ -180,7 +122,6 @@ export const standingAPI = {
   topScorers: (tournamentId, params) => api.get(`/standings/${tournamentId}/top-scorers`, { params }),
 }
 
-// Helper para manejar respuestas de API
 export const apiHelpers = {
   isSuccess: (response) => {
     return response?.data?.success === true || response?.status === 200

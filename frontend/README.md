@@ -1,14 +1,27 @@
-# frontend
+# Sports Tournament Manager - Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+Frontend application for the Sports Tournament Manager system built with Vue 3, Vite, and Tailwind CSS.
 
-## Recommended IDE Setup
+**Author: Alejandro Silla Tejero**
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Features
 
-## Customize configuration
+- Modern Vue 3 Composition API
+- Responsive design with Tailwind CSS
+- Real-time tournament management
+- Team and player administration
+- Match scheduling and results tracking
+- User authentication and authorization
+- Progressive Web App capabilities
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+## Technology Stack
+
+- **Vue 3** - Progressive JavaScript framework
+- **Vite** - Fast build tool and development server
+- **Tailwind CSS** - Utility-first CSS framework
+- **Vue Router** - Official router for Vue.js
+- **Pinia** - State management for Vue
+- **Axios** - HTTP client for API communication
 
 ## Project Setup
 
@@ -16,26 +29,41 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### Development Server
 
 ```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
+### Production Build
 
 ```sh
 npm run build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+### Preview Production Build
 
 ```sh
-npm run test:unit
+npm run preview
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+## Project Structure
 
-```sh
-npm run lint
 ```
+src/
+├── components/     # Reusable Vue components
+├── views/         # Page components
+├── router/        # Vue Router configuration
+├── stores/        # Pinia state management
+├── services/      # API services and utilities
+└── assets/        # Static assets
+```
+
+## API Integration
+
+The frontend communicates with a Laravel backend API providing:
+- User authentication with JWT tokens
+- Tournament CRUD operations
+- Team and player management
+- Match scheduling and results
+- Real-time standings calculation

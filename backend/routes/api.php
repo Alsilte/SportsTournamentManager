@@ -1,5 +1,14 @@
 <?php
-// routes/api.php
+
+/**
+ * API Routes Configuration
+ * 
+ * Defines all API endpoints for the Sports Tournament Manager system.
+ * Includes public routes for tournament data and protected routes for management operations.
+ * Provides authentication, tournament, team, player, and match management endpoints.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -9,12 +18,6 @@ use App\Http\Controllers\Api\TeamController;
 use App\Http\Controllers\Api\PlayerController;
 use App\Http\Controllers\Api\GameMatchController;
 use App\Http\Controllers\Api\StandingController;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-*/
 
 // Health check
 Route::get('/health', function () {
@@ -53,7 +56,7 @@ Route::prefix('')->group(function () {
 
   // Public player data
   Route::prefix('players')->group(function () {
-    Route::get('/available', [PlayerController::class, 'available']); // Esta ruta DEBE ir ANTES que /{id}
+    Route::get('/available', [PlayerController::class, 'available']);
     Route::get('/', [PlayerController::class, 'index']);
     Route::get('/{id}', [PlayerController::class, 'show']);
     Route::get('/{id}/statistics', [PlayerController::class, 'statistics']);
@@ -74,7 +77,7 @@ Route::prefix('')->middleware('auth:sanctum')->group(function () {
   // User authentication management
   Route::prefix('auth')->group(function () {
     Route::get('/profile', [AuthController::class, 'profile']);
-Route::put('/profile', [AuthController::class, 'updateProfile']);
+    Route::put('/profile', [AuthController::class, 'updateProfile']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/logout-all', [AuthController::class, 'logoutAll']);

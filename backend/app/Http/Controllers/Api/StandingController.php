@@ -1,5 +1,13 @@
 <?php
-// app/Http/Controllers/Api/StandingController.php
+
+/**
+ * Standing Controller for Sports Tournament Manager API
+ * 
+ * Manages tournament standings, rankings, statistics calculations,
+ * and leaderboard data with real-time updates.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace App\Http\Controllers\Api;
 

@@ -1,6 +1,14 @@
 <?php
 
-// database/seeders/PlayerSeeder.php
+/**
+ * Player Seeder
+ * 
+ * Seeds the database with sample players and their detailed information.
+ * Creates players with realistic statistics, positions, and biographical data
+ * for comprehensive testing of player management features.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace Database\Seeders;
 

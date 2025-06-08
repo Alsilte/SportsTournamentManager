@@ -1,6 +1,14 @@
 <?php
 
-// database/seeders/TournamentSeeder.php
+/**
+ * Tournament Seeder
+ * 
+ * Seeds the database with sample tournaments of different types and statuses.
+ * Creates various tournament configurations including knockout and league formats
+ * for testing and development purposes.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace Database\Seeders;
 

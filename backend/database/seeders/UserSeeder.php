@@ -1,6 +1,14 @@
 <?php
 
-// database/seeders/UserSeeder.php
+/**
+ * User Seeder
+ * 
+ * Seeds the database with sample users including administrators, team managers,
+ * and referees for development and testing purposes. Creates users with different
+ * roles and permissions for the Sports Tournament Manager system.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace Database\Seeders;
 

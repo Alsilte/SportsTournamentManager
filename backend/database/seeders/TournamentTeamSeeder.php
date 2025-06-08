@@ -1,5 +1,14 @@
 <?php
-// database/seeders/TournamentTeamSeeder.php
+
+/**
+ * Tournament Team Seeder
+ * 
+ * Seeds the database with team registrations for tournaments.
+ * Creates the relationship between teams and tournaments with registration
+ * dates and status information for comprehensive testing.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace Database\Seeders;
 

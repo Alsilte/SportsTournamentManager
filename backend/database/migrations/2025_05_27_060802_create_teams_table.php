@@ -1,6 +1,13 @@
 <?php
 
-// 3. database/migrations/XXXX_XX_XX_XXXXXX_create_teams_table.php
+/**
+ * Create Teams Table Migration
+ * 
+ * Creates the teams table with all necessary fields for team management
+ * including contact information, manager assignment, and venue details.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

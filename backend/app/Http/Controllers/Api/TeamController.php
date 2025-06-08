@@ -1,5 +1,13 @@
 <?php
-// app/Http/Controllers/Api/TeamController.php - MÉTODO ROSTER CORREGIDO
+
+/**
+ * Team Controller for Sports Tournament Manager API
+ * 
+ * Handles team management, player roster operations, statistics,
+ * and team-related data with role-based access control.
+ * 
+ * Author: Alejandro Silla Tejero
+ */
 
 namespace App\Http\Controllers\Api;
 
