@@ -446,7 +446,7 @@
  */
 
 import { ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import {
   ArrowLeftIcon,
   PlusIcon,
@@ -482,6 +482,7 @@ export default {
   },
   setup() {
     const route = useRoute()
+    const router = useRouter()
     const authStore = useAuthStore()
 
     // Data
@@ -675,9 +676,13 @@ export default {
     const formatMoney = (amount) => {
       return Number(amount).toLocaleString()
     }
+
+    /**
+     * Navigate to edit tournament
+     */
     const editTournament = () => {
-  router.push(`/tournaments/${route.params.id}/edit`)
-}
+      router.push(`/tournaments/${route.params.id}/edit`)
+    }
 
     // Initialize
     onMounted(() => {
@@ -698,6 +703,7 @@ export default {
       registrationProgress,
       tabs,
       canEditTournament,
+      editTournament,
       getTabName,
       handleRegistrationSuccess,
       handleTournamentUpdated,
