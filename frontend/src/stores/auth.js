@@ -56,43 +56,69 @@ export const useAuthStore = defineStore('auth', () => {
 
   /**
    * Login user with credentials
+   * 
+   * Authenticates user by sending credentials to the API, stores the JWT token
+   * and user data in both reactive state and localStorage for persistence.
+   * Handles redirection to intended route after successful login.
+   * 
+   * @param {Object} credentials - User login credentials (email, password)
+   * @returns {Object} Result object with success status and error message if applicable
    */
   const login = async (credentials) => {
+    // Set loading state and clear any previous errors
     isLoading.value = true
     error.value = null
 
     try {
+      // Send login request to the authentication API
       const response = await authAPI.login(credentials)
       
+      // Check if the HTTP response status indicates success (2xx)
       if (response.status >= 200 && response.status < 300) {
         const data = response.data
         
+        // Verify that the API response indicates successful authentication
         if (data.success === true && data.data) {
           const authToken = data.data.token
           const userData = data.data.user
           
+          // Update reactive state with authentication data
           token.value = authToken
           user.value = userData
           
+          // Persist authentication data in localStorage for session management
           localStorage.setItem('auth_token', authToken)
           localStorage.setItem('auth_user', JSON.stringify(userData))
           
+          // Check for redirect query parameter from route guard
           const intendedRoute = router.currentRoute.value.query.redirect || '/dashboard'
           router.push(intendedRoute)
           
+          // Return success indicator
           return { success: true }
         } else {
+          // API returned unsuccessful response, throw error with message
           throw new Error(data.message || 'Login failed')
         }
       } else {
+        // HTTP response indicates failure, throw error with API message
         throw new Error(response.data?.message || 'Login failed')
       }
     } catch (err) {
+      // Handle authentication errors with fallback error messages
+      // Priority: API error message > exception message > generic fallback
       const errorMessage = err.response?.data?.message || err.message || 'Login failed'
+      
+      // Set error state for UI display
       error.value = errorMessage
+      
+      // Clear any existing authentication data on login failure
       clearAuth()
+      
+      // Return failure indicator with error details
       return { success: false, error: errorMessage }
     } finally {
+      // Always reset loading state regardless of success or failure
       isLoading.value = false
     }
   }

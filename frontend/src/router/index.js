@@ -41,7 +41,7 @@ const routes = [
     name: 'home',
     component: Home,
     meta: { 
-      title: 'Sports Tournament Manager',
+      title: 'Compitio',
       public: true 
     }
   },
@@ -261,7 +261,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
   
-  document.title = to.meta.title ? `${to.meta.title} - Tournament Manager` : 'Tournament Manager'
+  document.title = to.meta.title ? `${to.meta.title} - Compitio` : 'Compitio'
   
   if (!authStore.isInitialized) {
     await authStore.initializeAuth()

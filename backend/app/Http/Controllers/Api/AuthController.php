@@ -23,8 +23,18 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    /**
+     * Register a new user in the system
+     * 
+     * Validates user input, creates a new user record, and if the role is 'player',
+     * also creates a corresponding player record. Returns a JWT token for authentication.
+     * 
+     * @param Request $request The HTTP request containing user registration data
+     * @return JsonResponse JSON response with user data and authentication token
+     */
     public function register(Request $request): JsonResponse
     {
+        // Validate incoming request data
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -33,6 +43,7 @@ class AuthController extends Controller
             'phone' => 'nullable|string|max:20',
         ]);
 
+        // Return validation errors if any
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -42,6 +53,7 @@ class AuthController extends Controller
         }
 
         try {
+            // Create new user with hashed password
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -51,14 +63,17 @@ class AuthController extends Controller
                 'is_active' => true,
             ]);
 
+            // If user is a player, create corresponding player record
             if ($request->role === 'player') {
                 Player::create([
                     'user_id' => $user->id,
                 ]);
             }
 
+            // Generate authentication token
             $token = $user->createToken('auth_token')->plainTextToken;
 
+            // Return success response with user data and token
             return response()->json([
                 'success' => true,
                 'message' => 'User registered successfully',
@@ -69,6 +84,7 @@ class AuthController extends Controller
                 ]
             ], 201);
         } catch (\Exception $e) {
+            // Log error and return failure response
             Log::error('Registration failed: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
@@ -78,13 +94,24 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Authenticate user and generate access token
+     * 
+     * Validates user credentials, checks if account is active, and generates
+     * a new JWT token. Deletes any existing tokens for security.
+     * 
+     * @param Request $request The HTTP request containing login credentials
+     * @return JsonResponse JSON response with user data and authentication token
+     */
     public function login(Request $request): JsonResponse
     {
+        // Validate login credentials
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required'
         ]);
 
+        // Return validation errors if any
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -94,8 +121,10 @@ class AuthController extends Controller
         }
 
         try {
+            // Find user by email
             $user = User::where('email', $request->email)->first();
 
+            // Check if user exists and password is correct
             if (!$user || !Hash::check($request->password, $user->password)) {
                 return response()->json([
                     'success' => false,
@@ -103,6 +132,7 @@ class AuthController extends Controller
                 ], 401);
             }
 
+            // Check if user account is active
             if (!$user->is_active) {
                 return response()->json([
                     'success' => false,
@@ -110,9 +140,13 @@ class AuthController extends Controller
                 ], 403);
             }
 
+            // Revoke all existing tokens for security
             $user->tokens()->delete();
+            
+            // Generate new authentication token
             $token = $user->createToken('auth_token')->plainTextToken;
 
+            // Return success response with user data and token
             return response()->json([
                 'success' => true,
                 'message' => 'Login successful',
@@ -123,6 +157,7 @@ class AuthController extends Controller
                 ]
             ]);
         } catch (\Exception $e) {
+            // Log error and return failure response
             Log::error('Login failed: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
@@ -133,9 +168,16 @@ class AuthController extends Controller
     }
     /**
      * Get authenticated user profile
+     * 
+     * Returns the current authenticated user's profile data including
+     * related player information and managed teams.
+     * 
+     * @param Request $request The authenticated HTTP request
+     * @return JsonResponse JSON response with user profile data
      */
     public function profile(Request $request): JsonResponse
     {
+        // Get authenticated user with relationships
         $user = $request->user()->load('player', 'managedTeams');
 
         return response()->json([
@@ -147,65 +189,87 @@ class AuthController extends Controller
     /**
      * Update user profile
      */
-   /**
- * Update user profile
- */
-public function updateProfile(Request $request): JsonResponse
-{
-    $user = $request->user();
+    /**
+     * Update authenticated user profile
+     * 
+     * Allows users to update their profile information including name, phone,
+     * avatar, and password. Validates input and hashes password if provided.
+     * 
+     * @param Request $request The HTTP request containing profile update data
+     * @return JsonResponse JSON response with updated user data
+     */
+    public function updateProfile(Request $request): JsonResponse
+    {
+        // Get the authenticated user
+        $user = $request->user();
 
-    $validator = Validator::make($request->all(), [
-        'name' => 'sometimes|string|max:255',
-        'phone' => 'nullable|string|max:20',
-        'avatar' => 'nullable|string|max:255',
-        'password' => 'sometimes|string|min:8|confirmed',
-    ]);
+        // Validate the incoming profile update data
+        $validator = Validator::make($request->all(), [
+            'name' => 'sometimes|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'avatar' => 'nullable|string|max:255',
+            'password' => 'sometimes|string|min:8|confirmed',
+            ]);
 
-    if ($validator->fails()) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Validation errors',
-            'errors' => $validator->errors()
-        ], 422);
-    }
-
-    try {
-        $updateData = $request->only(['name', 'phone', 'avatar']);
-
-        if ($request->has('password')) {
-            $updateData['password'] = Hash::make($request->password);
+        // Return validation errors if any
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation errors',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
-        $user->update($updateData);
+        try {
+            // Prepare update data (exclude sensitive fields)
+            $updateData = $request->only(['name', 'phone', 'avatar']);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Profile updated successfully',
-            'data' => $user->fresh()->load('player')
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Profile update failed',
-            'error' => $e->getMessage()
-        ], 500);
+            // Hash password if provided
+            if ($request->has('password')) {
+                $updateData['password'] = Hash::make($request->password);
+            }
+
+            // Update user record
+            $user->update($updateData);
+
+            // Return success response with updated user data
+            return response()->json([
+                'success' => true,
+                'message' => 'Profile updated successfully',
+                'data' => $user->fresh()->load('player')
+            ]);
+        } catch (\Exception $e) {
+            // Return error response
+            return response()->json([
+                'success' => false,
+                'message' => 'Profile update failed',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
-}
 
     /**
-     * Logout user (revoke current token) - MÉTODO CORREGIDO
+     * Logout user (revoke current token)
+     * 
+     * Attempts to revoke the current authentication token using multiple methods:
+     * 1. Find and delete the specific token using bearer token
+     * 2. Use Laravel Sanctum's currentAccessToken method
+     * 3. Fallback to revoking all tokens for the user
+     * 
+     * @param Request $request The authenticated HTTP request
+     * @return JsonResponse JSON response indicating logout status
      */
     public function logout(Request $request): JsonResponse
     {
         try {
-            // Method 1: Try to get the current access token
+            // Get the authenticated user
             $user = $request->user();
 
-            // Get the token ID from the request header
+            // Method 1: Try to get the token ID from the request header
             $bearerToken = $request->bearerToken();
 
             if ($bearerToken) {
-                // Find and delete the specific token
+                // Find and delete the specific token using SHA256 hash
                 $tokenModel = $user->tokens()->where('token', hash('sha256', $bearerToken))->first();
 
                 if ($tokenModel) {
@@ -229,7 +293,7 @@ public function updateProfile(Request $request): JsonResponse
                     ]);
                 }
             } catch (\Exception $e) {
-                // Continue to fallback method
+                // Continue to fallback method if this fails
             }
 
             // Method 3: Fallback - revoke all tokens for this user
@@ -240,6 +304,7 @@ public function updateProfile(Request $request): JsonResponse
                 'message' => 'Logged out successfully (all sessions)'
             ]);
         } catch (\Exception $e) {
+            // Return error response
             return response()->json([
                 'success' => false,
                 'message' => 'Logout failed',
@@ -250,11 +315,17 @@ public function updateProfile(Request $request): JsonResponse
 
     /**
      * Logout from all devices (revoke all tokens)
+     * 
+     * Revokes all authentication tokens for the current user, effectively
+     * logging them out from all devices and sessions.
+     * 
+     * @param Request $request The authenticated HTTP request
+     * @return JsonResponse JSON response indicating logout status
      */
     public function logoutAll(Request $request): JsonResponse
     {
         try {
-            // Revoke all tokens
+            // Revoke all tokens for the authenticated user
             $request->user()->tokens()->delete();
 
             return response()->json([
@@ -262,6 +333,7 @@ public function updateProfile(Request $request): JsonResponse
                 'message' => 'Logged out from all devices successfully'
             ]);
         } catch (\Exception $e) {
+            // Return error response
             return response()->json([
                 'success' => false,
                 'message' => 'Logout failed',
@@ -271,30 +343,38 @@ public function updateProfile(Request $request): JsonResponse
     }
 
     /**
-     * Refresh token
+     * Refresh authentication token
+     * 
+     * Revokes the current token and generates a new one for enhanced security.
+     * This allows users to refresh their session without re-entering credentials.
+     * 
+     * @param Request $request The authenticated HTTP request
+     * @return JsonResponse JSON response with new authentication token
      */
     public function refresh(Request $request): JsonResponse
     {
         try {
+            // Get the authenticated user
             $user = $request->user();
 
-            // Method 1: Try to get and revoke current token
+            // Method 1: Try to get and revoke current token using bearer token
             $bearerToken = $request->bearerToken();
 
             if ($bearerToken) {
-                // Find and delete the specific token
+                // Find and delete the specific token using SHA256 hash
                 $tokenModel = $user->tokens()->where('token', hash('sha256', $bearerToken))->first();
                 if ($tokenModel) {
                     $tokenModel->delete();
                 }
             } else {
-                // Fallback: revoke all tokens
+                // Fallback: revoke all tokens if specific token not found
                 $user->tokens()->delete();
             }
 
-            // Create new token
+            // Create new authentication token
             $token = $user->createToken('auth_token')->plainTextToken;
 
+            // Return success response with new token
             return response()->json([
                 'success' => true,
                 'message' => 'Token refreshed successfully',
@@ -304,6 +384,7 @@ public function updateProfile(Request $request): JsonResponse
                 ]
             ]);
         } catch (\Exception $e) {
+            // Return error response
             return response()->json([
                 'success' => false,
                 'message' => 'Token refresh failed',
