@@ -136,7 +136,7 @@
               Premio en Metálico
             </label>
             <div class="relative">
-              <span class="absolute left-3 top-3 text-gray-500">$</span>
+              <span class="absolute left-3 top-3 text-gray-500">€</span>
               <input
                 id="prize_pool"
                 v-model.number="form.prize_pool"

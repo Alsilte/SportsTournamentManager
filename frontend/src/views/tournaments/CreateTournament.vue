@@ -21,7 +21,7 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Tournament Name -->
             <div class="md:col-span-2">
-              <label for="name" class="form-label">Nombre del Torneo</label>
+              <label for="name" class="form-label">Nombre del Torneo</label>º
               <input
                 id="name"
                 v-model="form.name"
@@ -207,7 +207,7 @@
               <label for="prize_pool" class="form-label">Premio en Metálico</label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span class="text-gray-500 text-sm">$</span>
+                  <span class="text-gray-500 text-sm">€</span>
                 </div>
                 <input
                   id="prize_pool"
@@ -362,38 +362,52 @@ export default {
     ExclamationTriangleIcon,
   },
   setup() {
+    // Initialize router and authentication store
     const router = useRouter()
     const authStore = useAuthStore()
 
-    // Form data
+    // Form data - reactive object containing all tournament form fields
     const form = ref({
-      name: '',
-      description: '',
-      sport_type: '',
-      tournament_type: '',
-      max_teams: 16,
-      registration_start: '',
-      registration_end: '',
-      start_date: '',
-      end_date: '',
-      location: '',
-      prize_pool: '',
-      rules: '',
-      status: 'draft',
+      name: '',                  
+      description: '',           
+      sport_type: '',            
+      tournament_type: '',       
+      max_teams: 16,             
+      registration_start: '',    
+      registration_end: '',      
+      start_date: '',            
+      end_date: '',              
+      location: '',              
+      prize_pool: '',            
+      rules: '',                 
+      status: 'draft',           
     })
 
-    // UI state
-    const isLoading = ref(false)
-    const errors = ref({})
-    const generalError = ref('')
+    // UI state management - reactive variables for component state
+    const isLoading = ref(false)    // Loading state for API requests
+    const errors = ref({})          // Field-specific validation errors
+    const generalError = ref('')    // General error messages for display
 
-    // Computed
+    // Computed properties for reactive form validation and constraints
+
+    /**
+     * Minimum allowed date/time for form inputs
+     * 
+     * Calculates the earliest allowed date/time (1 hour from now)
+     * to prevent scheduling tournaments in the past.
+     */
     const minDateTime = computed(() => {
       const now = new Date()
       now.setHours(now.getHours() + 1) // At least 1 hour from now
       return now.toISOString().slice(0, 16)
     })
 
+    /**
+     * Form validation status
+     * 
+     * Determines if the form has all required fields and passes validation.
+     * Used to enable/disable the submit button.
+     */
     const isFormValid = computed(() => {
       return (
         form.value.name &&
@@ -407,86 +421,121 @@ export default {
 
     /**
      * Handle form submission
+     * 
+     * Validates form data, processes the tournament creation request,
+     * and handles success/error responses with appropriate user feedback.
+     * 
+     * @returns {Promise<void>} Async function that handles form submission
      */
     const handleSubmit = async () => {
+      // Clear any previous errors
       errors.value = {}
       generalError.value = ''
 
+      // Validate form before submission
       if (!validateForm()) {
         return
       }
 
+      // Set loading state to show progress indicator
       isLoading.value = true
 
       try {
+        // Prepare tournament data with proper data types
         const tournamentData = {
           ...form.value,
-          max_teams: parseInt(form.value.max_teams),
-          prize_pool: form.value.prize_pool ? parseFloat(form.value.prize_pool) : null,
+          max_teams: parseInt(form.value.max_teams), // Convert to integer
+          prize_pool: form.value.prize_pool ? parseFloat(form.value.prize_pool) : null, // Convert to float or null
         }
 
-        // Remove empty fields
+        // Clean up data by removing empty fields to avoid backend issues
         Object.keys(tournamentData).forEach((key) => {
           if (tournamentData[key] === '' || tournamentData[key] === null) {
             delete tournamentData[key]
           }
         })
 
+        // Send creation request to API
         const response = await tournamentAPI.create(tournamentData)
 
+        // Handle successful response
         if (apiHelpers.isSuccess(response)) {
           const tournament = apiHelpers.getData(response)
+          
+          // Show success notification if available
           window.$notify?.success('Torneo creado exitosamente')
+          
+          // Navigate to the newly created tournament details page
           router.push(`/tournaments/${tournament.id}`)
         } else {
+          // Handle API error response
           generalError.value = response.data?.message || 'Error al crear el torneo'
         }
       } catch (error) {
+        // Handle network/unexpected errors
         console.error('Tournament creation failed:', error)
         generalError.value = apiHelpers.handleError(error)
       } finally {
+        // Always reset loading state
         isLoading.value = false
       }
     }
 
     /**
      * Validate form data
+     * 
+     * Performs comprehensive validation of tournament form data including
+     * required fields, data types, date logic, and business rules.
+     * 
+     * @returns {boolean} True if validation passes, false otherwise
      */
     const validateForm = () => {
+      // Initialize errors object to collect validation issues
       const newErrors = {}
 
-      // Basic validation
+      // Basic required field validation
+      // Check if tournament name is provided and not empty
       if (!form.value.name?.trim()) {
         newErrors.name = 'El nombre del torneo es requerido'
       }
 
+      // Validate sport type selection
       if (!form.value.sport_type) {
         newErrors.sport_type = 'El tipo de deporte es requerido'
       }
 
+      // Validate tournament format selection
       if (!form.value.tournament_type) {
         newErrors.tournament_type = 'El formato del torneo es requerido'
       }
 
+      // Team count validation with business rules
+      // Minimum 2 teams required for any tournament
       if (!form.value.max_teams || form.value.max_teams < 2) {
         newErrors.max_teams = 'Mínimo 2 equipos requeridos'
-      } else if (form.value.max_teams > 64) {
+      } 
+      // Maximum 64 teams to keep tournament manageable
+      else if (form.value.max_teams > 64) {
         newErrors.max_teams = 'Máximo 64 equipos permitidos'
       }
 
-      // Date validation - ahora opcional
+      // Date validation logic - now optional but must be logical if provided
+      // Validate registration period if both dates are provided
       if (form.value.registration_start && form.value.registration_end) {
         const regStart = new Date(form.value.registration_start)
         const regEnd = new Date(form.value.registration_end)
 
+        // Registration end must be after registration start
         if (regEnd <= regStart) {
           newErrors.registration_end = 'El fin de inscripciones debe ser después del inicio'
         }
       }
 
+      // Tournament start date validation
       if (form.value.start_date) {
         const tournStart = new Date(form.value.start_date)
         
+        // If registration end is set, tournament must start after registration closes
         if (form.value.registration_end) {
           const regEnd = new Date(form.value.registration_end)
           if (tournStart <= regEnd) {
@@ -495,26 +544,39 @@ export default {
         }
       }
 
+      // Tournament end date validation
+      // If both start and end dates are provided, validate their relationship
       if (form.value.end_date && form.value.start_date) {
         const tournEnd = new Date(form.value.end_date)
         const tournStart = new Date(form.value.start_date)
         
+        // Tournament end must be after tournament start
         if (tournEnd <= tournStart) {
           newErrors.end_date = 'El fin del torneo debe ser después del inicio'
         }
       }
 
       // Prize pool validation
+      // Ensure prize pool is not negative if provided
       if (form.value.prize_pool && form.value.prize_pool < 0) {
         newErrors.prize_pool = 'El premio no puede ser negativo'
       }
 
+      // Update errors state and return validation result
       errors.value = newErrors
+      
+      // Return true if no validation errors found
       return Object.keys(newErrors).length === 0
     }
 
     /**
      * Format status for display
+     * 
+     * Converts internal status codes to user-friendly Spanish labels
+     * for display in the preview section.
+     * 
+     * @param {string} status - Internal status code
+     * @returns {string} User-friendly status label
      */
     const formatStatus = (status) => {
       const statusMap = {
@@ -526,6 +588,12 @@ export default {
 
     /**
      * Format tournament type for display
+     * 
+     * Converts tournament type codes to user-friendly Spanish labels
+     * for display in the preview section.
+     * 
+     * @param {string} type - Tournament type code
+     * @returns {string} User-friendly tournament type label
      */
     const formatTournamentType = (type) => {
       const typeMap = {
@@ -537,7 +605,13 @@ export default {
     }
 
     /**
-     * Format date for preview
+     * Format date for preview display
+     * 
+     * Converts ISO date string to a readable format for the preview section.
+     * Returns 'TBD' if no date is provided.
+     * 
+     * @param {string} dateString - ISO date string
+     * @returns {string} Formatted date string or 'TBD'
      */
     const formatPreviewDate = (dateString) => {
       if (!dateString) return 'TBD'
@@ -549,25 +623,34 @@ export default {
     }
 
     /**
-     * Format money amount
+     * Format money amount for display
+     * 
+     * Formats numerical amount with proper thousands separators
+     * for display in the preview section.
+     * 
+     * @param {number|string} amount - Money amount to format
+     * @returns {string} Formatted money string with separators
      */
     const formatMoney = (amount) => {
       return Number(amount).toLocaleString()
     }
 
-    // Set default dates
+    // Set default dates on component mount
     onMounted(() => {
       const now = new Date()
 
-      // Registration starts in 2 hours
+      // Set registration start time to 2 hours from now
+      // This gives admins time to review before opening registration
       const regStart = new Date(now.getTime() + 2 * 60 * 60 * 1000)
       form.value.registration_start = regStart.toISOString().slice(0, 16)
 
-      // Registration ends in 1 week
+      // Set registration end time to 1 week from now
+      // Provides reasonable time for teams to register
       const regEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
       form.value.registration_end = regEnd.toISOString().slice(0, 16)
 
-      // Tournament starts 2 days after registration ends
+      // Set tournament start time to 2 days after registration ends
+      // Allows time for bracket generation and preparation
       const tournStart = new Date(regEnd.getTime() + 2 * 24 * 60 * 60 * 1000)
       form.value.start_date = tournStart.toISOString().slice(0, 16)
     })
