@@ -207,7 +207,7 @@
       const generalError = ref('')
   
       // Computed properties
-      const isFormValid = computed(() => {º
+      const isFormValid = computed(() => {
         return form.value.email && form.value.password && !isLoading.value
       })
   
